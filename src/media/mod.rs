@@ -1,3 +1,4 @@
+mod hbomax;
 mod netflix;
 
 use async_trait::async_trait;
@@ -18,7 +19,8 @@ trait MediaService {
 }
 
 pub async fn check_all() {
-    let services: Vec<Box<dyn MediaService + Send + Sync>> = vec![Box::new(netflix::Netflix)];
+    let services: Vec<Box<dyn MediaService + Send + Sync>> =
+        vec![Box::new(netflix::Netflix), Box::new(hbomax::HboMax)];
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
     println!("{:?}", results);

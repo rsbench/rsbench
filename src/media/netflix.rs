@@ -111,7 +111,17 @@ impl MediaService for Netflix {
                     }
                 }
             };
-            let html = region.text().await.unwrap();
+            let html = match region.text().await {
+                Ok(html) => html,
+                Err(_) => {
+                    return UnlockResult {
+                        service_name: "Netflix".to_string(),
+                        available: false,
+                        region: None,
+                        error: Some(String::from("Can not parse HTML")),
+                    }
+                }
+            };
 
             let re = Regex::new(r#""id":"([A-Z]{2})""#).unwrap();
             let country = match re.find(html.as_str()) {
