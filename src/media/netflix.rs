@@ -1,3 +1,5 @@
+// https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
+
 use super::{MediaService, UnlockResult};
 use async_trait::async_trait;
 use regex::Regex;
