@@ -1,0 +1,20 @@
+[package]
+name = "rsbench"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-trait = "0.1.83"
+clap = { version = "4.5.23", features = ["derive"] }
+futures = "0.3.31"
+paris = {version = "1.5.15", features=["macros", "no_logger"]}
+sysinfo = "0.33.0"
+tokio = {version="1", features = ["full"]}
+
+[profile.dev]
+opt-level = 3
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
