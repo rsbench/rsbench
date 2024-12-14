@@ -16,5 +16,4 @@ pub fn run_info() {
         println!("VIRT: {}", virt::get_virt());
     }
     println!("OS  : {}", os::get_os());
-
 }

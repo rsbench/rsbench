@@ -1,5 +1,5 @@
 use sysinfo::System;
-#[allow(dead_code)]
+
 pub fn get_cpu(s: &System) -> String {
     match s.cpus().first() {
         Some(cpu) => {
