@@ -1,27 +1,20 @@
-use sysinfo::{System, Disks};
+use sysinfo::System;
 mod cpu;
+mod disk;
+mod mem;
+mod os;
+mod virt;
 pub fn run_info() {
-    //let s = System::new_with_specifics(RefreshKind::everything());
     let s = System::new_all();
-    match s.cpus().first() {
-        Some(cpu) => {
-            let cpu_model = cpu.brand();
-            let cpu_threads = s.cpus().len();
-            println!("CPU : {} {} Threads", cpu_model, cpu_threads);
-        }
-        None => {
-            println!("CPU: Unknown CPU");
-        }
+    println!("{}", cpu::get_cpu(&s));
+    println!("MEM : {}", mem::get_mem(&s));
+    for disk in disk::get_disk().iter() {
+        println!("DISK: {}", disk);
     }
-    let memory = s.total_memory();
-    if memory > 1_048_576 {
-        println!("MEM : {} GB", memory / 1_073_741_824);
-    } else {
-        println!("MEM : {} MB", memory / 1_048_576);
+    #[cfg(target_os = "linux")]
+    {
+        println!("VIRT: {}", virt::get_virt());
     }
-    let d = Disks::new_with_refreshed_list();
-    for disk in &d {
-        println!("DISK: {}/{} GB", (disk.total_space()-disk.available_space())/1_073_741_824, disk.total_space()/1_073_741_824);
-    }
-    
+    println!("OS  : {}", os::get_os());
+
 }
