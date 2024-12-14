@@ -8,10 +8,9 @@ async fn perform_speedtest() {
     let mut log = paris::Logger::new();
     log.loading("Running speedtest to Cloudflare network...");
     let start = Instant::now();
-    
-    
+
     let response = reqwest::get(url).await;
-    
+
     match response {
         Ok(response) => {
             let bytes = response.bytes().await.unwrap();
@@ -21,10 +20,9 @@ async fn perform_speedtest() {
             let speed = bytes.len() as f64 / duration_secs;
             let speed_mbps = speed * 8.0 / 1_000_000.0;
             println!("DOWN: 🔽 {:.2} Mbps", speed_mbps);
-        },
+        }
         Err(e) => println!("Failed to download file: {}", e),
     }
-
 }
 
 pub fn start_speedtest() {
