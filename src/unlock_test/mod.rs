@@ -1,3 +1,4 @@
+mod bahamut;
 mod google_play_store;
 mod hbomax;
 mod iqiyi_oversea;
@@ -36,6 +37,7 @@ pub async fn check_all() {
         Box::new(google_play_store::GooglePlayStore),
         Box::new(iqiyi_oversea::IqiyiOversea),
         Box::new(steam::Steam),
+        Box::new(bahamut::BahamutAnime),
     ];
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
