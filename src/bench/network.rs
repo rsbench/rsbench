@@ -3,6 +3,9 @@ use std::time::Instant;
 
 // Reverse engineering of speed.cloudflare.com
 // I don't think cloudflare would mind, but if you do, please contact me :(
+
+// WHAT THE FUCKING CODE IS THIS?
+// DO YOU WANT TO FILL UP ALL MY MEMORY?
 async fn perform_speedtest() {
     let url = "https://speed.cloudflare.com/__down?bytes=1000000000";
     let mut log = paris::Logger::new();
