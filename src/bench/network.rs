@@ -41,14 +41,15 @@ pub fn start_speedtest() {
     let mut log = paris::Logger::new();
     log.loading("Running single thread download test...");
     let (mean_speed_mbps, speed_samples) = block_on(perform_speedtest());
-    log.done();
-    log.loading("Running multiple thread download test...");
     let max = speed_samples.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
+    log.done();
     println!("DOWN: 🔽 {:.2} Mbps | MAX : {:.2} Mbps", mean_speed_mbps, max);
 }
 
 pub fn start_multithread_speedtest(num_concurrent: usize) {
     // let rt = tokio::runtime::Runtime::new().unwrap();
+    let mut log = paris::Logger::new();
+    log.loading("Running multiple thread download test...");
 
     let results = block_on(async {
         let mut handles = Vec::new();
@@ -83,6 +84,7 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         instant_speeds.push(instant_speed);
     }
     let max = instant_speeds.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
+    log.done();
 
     println!("DOWN: ⏬ {:.2} Mbps | MAX : {:.2} Mbps", total_mean_speed, max);
 }

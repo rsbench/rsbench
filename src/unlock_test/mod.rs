@@ -30,6 +30,8 @@ trait Service {
 }
 
 pub async fn check_all() {
+    let mut log = paris::Logger::new();
+    log.loading("Checking media services...");
     let services: Vec<Box<dyn Service + Send + Sync>> = vec![
         Box::new(netflix::Netflix),
         Box::new(hbomax::HboMax),
@@ -42,6 +44,7 @@ pub async fn check_all() {
     ];
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
+    log.done();
     let mut stdout = StandardStream::stdout(ColorChoice::Always);
     for result in results {
         if result.available {
