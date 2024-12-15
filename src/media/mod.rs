@@ -1,5 +1,6 @@
 mod google_play_store;
 mod hbomax;
+mod iqiyi_oversea;
 mod netflix;
 mod utils;
 mod youtube_cdn;
@@ -32,6 +33,7 @@ pub async fn check_all() {
         Box::new(youtube_cdn::YoutubeCDN),
         Box::new(youtube_premium::YoutubePremium),
         Box::new(google_play_store::GooglePlayStore),
+        Box::new(iqiyi_oversea::IqiyiOversea),
     ];
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
