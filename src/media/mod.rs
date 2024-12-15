@@ -7,6 +7,7 @@ mod youtube_premium;
 
 use async_trait::async_trait;
 use futures::{executor::block_on, future::join_all};
+use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 #[derive(Debug)]
 #[allow(dead_code)]
@@ -34,7 +35,59 @@ pub async fn check_all() {
     ];
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
-    println!("{:?}", results);
+    let mut stdout = StandardStream::stdout(ColorChoice::Always);
+    for result in results {
+        if result.available {
+            if result.region.is_some() {
+                stdout
+                    .set_color(ColorSpec::new().set_fg(Some(Color::Green)))
+                    .unwrap();
+                println!(
+                    "{}",
+                    format!("{}({})", result.service_name, result.region.unwrap())
+                );
+            } else {
+                stdout
+                    .set_color(ColorSpec::new().set_fg(Some(Color::Green)))
+                    .unwrap();
+                println!("{}", format!("{}", result.service_name));
+            }
+        } else {
+            if result.region.is_some() {
+                stdout
+                    .set_color(ColorSpec::new().set_fg(Some(Color::Red)))
+                    .unwrap();
+                if result.error.is_some() {
+                    println!(
+                        "{}",
+                        format!(
+                            "{}({}): {}",
+                            result.service_name,
+                            result.region.unwrap(),
+                            result.error.unwrap()
+                        )
+                    );
+                } else {
+                    println!(
+                        "{}",
+                        format!("{}({})", result.service_name, result.region.unwrap())
+                    );
+                }
+            } else {
+                stdout
+                    .set_color(ColorSpec::new().set_fg(Some(Color::Red)))
+                    .unwrap();
+                if result.error.is_some() {
+                    println!(
+                        "{}",
+                        format!("{}: {}", result.service_name, result.error.unwrap())
+                    );
+                } else {
+                    println!("{}", format!("{}", result.service_name));
+                }
+            }
+        }
+    }
 }
 
 pub fn run_media() {

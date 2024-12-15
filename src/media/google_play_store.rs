@@ -78,7 +78,17 @@ impl MediaService for GooglePlayStore {
         let re = Regex::new(r#"<div class="yVZQTb">\s*([^<(]+)"#).unwrap();
         let region = match re.captures(&html) {
             Some(captures) => {
-                let region = captures.get(1).unwrap().as_str();
+                let region = match captures.get(1) {
+                    None => {
+                        return UnlockResult {
+                            service_name: "Google Play Store".to_string(),
+                            available: false,
+                            region: None,
+                            error: Some(String::from("Can not get country code")),
+                        }
+                    }
+                    Some(region) => region.as_str().trim(),
+                };
                 Some(region.to_string())
             }
             None => None,
