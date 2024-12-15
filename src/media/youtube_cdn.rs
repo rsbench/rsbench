@@ -17,7 +17,7 @@ impl MediaService for YoutubeCDN {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match Client::builder().timeout(Duration::from_secs(10)).build() {
+        let client = match Client::builder().timeout(Duration::from_secs(10)).user_agent(UA_BROWSER).build() {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
@@ -68,7 +68,7 @@ impl MediaService for YoutubeCDN {
         }
 
         let binding = first_line.split_whitespace().collect::<Vec<&str>>();
-        let mut cdn_node = match binding.get(2) {
+        let cdn_node = match binding.get(2) {
             None => {
                 return UnlockResult {
                     service_name: "Youtube CDN".to_string(),
