@@ -2,6 +2,7 @@ mod google_play_store;
 mod hbomax;
 mod iqiyi_oversea;
 mod netflix;
+mod steam;
 mod utils;
 mod youtube_cdn;
 mod youtube_premium;

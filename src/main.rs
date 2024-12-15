@@ -3,8 +3,8 @@ use paris::{info, warn};
 mod bench;
 mod config;
 mod info;
-mod unlock_test;
 mod tune;
+mod unlock_test;
 
 #[tokio::main]
 async fn main() {
