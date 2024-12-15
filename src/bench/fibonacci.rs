@@ -1,4 +1,5 @@
 use std::time::Instant;
+const BASELINE_FIB_SCORE: f32 = 10263.0;
 // intentionally unoptimized fibonacci
 fn fib(n: u64) -> u64 {
     if n <= 0 {
@@ -13,8 +14,9 @@ pub fn run_fibonacci() {
     let mut log = paris::Logger::new();
     log.loading("Running fibonacci benchmark...");
     let start = Instant::now();
-    fib(50);
+    fib(48);
     let duration = start.elapsed();
     log.done();
-    println!("FIB : {}ms", duration.as_millis());
+    let score: f32 = BASELINE_FIB_SCORE / duration.as_millis() as f32;
+    println!("FIB : {} ({}ms)", score, duration.as_millis());
 }

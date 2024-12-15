@@ -9,7 +9,6 @@ mod unlock_test;
 #[tokio::main]
 async fn main() {
     info!("RSBench v{}", env!("CARGO_PKG_VERSION"));
-    // Exit if not built as release
     if cfg!(debug_assertions) {
         warn!("This program should be built in release mode for accurate benchmarking");
         warn!("Results are very likely to be inaccurate");
