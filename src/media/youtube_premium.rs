@@ -18,8 +18,11 @@ impl MediaService for YoutubePremium {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match Client::builder().timeout(Duration::from_secs(5)).user_agent(UA_BROWSER).build() {
-
+        let client = match Client::builder()
+            .timeout(Duration::from_secs(5))
+            .user_agent(UA_BROWSER)
+            .build()
+        {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
@@ -29,14 +32,18 @@ impl MediaService for YoutubePremium {
                     error: Some(String::from("Can not initialize client")),
                 };
             }
-
         };
 
         let mut headers = header::HeaderMap::new();
         headers.insert("accept-language", "en-US,en;q=0.9".parse().unwrap());
         headers.insert(header::COOKIE, "YSC=FSCWhKo2Zgw; VISITOR_PRIVACY_METADATA=CgJERRIEEgAgYQ%3D%3D; PREF=f7=4000; __Secure-YEC=CgtRWTBGTFExeV9Iayjele2yBjIKCgJERRIEEgAgYQ%3D%3D; SOCS=CAISOAgDEitib3FfaWRlbnRpdHlmcm9udGVuZHVpc2VydmVyXzIwMjQwNTI2LjAxX3AwGgV6aC1DTiACGgYIgMnpsgY; VISITOR_INFO1_LIVE=Di84mAIbgKY; __Secure-BUCKET=CGQ".parse().unwrap());
 
-        let result = match client.get("https://www.youtube.com/premium").headers(headers).send().await {
+        let result = match client
+            .get("https://www.youtube.com/premium")
+            .headers(headers)
+            .send()
+            .await
+        {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
@@ -65,7 +72,7 @@ impl MediaService for YoutubePremium {
                 available: false,
                 region: Some("CN".to_string()),
                 error: Some(String::from("Powered by GFW")),
-            }
+            };
         }
 
         if html.contains("Premium is not available in your country") {
@@ -74,7 +81,7 @@ impl MediaService for YoutubePremium {
                 available: false,
                 region: None,
                 error: Some(String::from("Premium is not available in your country")),
-            }
+            };
         }
 
         let re = Regex::new(r#""INNERTUBE_CONTEXT_GL":"[A-Z]{2}"#).unwrap(); // "INNERTUBE_CONTEXT_GL":"HK"

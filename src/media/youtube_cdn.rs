@@ -17,7 +17,11 @@ impl MediaService for YoutubeCDN {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match Client::builder().timeout(Duration::from_secs(10)).user_agent(UA_BROWSER).build() {
+        let client = match Client::builder()
+            .timeout(Duration::from_secs(10))
+            .user_agent(UA_BROWSER)
+            .build()
+        {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {

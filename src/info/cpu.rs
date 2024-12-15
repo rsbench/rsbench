@@ -11,8 +11,6 @@ pub fn get_cpu(s: &System) -> String {
                 cpu_model, cpu_threads, cpu_speed
             )
         }
-        None => {
-            "CPU: Unknown CPU".to_string()
-        }
+        None => "CPU: Unknown CPU".to_string(),
     }
 }

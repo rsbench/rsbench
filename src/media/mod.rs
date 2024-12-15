@@ -1,7 +1,8 @@
+mod google_play_store;
 mod hbomax;
 mod netflix;
-mod youtube_cdn;
 mod utils;
+mod youtube_cdn;
 mod youtube_premium;
 
 use async_trait::async_trait;
@@ -29,6 +30,7 @@ pub async fn check_all() {
         Box::new(hbomax::HboMax),
         Box::new(youtube_cdn::YoutubeCDN),
         Box::new(youtube_premium::YoutubePremium),
+        Box::new(google_play_store::GooglePlayStore),
     ];
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
