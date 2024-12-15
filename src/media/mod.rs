@@ -1,5 +1,6 @@
 mod hbomax;
 mod netflix;
+mod youtube_cdn;
 
 use async_trait::async_trait;
 use futures::{executor::block_on, future::join_all};
@@ -21,8 +22,11 @@ trait MediaService {
 }
 
 pub async fn check_all() {
-    let services: Vec<Box<dyn MediaService + Send + Sync>> =
-        vec![Box::new(netflix::Netflix), Box::new(hbomax::HboMax)];
+    let services: Vec<Box<dyn MediaService + Send + Sync>> = vec![
+        Box::new(netflix::Netflix),
+        Box::new(hbomax::HboMax),
+        Box::new(youtube_cdn::YoutubeCDN),
+    ];
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
     println!("{:?}", results);
