@@ -1,6 +1,6 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{MediaService, UnlockResult};
+use super::{Service, UnlockResult};
 use async_trait::async_trait;
 use regex::Regex;
 use reqwest::Client;
@@ -11,7 +11,7 @@ pub struct HboMax;
 const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
 
 #[async_trait]
-impl MediaService for HboMax {
+impl Service for HboMax {
     fn name(&self) -> &'static str {
         "HBO MAX"
     }
@@ -70,7 +70,7 @@ impl MediaService for HboMax {
         let re = Regex::new(r#""url":"/[a-z]{2}/[a-z]{2}""#).unwrap(); // "url":"/tr/en"
 
         for line in re.find_iter(&html) {
-            country_list.push(crate::media::utils::trim_string(line.as_str(), 8, 4).to_uppercase());
+            country_list.push(crate::unlock_test::utils::trim_string(line.as_str(), 8, 4).to_uppercase());
         }
 
         let mut unique_vec: Vec<_> = country_list.iter().collect();
@@ -93,7 +93,7 @@ impl MediaService for HboMax {
             Some(country) => country.as_str(),
         };
 
-        let region = crate::media::utils::trim_string(region_country_code, 15, 1).to_uppercase();
+        let region = crate::unlock_test::utils::trim_string(region_country_code, 15, 1).to_uppercase();
 
         if country_list.contains(&&region) {
             UnlockResult {

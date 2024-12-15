@@ -1,6 +1,6 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{MediaService, UnlockResult};
+use super::{Service, UnlockResult};
 use async_trait::async_trait;
 use regex::Regex;
 use reqwest::{header, Client};
@@ -9,7 +9,7 @@ use std::time::Duration;
 pub struct GooglePlayStore;
 
 #[async_trait]
-impl MediaService for GooglePlayStore {
+impl Service for GooglePlayStore {
     fn name(&self) -> &'static str {
         "Google Play Store"
     }

@@ -20,14 +20,14 @@ struct UnlockResult {
 }
 
 #[async_trait]
-trait MediaService {
+trait Service {
     fn name(&self) -> &'static str;
 
     async fn check_unlock(&self) -> UnlockResult;
 }
 
 pub async fn check_all() {
-    let services: Vec<Box<dyn MediaService + Send + Sync>> = vec![
+    let services: Vec<Box<dyn Service + Send + Sync>> = vec![
         Box::new(netflix::Netflix),
         Box::new(hbomax::HboMax),
         Box::new(youtube_cdn::YoutubeCDN),

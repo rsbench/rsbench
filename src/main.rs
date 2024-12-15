@@ -3,7 +3,7 @@ use paris::{info, warn};
 mod bench;
 mod config;
 mod info;
-mod media;
+mod unlock_test;
 mod tune;
 
 #[tokio::main]
@@ -23,7 +23,7 @@ async fn main() {
         bench::run_bench();
     }
     if args.media {
-        media::run_media();
+        unlock_test::run_media();
     }
     if args.tune {
         tune::run_tune();

@@ -1,6 +1,6 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{MediaService, UnlockResult};
+use super::{Service, UnlockResult};
 use async_trait::async_trait;
 use regex::Regex;
 use reqwest::{header, Client};
@@ -11,7 +11,7 @@ pub struct Netflix;
 const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
 
 #[async_trait]
-impl MediaService for Netflix {
+impl Service for Netflix {
     fn name(&self) -> &'static str {
         "Netflix"
     }

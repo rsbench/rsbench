@@ -1,7 +1,7 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{MediaService, UnlockResult};
-use crate::media::utils::trim_string;
+use super::{Service, UnlockResult};
+use crate::unlock_test::utils::trim_string;
 use async_trait::async_trait;
 use regex::Regex;
 use reqwest::Client;
@@ -11,7 +11,7 @@ const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 pub struct IqiyiOversea;
 
 #[async_trait]
-impl MediaService for IqiyiOversea {
+impl Service for IqiyiOversea {
     fn name(&self) -> &'static str {
         "IQIYI Oversea"
     }
