@@ -15,6 +15,8 @@ struct UnlockResult {
 
 #[async_trait]
 trait MediaService {
+    fn name(&self) -> &'static str;
+
     async fn check_unlock(&self) -> UnlockResult;
 }
 

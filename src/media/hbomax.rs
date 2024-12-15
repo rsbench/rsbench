@@ -12,6 +12,10 @@ const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 
 #[async_trait]
 impl MediaService for HboMax {
+    fn name(&self) -> &'static str {
+        "Hbo max"
+    }
+
     async fn check_unlock(&self) -> UnlockResult {
         let client = match Client::builder()
             .timeout(Duration::from_secs(10))

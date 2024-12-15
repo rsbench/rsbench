@@ -1,7 +1,16 @@
 [package]
 name = "rsbench"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
+
+authors = ["moohr <moohric@moohric.com>", "GenshinMinecraft <gm@highp.ing>"]
+description = "Benchmarking utility written in pure rust"
+readme = "README.md"
+repository = "https://github.com/rsbench/rsbench"
+license = "MIT"
+
+[badges]
+maintenance = { status = "actively-developed" }
 
 [dependencies]
 async-trait = "0.1.83"
@@ -13,10 +22,7 @@ sysinfo = "0.33.0"
 tokio = {version="1.42.0", features = ["rt-multi-thread", "macros"]}
 regex = { version = "1.11.1", default-features = false, features = ["std", "unicode-perl"] }
 
-[profile.dev]
-opt-level = 3
-
-[profile.release]
-opt-level = 3
-lto = true
-codegen-units = 1
+[profile]
+dev = { opt-level = 3 }
+release = { opt-level = 3, lto = true, codegen-units = 1, panic = "abort" }
+minimal = { inherits = "release", opt-level = "z", lto = true, codegen-units = 1, panic = "abort", debug = false }
