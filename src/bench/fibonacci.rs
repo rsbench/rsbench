@@ -2,11 +2,11 @@ use std::time::Instant;
 // intentionally unoptimized fibonacci
 fn fib(n: u64) -> u64 {
     if n <= 0 {
-        return 0;
+        0
     } else if n == 1 {
-        return 1;
+        1
     } else {
-        return fib(n - 1) + fib(n - 2);
+        fib(n - 1) + fib(n - 2)
     }
 }
 pub fn run_fibonacci() {

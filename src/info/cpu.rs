@@ -12,7 +12,7 @@ pub fn get_cpu(s: &System) -> String {
             )
         }
         None => {
-            format!("CPU: Unknown CPU")
+            "CPU: Unknown CPU".to_string()
         }
     }
 }
