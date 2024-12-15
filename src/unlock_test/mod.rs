@@ -35,6 +35,7 @@ pub async fn check_all() {
         Box::new(youtube_premium::YoutubePremium),
         Box::new(google_play_store::GooglePlayStore),
         Box::new(iqiyi_oversea::IqiyiOversea),
+        Box::new(steam::Steam),
     ];
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
