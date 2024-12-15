@@ -22,6 +22,7 @@ struct UnlockResult {
 }
 
 #[async_trait]
+#[allow(dead_code)]
 trait Service {
     fn name(&self) -> &'static str;
 

@@ -1,41 +1,88 @@
-use futures::{executor::block_on, StreamExt};
+use futures::{StreamExt, executor::block_on};
 use std::time::Instant;
 
-// Reverse engineering of speed.cloudflare.com
-// I don't think cloudflare would mind, but if you do, please contact me :(
-async fn perform_speedtest() {
+async fn perform_speedtest() -> (f64, Vec<f64>) {
     let url = "https://speed.cloudflare.com/__down?bytes=10000000000";
-    let mut log = paris::Logger::new();
-    log.loading("Running speedtest to Cloudflare network...");
     let start_time = Instant::now();
 
     let mut stream = reqwest::get(url).await.unwrap().bytes_stream();
-    let mut total_bytes = 0u64;
-    let mut max_speed_mbps = 0f64;
-    let last_chunk = Instant::now();
+    let mut speed_samples = Vec::new();
+    let mut interval_bytes = 0u64;
+    let mut last_time = Instant::now();
+
     while let Some(chunk) = stream.next().await {
-        total_bytes += chunk.unwrap().len() as u64;
-        let elapsed = last_chunk.elapsed().as_secs_f64();
+        let chunk_len = chunk.unwrap().len() as u64;
+        interval_bytes += chunk_len;
+
+        let elapsed = last_time.elapsed().as_secs_f64();
         if elapsed >= 0.5 {
-            let speed = (total_bytes as f64 * 8.0) / (elapsed * 1_000_000.0);
-            if speed > max_speed_mbps {
-                max_speed_mbps = speed;
-            }
+            let speed = (interval_bytes as f64 * 8.0) / (elapsed * 1_000_000.0); // Mbps
+            speed_samples.push(speed);
+            interval_bytes = 0;
+            last_time = Instant::now();
         }
+
         if start_time.elapsed().as_secs() >= 10 {
             break;
         }
     }
 
-    let duration = start_time.elapsed();
-    let speed_mbps = (total_bytes as f64 * 8.0) / (duration.as_secs_f64() * 1_000_000.0);
-    log.done();
-    println!(
-        "DOWN: 🔽 {:.2} Mbps | MAX {:.2} Mbps",
-        speed_mbps, max_speed_mbps
-    );
+    let mean_speed = if !speed_samples.is_empty() {
+        speed_samples.iter().sum::<f64>() / speed_samples.len() as f64
+    } else {
+        0.0
+    };
+
+    (mean_speed, speed_samples)
 }
 
 pub fn start_speedtest() {
-    block_on(perform_speedtest());
+    //let rt = tokio::runtime::Runtime::new().unwrap();
+    let mut log = paris::Logger::new();
+    log.loading("Running single thread download test...");
+    let (mean_speed_mbps, speed_samples) = block_on(perform_speedtest());
+    log.done();
+    log.loading("Running multiple thread download test...");
+    let max = speed_samples.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
+    println!("DOWN: 🔽 {:.2} Mbps | MAX : {:.2} Mbps", mean_speed_mbps, max);
+}
+
+pub fn start_multithread_speedtest(num_concurrent: usize) {
+    // let rt = tokio::runtime::Runtime::new().unwrap();
+
+    let results = block_on(async {
+        let mut handles = Vec::new();
+        for _ in 0..num_concurrent {
+            handles.push(tokio::spawn(async {
+                perform_speedtest().await
+            }));
+        }
+        let mut results = Vec::new();
+        for handle in handles {
+            results.push(handle.await.unwrap());
+        }
+        results
+    });
+
+    let total_mean_speed: f64 = results.iter().map(|(mean_speed, _)| mean_speed).sum();
+    
+
+    let mut all_speed_samples: Vec<f64> = Vec::new();
+    for (_, speed_samples) in &results {
+        all_speed_samples.extend(speed_samples);
+    }
+
+    let mut instant_speeds: Vec<f64> = Vec::new();
+    for i in 0..all_speed_samples.len() {
+        let mut instant_speed = 0.0;
+        for j in 0..results.len() {
+            if i < results[j].1.len() {
+                instant_speed += results[j].1[i];
+            }
+        }
+        instant_speeds.push(instant_speed);
+    }
+    let max = instant_speeds.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
+
+    println!("DOWN: ⏬ {:.2} Mbps | MAX : {:.2} Mbps", total_mean_speed, max);
 }

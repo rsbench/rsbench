@@ -8,8 +8,6 @@ use std::time::Duration;
 
 pub struct Steam;
 
-const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
-
 #[async_trait]
 impl Service for Steam {
     fn name(&self) -> &'static str {
