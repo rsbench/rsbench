@@ -1,4 +1,6 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
+// 该脚本稍微有点小问题，不论什么区域检测都会显示 US 区域解锁，尚不清楚原因
+// Disabled
 
 use super::{Service, UnlockResult};
 use async_trait::async_trait;

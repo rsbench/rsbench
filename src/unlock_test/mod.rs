@@ -34,7 +34,7 @@ pub async fn check_all() {
     log.loading("Checking media services...");
     let services: Vec<Box<dyn Service + Send + Sync>> = vec![
         Box::new(netflix::Netflix),
-        Box::new(hbomax::HboMax),
+//        Box::new(hbomax::HboMax),
         Box::new(youtube_cdn::YoutubeCDN),
         Box::new(youtube_premium::YoutubePremium),
         Box::new(google_play_store::GooglePlayStore),
