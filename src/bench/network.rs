@@ -3,7 +3,7 @@ use std::time::Instant;
 
 pub fn ping() {
     let mut results = Vec::new();
-    let addr = "speed.cloudflare.com:443";
+    let addr = "1.1.1.1:443";
     for _ in 0..50 {
         let start = Instant::now();
         let stream = block_on(tokio::net::TcpStream::connect(addr));

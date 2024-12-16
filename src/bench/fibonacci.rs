@@ -1,5 +1,5 @@
 use std::time::Instant;
-const BASELINE_FIB_SCORE: f32 = 10263.0;
+const BASELINE_FIB_SCORE: f32 = 8838.0;
 // intentionally unoptimized fibonacci
 fn fib(n: u64) -> u64 {
     if n <= 0 {
