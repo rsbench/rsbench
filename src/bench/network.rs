@@ -1,5 +1,23 @@
-use futures::{StreamExt, executor::block_on};
+use futures::{executor::block_on, StreamExt};
 use std::time::Instant;
+
+pub fn ping() {
+    let mut results = Vec::new();
+    let addr = "speed.cloudflare.com:443";
+    for _ in 0..50 {
+        let start = Instant::now();
+        let stream = block_on(tokio::net::TcpStream::connect(addr));
+        let elapsed = start.elapsed().as_millis();
+        results.push(elapsed);
+        if let Ok(stream) = &stream {
+            // Do not remove, to prevent compiler optimization
+            let _ = stream.peer_addr();
+            let _ = stream.local_addr();
+        }
+    }
+    let mean = results.iter().sum::<u128>() as f64 / results.len() as f64;
+    println!("PING: {:.2} ms", mean);
+}
 
 async fn perform_speedtest() -> (f64, Vec<f64>) {
     let url = "https://speed.cloudflare.com/__down?bytes=10000000000";
@@ -41,9 +59,15 @@ pub fn start_speedtest() {
     let mut log = paris::Logger::new();
     log.loading("Running single thread download test...");
     let (mean_speed_mbps, speed_samples) = block_on(perform_speedtest());
-    let max = speed_samples.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
+    let max = speed_samples
+        .iter()
+        .max_by(|a, b| a.partial_cmp(b).unwrap())
+        .unwrap();
     log.done();
-    println!("DOWN: 🔽 {:.2} Mbps | MAX : {:.2} Mbps", mean_speed_mbps, max);
+    println!(
+        "DOWN: 🔽 {:.2} Mbps | MAX : {:.2} Mbps",
+        mean_speed_mbps, max
+    );
 }
 
 pub fn start_multithread_speedtest(num_concurrent: usize) {
@@ -54,9 +78,7 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     let results = block_on(async {
         let mut handles = Vec::new();
         for _ in 0..num_concurrent {
-            handles.push(tokio::spawn(async {
-                perform_speedtest().await
-            }));
+            handles.push(tokio::spawn(async { perform_speedtest().await }));
         }
         let mut results = Vec::new();
         for handle in handles {
@@ -66,7 +88,6 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     });
 
     let total_mean_speed: f64 = results.iter().map(|(mean_speed, _)| mean_speed).sum();
-    
 
     let mut all_speed_samples: Vec<f64> = Vec::new();
     for (_, speed_samples) in &results {
@@ -83,8 +104,14 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         }
         instant_speeds.push(instant_speed);
     }
-    let max = instant_speeds.iter().max_by(|a, b| a.partial_cmp(b).unwrap()).unwrap();
+    let max = instant_speeds
+        .iter()
+        .max_by(|a, b| a.partial_cmp(b).unwrap())
+        .unwrap();
     log.done();
 
-    println!("DOWN: ⏬ {:.2} Mbps | MAX : {:.2} Mbps", total_mean_speed, max);
+    println!(
+        "DOWN: ⏬ {:.2} Mbps | MAX : {:.2} Mbps",
+        total_mean_speed, max
+    );
 }
