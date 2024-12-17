@@ -5,23 +5,19 @@ use crate::unlock_test::utils::trim_string;
 use async_trait::async_trait;
 use regex::Regex;
 use reqwest::Client;
-use std::time::Duration;
 
 const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
-pub struct IqiyiOversea;
+
+pub struct BilibiliChinaMainland;
 
 #[async_trait]
-impl Service for IqiyiOversea {
+impl Service for BilibiliChinaMainland {
     fn name(&self) -> String {
-        "IQIYI Oversea".to_string()
+        "Bilibili China Mainland".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match Client::builder()
-            .timeout(Duration::from_secs(5))
-            .user_agent(UA_BROWSER)
-            .build()
-        {
+        let client = match Client::builder().user_agent(UA_BROWSER).build() {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
@@ -32,8 +28,7 @@ impl Service for IqiyiOversea {
                 };
             }
         };
-
-        let result = match client.get("https://www.iq.com/").send().await {
+        let result = match client.get("https://api.bilibili.com/pgc/player/web/playurl?avid=82846771&qn=0&type=&otype=json&ep_id=307247&fourk=1&fnver=0&fnval=16&session=2964df126ad2f9d834dd4fda26fe1061&module=bangumi").send().await {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
@@ -57,26 +52,43 @@ impl Service for IqiyiOversea {
             }
         };
 
-        let re = Regex::new(r#"mod=[a-z]+"#).unwrap();
-        let region = match re.find(&html) {
+        let re = Regex::new(r#""code":-?\d+"#).unwrap();
+
+        let line = match re.find(&html) {
             None => {
                 return UnlockResult {
                     service_name: self.name(),
                     available: false,
                     region: None,
-                    error: Some(String::from("Can not get country code")),
+                    error: Some(String::from("Can not get response status code")),
                 }
             }
-            Some(region) => region.as_str(),
+            Some(line) => line.as_str(),
         };
 
-        let region = trim_string(region, 4, 0).to_uppercase();
+        let code = trim_string(line, 7, 0).to_string().parse::<i32>().unwrap();
 
-        UnlockResult {
-            service_name: self.name(),
-            available: true,
-            region: Some(region),
-            error: None,
+        if code == 0 {
+            UnlockResult {
+                service_name: self.name(),
+                available: true,
+                region: None,
+                error: None,
+            }
+        } else if code < 0 {
+            UnlockResult {
+                service_name: self.name(),
+                available: false,
+                region: None,
+                error: Some(String::from("Not available / Network connection error")),
+            }
+        } else {
+            UnlockResult {
+                service_name: self.name(),
+                available: false,
+                region: None,
+                error: None,
+            }
         }
     }
 }

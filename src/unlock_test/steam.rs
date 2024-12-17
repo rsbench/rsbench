@@ -10,8 +10,8 @@ pub struct Steam;
 
 #[async_trait]
 impl Service for Steam {
-    fn name(&self) -> &'static str {
-        "Steam"
+    fn name(&self) -> String {
+        "Steam".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
@@ -19,7 +19,7 @@ impl Service for Steam {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Steam".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not initialize client")),
@@ -35,7 +35,7 @@ impl Service for Steam {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Steam".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -47,7 +47,7 @@ impl Service for Steam {
             Ok(html) => html,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Steam".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not parse HTML")),
@@ -65,7 +65,7 @@ impl Service for Steam {
         }
 
         UnlockResult {
-            service_name: "Steam".to_string(),
+            service_name: self.name(),
             available: true,
             region: Some(region.to_string()),
             error: None,

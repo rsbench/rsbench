@@ -1,4 +1,5 @@
 mod bahamut;
+mod bilibili_china_mainland;
 mod google_play_store;
 mod hbomax;
 mod iqiyi_oversea;
@@ -24,7 +25,7 @@ struct UnlockResult {
 #[async_trait]
 #[allow(dead_code)]
 trait Service {
-    fn name(&self) -> &'static str;
+    fn name(&self) -> String;
 
     async fn check_unlock(&self) -> UnlockResult;
 }
@@ -32,16 +33,19 @@ trait Service {
 pub async fn check_all() {
     let mut log = paris::Logger::new();
     log.loading("Checking media services...");
+
     let services: Vec<Box<dyn Service + Send + Sync>> = vec![
         Box::new(netflix::Netflix),
-//        Box::new(hbomax::HboMax),
+        //        Box::new(hbomax::HboMax),
         Box::new(youtube_cdn::YoutubeCDN),
         Box::new(youtube_premium::YoutubePremium),
         Box::new(google_play_store::GooglePlayStore),
         Box::new(iqiyi_oversea::IqiyiOversea),
         Box::new(steam::Steam),
         Box::new(bahamut::BahamutAnime),
+        Box::new(bilibili_china_mainland::BilibiliChinaMainland),
     ];
+
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
     log.done();

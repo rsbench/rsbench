@@ -10,8 +10,8 @@ pub struct GooglePlayStore;
 
 #[async_trait]
 impl Service for GooglePlayStore {
-    fn name(&self) -> &'static str {
-        "Google Play Store"
+    fn name(&self) -> String {
+        "Google Play Store".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
@@ -19,7 +19,7 @@ impl Service for GooglePlayStore {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Google Play Store".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not initialize client")),
@@ -55,7 +55,7 @@ impl Service for GooglePlayStore {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Google Play Store".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -67,7 +67,7 @@ impl Service for GooglePlayStore {
             Ok(html) => html,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Google Play Store".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not parse HTML")),
@@ -81,7 +81,7 @@ impl Service for GooglePlayStore {
                 let region = match captures.get(1) {
                     None => {
                         return UnlockResult {
-                            service_name: "Google Play Store".to_string(),
+                            service_name: self.name(),
                             available: false,
                             region: None,
                             error: Some(String::from("Can not get country code")),
@@ -95,7 +95,7 @@ impl Service for GooglePlayStore {
         };
 
         UnlockResult {
-            service_name: "Google Play Store".to_string(),
+            service_name: self.name(),
             available: true,
             region,
             error: None,

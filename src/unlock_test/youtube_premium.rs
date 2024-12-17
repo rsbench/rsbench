@@ -13,8 +13,8 @@ const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 
 #[async_trait]
 impl Service for YoutubePremium {
-    fn name(&self) -> &'static str {
-        "Youtube Premium"
+    fn name(&self) -> String {
+        "Youtube Premium".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
@@ -26,7 +26,7 @@ impl Service for YoutubePremium {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Youtube Premium".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not initialize client")),
@@ -47,7 +47,7 @@ impl Service for YoutubePremium {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Youtube Premium".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -58,7 +58,7 @@ impl Service for YoutubePremium {
             Ok(html) => html,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Youtube Premium".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not parse HTML")),
@@ -68,7 +68,7 @@ impl Service for YoutubePremium {
 
         if html.contains("www.google.cn") {
             return UnlockResult {
-                service_name: "Youtube Premium".to_string(),
+                service_name: self.name(),
                 available: false,
                 region: Some("CN".to_string()),
                 error: Some(String::from("Powered by GFW")),
@@ -77,7 +77,7 @@ impl Service for YoutubePremium {
 
         if html.contains("Premium is not available in your country") {
             return UnlockResult {
-                service_name: "Youtube Premium".to_string(),
+                service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some(String::from("Premium is not available in your country")),
@@ -88,7 +88,7 @@ impl Service for YoutubePremium {
 
         match re.find(&html) {
             None => UnlockResult {
-                service_name: "Youtube Premium".to_string(),
+                service_name: self.name(),
                 available: true,
                 region: None,
                 error: None,
@@ -96,7 +96,7 @@ impl Service for YoutubePremium {
             Some(line) => {
                 let region = trim_string(line.as_str(), 24, 0);
                 UnlockResult {
-                    service_name: "Youtube Premium".to_string(),
+                    service_name: self.name(),
                     available: true,
                     region: Some(region.to_string()),
                     error: None,

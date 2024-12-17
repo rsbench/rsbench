@@ -12,8 +12,8 @@ const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 
 #[async_trait]
 impl Service for YoutubeCDN {
-    fn name(&self) -> &'static str {
-        "Youtube CDN"
+    fn name(&self) -> String {
+        "Youtube CDN".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
@@ -25,7 +25,7 @@ impl Service for YoutubeCDN {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Youtube CDN".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not initialize client")),
@@ -41,7 +41,7 @@ impl Service for YoutubeCDN {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Youtube CDN".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -53,7 +53,7 @@ impl Service for YoutubeCDN {
             Ok(html) => html,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Youtube CDN".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not parse HTML")),
@@ -75,7 +75,7 @@ impl Service for YoutubeCDN {
         let cdn_node = match binding.get(2) {
             None => {
                 return UnlockResult {
-                    service_name: "Youtube CDN".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not get CDN node")),
@@ -89,7 +89,7 @@ impl Service for YoutubeCDN {
             match binding.get(1) {
                 None => {
                     return UnlockResult {
-                        service_name: "Youtube CDN".to_string(),
+                        service_name: self.name(),
                         available: false,
                         region: None,
                         error: Some(String::from("Can not get CDN node")),
@@ -112,7 +112,7 @@ impl Service for YoutubeCDN {
         }
 
         UnlockResult {
-            service_name: "Youtube CDN".to_string(),
+            service_name: self.name(),
             available: true,
             region: Some(cdn_region),
             error: None,

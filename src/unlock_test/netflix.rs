@@ -12,8 +12,8 @@ const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 
 #[async_trait]
 impl Service for Netflix {
-    fn name(&self) -> &'static str {
-        "Netflix"
+    fn name(&self) -> String {
+        "Netflix".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
@@ -21,7 +21,7 @@ impl Service for Netflix {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Netflix".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not initialize client")),
@@ -57,7 +57,7 @@ impl Service for Netflix {
             Ok(result1) => result1,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Netflix".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -76,7 +76,7 @@ impl Service for Netflix {
             Ok(result2) => result2,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Netflix".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -86,14 +86,14 @@ impl Service for Netflix {
 
         if result1.status().as_u16() == 404 && result2.status().as_u16() == 404 {
             UnlockResult {
-                service_name: "Netflix".to_string(),
+                service_name: self.name(),
                 available: true,
                 region: Some("Original Web Series".to_string()),
                 error: None,
             }
         } else if result1.status().as_u16() == 403 || result2.status().as_u16() == 403 {
             UnlockResult {
-                service_name: "Netflix".to_string(),
+                service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some(String::from("Not available")),
@@ -108,7 +108,7 @@ impl Service for Netflix {
                 Ok(region) => region,
                 Err(_) => {
                     return UnlockResult {
-                        service_name: "Netflix".to_string(),
+                        service_name: self.name(),
                         available: false,
                         region: None,
                         error: Some(String::from("Network connection error")),
@@ -119,7 +119,7 @@ impl Service for Netflix {
                 Ok(html) => html,
                 Err(_) => {
                     return UnlockResult {
-                        service_name: "Netflix".to_string(),
+                        service_name: self.name(),
                         available: false,
                         region: None,
                         error: Some(String::from("Can not parse HTML")),
@@ -131,7 +131,7 @@ impl Service for Netflix {
             let country = match re.find(html.as_str()) {
                 None => {
                     return UnlockResult {
-                        service_name: "Netflix".to_string(),
+                        service_name: self.name(),
                         available: false,
                         region: None,
                         error: Some(String::from("Can not parse HTML")),
@@ -143,14 +143,14 @@ impl Service for Netflix {
             let country = re.find(&country).unwrap().as_str();
 
             UnlockResult {
-                service_name: "Netflix".to_string(),
+                service_name: self.name(),
                 available: true,
                 region: Some(country.to_string()),
                 error: None,
             }
         } else {
             UnlockResult {
-                service_name: "Netflix".to_string(),
+                service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some(String::from("Not available / Network connection error")),

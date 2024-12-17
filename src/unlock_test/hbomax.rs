@@ -14,8 +14,8 @@ const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 
 #[async_trait]
 impl Service for HboMax {
-    fn name(&self) -> &'static str {
-        "HBO MAX"
+    fn name(&self) -> String {
+        "HBO MAX".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
@@ -27,7 +27,7 @@ impl Service for HboMax {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "HBO MAX".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not initialize client")),
@@ -39,7 +39,7 @@ impl Service for HboMax {
             Ok(result1) => result1,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "HBO MAX".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -49,7 +49,7 @@ impl Service for HboMax {
 
         if result.status().as_u16() != 200 {
             return UnlockResult {
-                service_name: "HBO MAX".to_string(),
+                service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some("Not available".to_string()),
@@ -60,7 +60,7 @@ impl Service for HboMax {
             Ok(html) => html,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "HBO MAX".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not parse HTML")),
@@ -87,7 +87,7 @@ impl Service for HboMax {
         let region_country_code = match re.find(&html) {
             None => {
                 return UnlockResult {
-                    service_name: "HBO MAX".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not parse HTML")),
@@ -101,14 +101,14 @@ impl Service for HboMax {
 
         if country_list.contains(&&region) {
             UnlockResult {
-                service_name: "HBO MAX".to_string(),
+                service_name: self.name(),
                 available: true,
                 region: Some(region),
                 error: None,
             }
         } else {
             UnlockResult {
-                service_name: "HBO MAX".to_string(),
+                service_name: self.name(),
                 available: false,
                 region: Some(region),
                 error: Some(std::string::String::from(

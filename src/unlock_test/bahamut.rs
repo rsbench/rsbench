@@ -12,8 +12,8 @@ pub struct BahamutAnime;
 
 #[async_trait]
 impl Service for BahamutAnime {
-    fn name(&self) -> &'static str {
-        "Bahamut Anime"
+    fn name(&self) -> String {
+        "Bahamut Anime".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
@@ -26,7 +26,7 @@ impl Service for BahamutAnime {
             Ok(client) => client,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Bahamut Anime".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not initialize client")),
@@ -42,7 +42,7 @@ impl Service for BahamutAnime {
             Ok(result_device_id) => result_device_id,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Bahamut Anime".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -53,7 +53,7 @@ impl Service for BahamutAnime {
             Ok(html) => html,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Bahamut Anime".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not parse HTML")),
@@ -73,7 +73,7 @@ impl Service for BahamutAnime {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Bahamut Anime".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -113,7 +113,7 @@ impl Service for BahamutAnime {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Bahamut Anime".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Not available / Network connection error")),
@@ -125,7 +125,7 @@ impl Service for BahamutAnime {
             Ok(html) => html,
             Err(_) => {
                 return UnlockResult {
-                    service_name: "Bahamut Anime".to_string(),
+                    service_name: self.name(),
                     available: false,
                     region: None,
                     error: Some(String::from("Can not parse HTML")),
@@ -144,7 +144,7 @@ impl Service for BahamutAnime {
         }
 
         UnlockResult {
-            service_name: "Bahamut Anime".to_string(),
+            service_name: self.name(),
             available: true,
             region: Some(region),
             error: None,
