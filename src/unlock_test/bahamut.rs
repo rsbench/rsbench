@@ -1,13 +1,13 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
 use super::{Service, UnlockResult};
-use crate::unlock_test::utils::trim_string;
+use crate::unlock_test::headers::bahamut_headers2;
+use crate::unlock_test::utils::{
+    create_reqwest_client, get_url, parse_response_to_html, trim_string,
+};
 use async_trait::async_trait;
 use regex::Regex;
-use reqwest::{header, Client};
-use std::time::Duration;
 
-const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
 pub struct BahamutAnime;
 
 #[async_trait]
@@ -17,120 +17,63 @@ impl Service for BahamutAnime {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match Client::builder()
-            .timeout(Duration::from_secs(15))
-            .cookie_store(true)
-            .user_agent(UA_BROWSER)
-            .build()
-        {
-            Ok(client) => client,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not initialize client")),
-                };
-            }
-        };
+        let client =
+            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER), true, None)
+                .await
+            {
+                Ok(client) => client,
+                Err(unlock_result) => return unlock_result,
+            };
 
-        let result_device_id = match client
-            .get("https://ani.gamer.com.tw/ajax/getdeviceid.php")
-            .send()
-            .await
+        let result_device_id = match get_url(
+            self.name(),
+            &client,
+            "https://ani.gamer.com.tw/ajax/getdeviceid.php",
+            None,
+        )
+        .await
         {
             Ok(result_device_id) => result_device_id,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Not available / Network connection error")),
-                }
-            }
+            Err(unlock_result) => return unlock_result,
         };
-        let html = match result_device_id.text().await {
+
+        let html = match parse_response_to_html(self.name(), result_device_id).await {
             Ok(html) => html,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not parse HTML")),
-                }
-            }
+            Err(unlock_result) => return unlock_result,
         };
+
         let device_id = trim_string(&html, 13, 2);
 
-        match client
-            .get(format!(
+        match get_url(
+            self.name(),
+            &client,
+            &format!(
                 "https://ani.gamer.com.tw/ajax/token.php?adID=89422&sn=37783&device={}",
                 device_id
-            ))
-            .send()
-            .await
+            ),
+            None,
+        )
+        .await
         {
             Ok(result) => result,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Not available / Network connection error")),
-                }
-            }
-        };
+            Err(unlock_result) => return unlock_result,
+        }
 
-        let mut headers = header::HeaderMap::new();
-        headers.insert(
-            "accept",
-            "*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
-                .parse()
-                .unwrap(),
-        );
-        headers.insert("accept-language", "zh-CN,zh;q=0.9".parse().unwrap());
-        headers.insert(
-            "sec-ch-ua",
-            r#""Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24""#
-                .parse()
-                .unwrap(),
-        );
-        headers.insert("sec-ch-ua-mobile", "?0".parse().unwrap());
-        headers.insert("sec-ch-ua-model", "\"\"".parse().unwrap());
-        headers.insert("sec-ch-ua-platform", "\"Windows\"".parse().unwrap());
-        headers.insert("sec-ch-ua-platform-version", "\"15.0.0\"".parse().unwrap());
-        headers.insert("sec-fetch-dest", "document".parse().unwrap());
-        headers.insert("sec-fetch-mode", "navigate".parse().unwrap());
-        headers.insert("sec-fetch-site", "none".parse().unwrap());
-        headers.insert("sec-fetch-user", "?1".parse().unwrap());
-
-        let result2 = match client
-            .get("https://ani.gamer.com.tw/")
-            .headers(headers)
-            .send()
-            .await
+        let result2 = match get_url(
+            self.name(),
+            &client,
+            "https://ani.gamer.com.tw/",
+            Some(bahamut_headers2()),
+        )
+        .await
         {
-            Ok(result) => result,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Not available / Network connection error")),
-                }
-            }
+            Ok(result2) => result2,
+            Err(unlock_result) => return unlock_result,
         };
 
-        let html2 = match result2.text().await {
-            Ok(html) => html,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not parse HTML")),
-                }
-            }
+        let html2 = match parse_response_to_html(self.name(), result2).await {
+            Ok(html2) => html2,
+            Err(unlock_result) => return unlock_result,
         };
 
         let re = Regex::new(r#"data-geo="([A-Za-z]{2})""#).unwrap();
