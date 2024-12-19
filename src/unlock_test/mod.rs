@@ -1,7 +1,5 @@
 mod bahamut;
-mod bilibili_china_hk_mo_tw;
-mod bilibili_china_mainland;
-mod bilibili_china_tw_only;
+mod bilibili;
 mod google_play_store;
 mod hbomax;
 mod iqiyi_oversea;
@@ -46,9 +44,9 @@ pub async fn check_all() {
         Box::new(iqiyi_oversea::IqiyiOversea),
         Box::new(steam::Steam),
         Box::new(bahamut::BahamutAnime),
-        Box::new(bilibili_china_mainland::BilibiliChinaMainland),
-        Box::new(bilibili_china_hk_mo_tw::BilibiliChinaHKMOTW),
-        Box::new(bilibili_china_tw_only::BilibiliChinaTWOnly),
+        Box::new(bilibili::BilibiliChinaMainland),
+        Box::new(bilibili::BilibiliChinaTWOnly),
+        Box::new(bilibili::BilibiliChinaHKMOTW),
         Box::new(princess_connect_redive_japan::PrincessConnectReDiveJapan),
     ];
 
