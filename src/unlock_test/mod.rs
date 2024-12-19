@@ -1,9 +1,12 @@
 mod bahamut;
+mod bilibili_china_hk_mo_tw;
 mod bilibili_china_mainland;
+mod bilibili_china_tw_only;
 mod google_play_store;
 mod hbomax;
 mod iqiyi_oversea;
 mod netflix;
+mod princess_connect_redive_japan;
 mod steam;
 mod utils;
 mod youtube_cdn;
@@ -36,7 +39,7 @@ pub async fn check_all() {
 
     let services: Vec<Box<dyn Service + Send + Sync>> = vec![
         Box::new(netflix::Netflix),
-        //        Box::new(hbomax::HboMax),
+        //Box::new(hbomax::HboMax),
         Box::new(youtube_cdn::YoutubeCDN),
         Box::new(youtube_premium::YoutubePremium),
         Box::new(google_play_store::GooglePlayStore),
@@ -44,6 +47,9 @@ pub async fn check_all() {
         Box::new(steam::Steam),
         Box::new(bahamut::BahamutAnime),
         Box::new(bilibili_china_mainland::BilibiliChinaMainland),
+        Box::new(bilibili_china_hk_mo_tw::BilibiliChinaHKMOTW),
+        Box::new(bilibili_china_tw_only::BilibiliChinaTWOnly),
+        Box::new(princess_connect_redive_japan::PrincessConnectReDiveJapan),
     ];
 
     let futures = services.iter().map(|service| service.check_unlock());

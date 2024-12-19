@@ -1,21 +1,17 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
 use super::{Service, UnlockResult};
-use crate::unlock_test::utils::trim_string;
 use async_trait::async_trait;
-use regex::Regex;
 use reqwest::Client;
 
-const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
-
-pub struct BilibiliChinaMainland;
+const UA_BROWSER: &str = r#"Mozilla/5.0 (Linux; Android 10; Pixel 4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Mobile Safari/537.36"#;
+pub struct PrincessConnectReDiveJapan;
 
 #[async_trait]
-impl Service for BilibiliChinaMainland {
+impl Service for PrincessConnectReDiveJapan {
     fn name(&self) -> String {
-        "Bilibili China Mainland".to_string()
+        "Princess Connect Re:Dive Japan".to_string()
     }
-
     async fn check_unlock(&self) -> UnlockResult {
         let client = match Client::builder().user_agent(UA_BROWSER).build() {
             Ok(client) => client,
@@ -28,7 +24,11 @@ impl Service for BilibiliChinaMainland {
                 };
             }
         };
-        let result = match client.get("https://api.bilibili.com/pgc/player/web/playurl?avid=82846771&qn=0&type=&otype=json&ep_id=307247&fourk=1&fnver=0&fnval=16&session=2964df126ad2f9d834dd4fda26fe1061&module=bangumi").send().await {
+        let result = match client
+            .get("https://api-priconne-redive.cygames.jp/")
+            .send()
+            .await
+        {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
@@ -39,43 +39,14 @@ impl Service for BilibiliChinaMainland {
                 }
             }
         };
-
-        let html = match result.text().await {
-            Ok(html) => html,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not parse HTML")),
-                }
-            }
-        };
-
-        let re = Regex::new(r#""code":-?\d+"#).unwrap();
-
-        let line = match re.find(&html) {
-            None => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not get response status code")),
-                }
-            }
-            Some(line) => line.as_str(),
-        };
-
-        let code = trim_string(line, 7, 0).to_string().parse::<i32>().unwrap();
-
-        if code == 0 {
+        if result.status().as_u16() == 404 {
             UnlockResult {
                 service_name: self.name(),
                 available: true,
                 region: None,
                 error: None,
             }
-        } else if code < 0 {
+        } else if result.status().as_u16() == 403 {
             UnlockResult {
                 service_name: self.name(),
                 available: false,
@@ -87,7 +58,7 @@ impl Service for BilibiliChinaMainland {
                 service_name: self.name(),
                 available: false,
                 region: None,
-                error: None,
+                error: Some(String::from("Network connection error")),
             }
         }
     }

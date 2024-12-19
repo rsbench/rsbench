@@ -8,12 +8,12 @@ use reqwest::Client;
 
 const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
 
-pub struct BilibiliChinaMainland;
+pub struct BilibiliChinaTWOnly;
 
 #[async_trait]
-impl Service for BilibiliChinaMainland {
+impl Service for BilibiliChinaTWOnly {
     fn name(&self) -> String {
-        "Bilibili China Mainland".to_string()
+        "Bilibili China TW Only".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
@@ -28,7 +28,7 @@ impl Service for BilibiliChinaMainland {
                 };
             }
         };
-        let result = match client.get("https://api.bilibili.com/pgc/player/web/playurl?avid=82846771&qn=0&type=&otype=json&ep_id=307247&fourk=1&fnver=0&fnval=16&session=2964df126ad2f9d834dd4fda26fe1061&module=bangumi").send().await {
+        let result = match client.get("https://api.bilibili.com/pgc/player/web/playurl?avid=50762638&cid=100279344&qn=0&type=&otype=json&ep_id=268176&fourk=1&fnver=0&fnval=16&session=2964df126ad2f9d834dd4fda26fe1061&module=bangumi").send().await {
             Ok(result) => result,
             Err(_) => {
                 return UnlockResult {
