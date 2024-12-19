@@ -14,7 +14,7 @@ async fn main() {
         warn!("Results are very likely to be inaccurate");
     }
     let args = config::Config::parse();
-    println!("{:?}", args);
+    // println!("{:?}", args);
     if args.info {
         info::run_info();
     }
