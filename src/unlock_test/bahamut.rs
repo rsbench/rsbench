@@ -57,7 +57,7 @@ impl Service for BahamutAnime {
         {
             Ok(result) => result,
             Err(unlock_result) => return unlock_result,
-        }
+        };
 
         let result2 = match get_url(
             self.name(),
