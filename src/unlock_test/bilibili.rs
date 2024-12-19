@@ -1,51 +1,37 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
 use super::{Service, UnlockResult};
-use crate::unlock_test::utils::trim_string;
+use crate::unlock_test::utils::{
+    create_reqwest_client, get_url, parse_response_to_html, trim_string,
+};
 use async_trait::async_trait;
 use regex::Regex;
-use reqwest::Client;
-
-const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
 
 const MAINLAND_URL: &str = r#"https://api.bilibili.com/pgc/player/web/playurl?avid=82846771&qn=0&type=&otype=json&ep_id=307247&fourk=1&fnver=0&fnval=16&session=2964df126ad2f9d834dd4fda26fe1061&module=bangumi"#;
 const TW_URL: &str = r#"https://api.bilibili.com/pgc/player/web/playurl?avid=50762638&cid=100279344&qn=0&type=&otype=json&ep_id=268176&fourk=1&fnver=0&fnval=16&session=2964df126ad2f9d834dd4fda26fe1061&module=bangumi"#;
 const HKMOTW_URL: &str = r#"https://api.bilibili.com/pgc/player/web/playurl?avid=18281381&cid=29892777&qn=0&type=&otype=json&ep_id=183799&fourk=1&fnver=0&fnval=16&session=2964df126ad2f9d834dd4fda26fe1061&module=bangumi"#;
 
 async fn get_bilibili_url(name: String, url: String) -> UnlockResult {
-    let client = match Client::builder().user_agent(UA_BROWSER).build() {
+    let client = match create_reqwest_client(
+        name.clone(),
+        Some(super::utils::UA_BROWSER),
+        false,
+        None,
+    )
+    .await
+    {
         Ok(client) => client,
-        Err(_) => {
-            return UnlockResult {
-                service_name: name,
-                available: false,
-                region: None,
-                error: Some(String::from("Can not initialize client")),
-            };
-        }
-    };
-    let result = match client.get(url).send().await {
-        Ok(result) => result,
-        Err(_) => {
-            return UnlockResult {
-                service_name: name,
-                available: false,
-                region: None,
-                error: Some(String::from("Not available / Network connection error")),
-            }
-        }
+        Err(unlock_result) => return unlock_result,
     };
 
-    let html = match result.text().await {
+    let result = match get_url(name.clone(), &client, &url, None).await {
+        Ok(result) => result,
+        Err(unlock_result) => return unlock_result,
+    };
+
+    let html = match parse_response_to_html(name.clone(), result).await {
         Ok(html) => html,
-        Err(_) => {
-            return UnlockResult {
-                service_name: name,
-                available: false,
-                region: None,
-                error: Some(String::from("Can not parse HTML")),
-            }
-        }
+        Err(unlock_result) => return unlock_result,
     };
 
     let re = Regex::new(r#""code":-?\d+"#).unwrap();
