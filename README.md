@@ -26,5 +26,5 @@ Options:
 - [ ] 获取更多系统信息 (虚拟化 / CPU 缓存 / 内核 / 指令集 ...)
 - [ ] 指定使用 IPv4 / IPv6
 - [ ] 多地点回程 / 去程路由检测
-- [ ] 多地点服务器测速 (Base On Speedtest.net)
+- [ ] 多地点服务器测速 (Based On Speedtest.net)
 - [ ] 多语言输出支持
