@@ -1,10 +1,10 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
 use super::{Service, UnlockResult};
+use crate::unlock_test::headers::google_play_store_headers;
+use crate::unlock_test::utils::{create_reqwest_client, get_url, parse_response_to_html};
 use async_trait::async_trait;
 use regex::Regex;
-use reqwest::{header, Client};
-use std::time::Duration;
 
 pub struct GooglePlayStore;
 
@@ -15,64 +15,26 @@ impl Service for GooglePlayStore {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match Client::builder().timeout(Duration::from_secs(5)).build() {
+        let client = match create_reqwest_client(self.name(), None, false, None).await {
             Ok(client) => client,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not initialize client")),
-                };
-            }
+            Err(unlock_result) => return unlock_result,
         };
 
-        let mut headers = header::HeaderMap::new();
-        headers.insert("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7".parse().unwrap());
-        headers.insert("accept-language", "en-US;q=0.9".parse().unwrap());
-        headers.insert("priority", "u=0, i".parse().unwrap());
-        headers.insert(
-            "sec-ch-ua",
-            "\"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\", \"Google Chrome\";v=\"131\""
-                .parse()
-                .unwrap(),
-        );
-        headers.insert("sec-ch-ua-mobile", "?0".parse().unwrap());
-        headers.insert("sec-ch-ua-platform", "\"Windows\"".parse().unwrap());
-        headers.insert("sec-fetch-dest", "document".parse().unwrap());
-        headers.insert("sec-fetch-mode", "navigate".parse().unwrap());
-        headers.insert("sec-fetch-site", "none".parse().unwrap());
-        headers.insert("sec-fetch-user", "?1".parse().unwrap());
-        headers.insert("upgrade-insecure-requests", "1".parse().unwrap());
-        headers.insert("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36".parse().unwrap());
-
-        let result = match client
-            .get("https://play.google.com/")
-            .headers(headers)
-            .send()
-            .await
+        let result = match get_url(
+            self.name(),
+            &client,
+            "https://play.google.com/",
+            Some(google_play_store_headers()),
+        )
+        .await
         {
             Ok(result) => result,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Not available / Network connection error")),
-                }
-            }
+            Err(unlock_result) => return unlock_result,
         };
 
-        let html = match result.text().await {
+        let html = match parse_response_to_html(self.name(), result).await {
             Ok(html) => html,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not parse HTML")),
-                }
-            }
+            Err(unlock_result) => return unlock_result,
         };
 
         let re = Regex::new(r#"<div class="yVZQTb">\s*([^<(]+)"#).unwrap();

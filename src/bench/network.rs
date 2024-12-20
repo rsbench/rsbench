@@ -25,7 +25,6 @@ pub fn ping() {
     println!("PING: {:.2} ms", mean);
 }
 
-
 pub fn upload_stream_provider(
     time: u64,
     mut tx: Sender<f64>,

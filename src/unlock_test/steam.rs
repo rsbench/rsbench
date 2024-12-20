@@ -1,10 +1,10 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
 use super::{Service, UnlockResult};
+use crate::unlock_test::headers::default_headers;
+use crate::unlock_test::utils::{create_reqwest_client, get_url, parse_response_to_html};
 use async_trait::async_trait;
 use regex::Regex;
-use reqwest::Client;
-use std::time::Duration;
 
 pub struct Steam;
 
@@ -15,44 +15,29 @@ impl Service for Steam {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match Client::builder().timeout(Duration::from_secs(10)).build() {
-            Ok(client) => client,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not initialize client")),
-                };
-            }
-        };
+        let client =
+            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER), false, None)
+                .await
+            {
+                Ok(client) => client,
+                Err(unlock_result) => return unlock_result,
+            };
 
-        let result = match client
-            .get("https://store.steampowered.com/app/761830")
-            .send()
-            .await
+        let result = match get_url(
+            self.name(),
+            &client,
+            "https://store.steampowered.com/app/761830",
+            Some(default_headers()),
+        )
+        .await
         {
             Ok(result) => result,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Not available / Network connection error")),
-                }
-            }
+            Err(unlock_result) => return unlock_result,
         };
 
-        let html = match result.text().await {
+        let html = match parse_response_to_html(self.name(), result).await {
             Ok(html) => html,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not parse HTML")),
-                }
-            }
+            Err(unlock_result) => return unlock_result,
         };
 
         let re = Regex::new("priceCurrency").unwrap();

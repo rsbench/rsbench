@@ -1,14 +1,13 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
 use super::{Service, UnlockResult};
+use crate::unlock_test::headers::netflix_headers;
+use crate::unlock_test::utils::{create_reqwest_client, get_url, parse_response_to_html};
 use async_trait::async_trait;
 use regex::Regex;
-use reqwest::{header, Client};
 use std::time::Duration;
 
 pub struct Netflix;
-
-const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
 
 #[async_trait]
 impl Service for Netflix {
@@ -17,71 +16,38 @@ impl Service for Netflix {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match Client::builder().timeout(Duration::from_secs(10)).build() {
-            Ok(client) => client,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not initialize client")),
-                };
-            }
+        let client =
+            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER), false, None)
+                .await
+            {
+                Ok(client) => client,
+                Err(unlock_result) => return unlock_result,
+            };
+
+        let result1 = match get_url(
+            self.name(),
+            &client,
+            "https://www.netflix.com/title/81280792",
+            Some(netflix_headers()),
+        )
+        .await
+        {
+            Ok(result) => result,
+            Err(unlock_result) => return unlock_result,
         };
 
-        let mut headers = header::HeaderMap::new();
-        {
-            headers.insert("host", "www.netflix.com".parse().unwrap());
-            headers.insert("accept-language", "en-US,en;q=0.9".parse().unwrap());
-            headers.insert(
-                "sec-ch-ua",
-                r#""Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24""#
-                    .parse()
-                    .unwrap(),
-            );
-            headers.insert("sec-ch-ua-mobile", "?0".parse().unwrap());
-            headers.insert("sec-ch-ua-platform", "\"Windows\"".parse().unwrap());
-            headers.insert("sec-fetch-site", "none".parse().unwrap());
-            headers.insert("sec-fetch-mode", "navigate".parse().unwrap());
-            headers.insert("sec-fetch-user", "?1".parse().unwrap());
-            headers.insert("sec-fetch-dest", "document".parse().unwrap());
-            headers.insert("user-agent", UA_BROWSER.parse().unwrap());
-        }
+        tokio::time::sleep(Duration::from_millis(100)).await;
 
-        let result1 = match client
-            .get("https://www.netflix.com/title/81280792")
-            .headers(headers.clone())
-            .send()
-            .await
+        let result2 = match get_url(
+            self.name(),
+            &client,
+            "https://www.netflix.com/title/70143836",
+            Some(netflix_headers()),
+        )
+        .await
         {
-            Ok(result1) => result1,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Not available / Network connection error")),
-                }
-            }
-        };
-
-        tokio::time::sleep(Duration::from_secs(1)).await;
-
-        let result2 = match client
-            .get("https://www.netflix.com/title/70143836")
-            .headers(headers.clone())
-            .send()
-            .await
-        {
-            Ok(result2) => result2,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Not available / Network connection error")),
-                }
-            }
+            Ok(result) => result,
+            Err(unlock_result) => return unlock_result,
         };
 
         if result1.status().as_u16() == 404 && result2.status().as_u16() == 404 {
@@ -99,32 +65,21 @@ impl Service for Netflix {
                 error: Some(String::from("Not available")),
             }
         } else if result1.status().as_u16() == 200 || result2.status().as_u16() == 200 {
-            let region = match client
-                .get("https://www.netflix.com/")
-                .headers(headers)
-                .send()
-                .await
+            let region = match get_url(
+                self.name(),
+                &client,
+                "https://www.netflix.com/",
+                Some(netflix_headers()),
+            )
+            .await
             {
-                Ok(region) => region,
-                Err(_) => {
-                    return UnlockResult {
-                        service_name: self.name(),
-                        available: false,
-                        region: None,
-                        error: Some(String::from("Network connection error")),
-                    }
-                }
+                Ok(result) => result,
+                Err(unlock_result) => return unlock_result,
             };
-            let html = match region.text().await {
+
+            let html = match parse_response_to_html(self.name(), region).await {
                 Ok(html) => html,
-                Err(_) => {
-                    return UnlockResult {
-                        service_name: self.name(),
-                        available: false,
-                        region: None,
-                        error: Some(String::from("Can not parse HTML")),
-                    }
-                }
+                Err(unlock_result) => return unlock_result,
             };
 
             let re = Regex::new(r#""id":"([A-Z]{2})""#).unwrap();

@@ -1,15 +1,14 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
 use super::{Service, UnlockResult};
-use crate::unlock_test::utils::trim_string;
+use crate::unlock_test::headers::youtube_premium_headers;
+use crate::unlock_test::utils::{
+    create_reqwest_client, get_url, parse_response_to_html, trim_string, UA_BROWSER,
+};
 use async_trait::async_trait;
 use regex::Regex;
-use reqwest::{header, Client};
-use std::time::Duration;
 
 pub struct YoutubePremium;
-
-const UA_BROWSER: &str = r#"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"#;
 
 #[async_trait]
 impl Service for YoutubePremium {
@@ -18,52 +17,26 @@ impl Service for YoutubePremium {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match Client::builder()
-            .timeout(Duration::from_secs(5))
-            .user_agent(UA_BROWSER)
-            .build()
-        {
+        let client = match create_reqwest_client(self.name(), Some(UA_BROWSER), false, None).await {
             Ok(client) => client,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not initialize client")),
-                };
-            }
+            Err(unlock_result) => return unlock_result,
         };
 
-        let mut headers = header::HeaderMap::new();
-        headers.insert("accept-language", "en-US,en;q=0.9".parse().unwrap());
-        headers.insert(header::COOKIE, "YSC=FSCWhKo2Zgw; VISITOR_PRIVACY_METADATA=CgJERRIEEgAgYQ%3D%3D; PREF=f7=4000; __Secure-YEC=CgtRWTBGTFExeV9Iayjele2yBjIKCgJERRIEEgAgYQ%3D%3D; SOCS=CAISOAgDEitib3FfaWRlbnRpdHlmcm9udGVuZHVpc2VydmVyXzIwMjQwNTI2LjAxX3AwGgV6aC1DTiACGgYIgMnpsgY; VISITOR_INFO1_LIVE=Di84mAIbgKY; __Secure-BUCKET=CGQ".parse().unwrap());
-
-        let result = match client
-            .get("https://www.youtube.com/premium")
-            .headers(headers)
-            .send()
-            .await
+        let result = match get_url(
+            self.name(),
+            &client,
+            "https://www.youtube.com/premium",
+            Some(youtube_premium_headers()),
+        )
+        .await
         {
             Ok(result) => result,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Not available / Network connection error")),
-                }
-            }
+            Err(unlock_result) => return unlock_result,
         };
-        let html = match result.text().await {
+
+        let html = match parse_response_to_html(self.name(), result).await {
             Ok(html) => html,
-            Err(_) => {
-                return UnlockResult {
-                    service_name: self.name(),
-                    available: false,
-                    region: None,
-                    error: Some(String::from("Can not parse HTML")),
-                }
-            }
+            Err(unlock_result) => return unlock_result,
         };
 
         if html.contains("www.google.cn") {
