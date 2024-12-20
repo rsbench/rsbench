@@ -13,6 +13,7 @@ mod youtube_premium;
 
 use async_trait::async_trait;
 use futures::{executor::block_on, future::join_all};
+use std::fmt::{Display, Formatter};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 #[derive(Debug)]
@@ -54,58 +55,49 @@ pub async fn check_all() {
     let futures = services.iter().map(|service| service.check_unlock());
     let results = join_all(futures).await;
     log.done();
-    let mut stdout = StandardStream::stdout(ColorChoice::Always);
+
     for result in results {
-        if result.available {
-            if result.region.is_some() {
-                stdout
-                    .set_color(ColorSpec::new().set_fg(Some(Color::Green)))
-                    .unwrap();
-                println!(
-                    "{}",
-                    format!("{}({})", result.service_name, result.region.unwrap())
-                );
-            } else {
-                stdout
-                    .set_color(ColorSpec::new().set_fg(Some(Color::Green)))
-                    .unwrap();
-                println!("{}", format!("{}", result.service_name));
+        println!("{}", result);
+    }
+}
+
+impl Display for UnlockResult {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let mut stdout = StandardStream::stdout(ColorChoice::Always);
+
+        stdout
+            .set_color(ColorSpec::new().set_fg(Some(Color::White)))
+            .unwrap();
+        let result = if self.available {
+            stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Green)))
+                .unwrap();
+            match &self.region {
+                None => {
+                    write!(f, "{}", self.service_name)
+                }
+                Some(region) => {
+                    write!(f, "{} ({})", self.service_name, region)
+                }
             }
         } else {
-            if result.region.is_some() {
-                stdout
-                    .set_color(ColorSpec::new().set_fg(Some(Color::Red)))
-                    .unwrap();
-                if result.error.is_some() {
-                    println!(
-                        "{}",
-                        format!(
-                            "{}({}): {}",
-                            result.service_name,
-                            result.region.unwrap(),
-                            result.error.unwrap()
-                        )
-                    );
-                } else {
-                    println!(
-                        "{}",
-                        format!("{}({})", result.service_name, result.region.unwrap())
-                    );
+            stdout
+                .set_color(ColorSpec::new().set_fg(Some(Color::Red)))
+                .unwrap();
+            match &self.error {
+                None => {
+                    write!(f, "{}", self.service_name)
                 }
-            } else {
-                stdout
-                    .set_color(ColorSpec::new().set_fg(Some(Color::Red)))
-                    .unwrap();
-                if result.error.is_some() {
-                    println!(
-                        "{}",
-                        format!("{}: {}", result.service_name, result.error.unwrap())
-                    );
-                } else {
-                    println!("{}", format!("{}", result.service_name));
+                Some(error) => {
+                    write!(f, "{}: {}", self.service_name, error)
                 }
             }
-        }
+        };
+
+        stdout
+            .set_color(ColorSpec::new().set_fg(Some(Color::White)))
+            .unwrap();
+        result
     }
 }
 
