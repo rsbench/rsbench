@@ -109,6 +109,6 @@ pub async fn check_all() {
     }
 }
 
-pub fn run_media() {
+pub fn run_unlock_test() {
     block_on(check_all());
 }

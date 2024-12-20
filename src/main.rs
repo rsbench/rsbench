@@ -21,8 +21,8 @@ async fn main() {
     if args.bench {
         bench::run_bench();
     }
-    if args.media {
-        unlock_test::run_media();
+    if args.unlock {
+        unlock_test::run_unlock_test();
     }
     if args.tune {
         tune::run_tune();

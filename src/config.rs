@@ -13,7 +13,7 @@ pub struct Config {
 
     /// Run Media Unlock test
     #[arg(short, long)]
-    pub media: bool,
+    pub unlock: bool,
 
     /// Run System Tuning
     #[arg(short, long)]
