@@ -108,7 +108,7 @@ pub fn youtube_premium_headers() -> HeaderMap {
 }
 
 pub fn lemino_headers() -> HeaderMap {
-    let mut headers = header::HeaderMap::new();
+    let mut headers = HeaderMap::new();
     headers.insert(
         "accept",
         "application/json, text/plain, */*".parse().unwrap(),
@@ -136,5 +136,23 @@ pub fn lemino_headers() -> HeaderMap {
         "x-trace-id",
         "556db33f-d739-4a82-84df-dd509a8aa179".parse().unwrap(),
     );
+    headers
+}
+
+pub fn animefesta_headers() -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    headers.insert("Origin", "https://animefesta.iowl.jp".parse().unwrap());
+    headers.insert("Priority", "u=1, i".parse().unwrap());
+    headers.insert("Referer", "https://animefesta.iowl.jp/".parse().unwrap());
+    headers.insert("Sec-Fetch-Dest", "empty".parse().unwrap());
+    headers.insert("Sec-Fetch-Mode", "cors".parse().unwrap());
+    headers.insert("Sec-Fetch-Site", "same-site".parse().unwrap());
+    headers.insert("X-Requested-With", "XMLHttpRequest".parse().unwrap());
+    headers
+}
+
+pub fn mora_headers() -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    headers.insert("host", "mora.jp".parse().unwrap());
     headers
 }

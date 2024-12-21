@@ -1,3 +1,4 @@
+mod animefesta;
 mod bahamut;
 mod bilibili;
 mod google_play_store;
@@ -6,6 +7,7 @@ mod headers;
 mod iqiyi_oversea;
 mod kancolle;
 mod lemino;
+mod mora;
 mod netflix;
 mod princess_connect_redive_japan;
 mod steam;
@@ -54,6 +56,8 @@ pub async fn check_all() {
         Box::new(princess_connect_redive_japan::PrincessConnectReDiveJapan),
         Box::new(kancolle::Kancolle),
         Box::new(lemino::Lemino),
+        Box::new(animefesta::AnimeFesta),
+        Box::new(mora::Mora),
     ];
 
     let futures = services.iter().map(|service| service.check_unlock());
