@@ -16,9 +16,10 @@ mod youtube_cdn;
 mod youtube_premium;
 
 use async_trait::async_trait;
-use futures::{executor::block_on, future::join_all};
+use futures::executor::block_on;
 use std::fmt::{Display, Formatter};
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+use tokio::sync::mpsc;
 
 #[derive(Debug)]
 #[allow(dead_code)]
@@ -38,8 +39,8 @@ trait Service {
 }
 
 pub async fn check_all() {
-    let mut log = paris::Logger::new();
-    log.loading("Checking media services...");
+    //    let mut log = paris::Logger::new();
+    //    log.loading("Checking media services...");
 
     let services: Vec<Box<dyn Service + Send + Sync>> = vec![
         Box::new(netflix::Netflix),
@@ -60,13 +61,25 @@ pub async fn check_all() {
         Box::new(mora::Mora),
     ];
 
-    let futures = services.iter().map(|service| service.check_unlock());
-    let results = join_all(futures).await;
-    log.done();
+    let (tx, mut rx) = mpsc::channel(100);
 
-    for result in results {
+    let time = tokio::time::Instant::now();
+
+    for service in services {
+        let tx = tx.clone();
+        tokio::spawn(async move {
+            let result = service.check_unlock().await;
+            tx.send(result).await.unwrap();
+        });
+    }
+
+    drop(tx);
+
+    while let Some(result) = rx.recv().await {
         println!("{}", result);
     }
+
+    println!("Time taken: {:?}", time.elapsed());
 }
 
 impl Display for UnlockResult {
