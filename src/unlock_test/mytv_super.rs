@@ -40,19 +40,19 @@ impl Service for MyTVSuper {
         };
 
         if html.contains(r#""country_code":"HK""#) {
-            return UnlockResult {
+            UnlockResult {
                 service_name: self.name(),
                 available: true,
                 region: None,
                 error: None,
-            };
+            }
         } else {
-            return UnlockResult {
+            UnlockResult {
                 service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some(String::from("Not available")),
-            };
+            }
         }
     }
 }
