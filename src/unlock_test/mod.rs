@@ -44,7 +44,7 @@ pub async fn check_all() {
 
     let services: Vec<Box<dyn Service + Send + Sync>> = vec![
         Box::new(netflix::Netflix),
-        //Box::new(hbomax::HboMax),
+        Box::new(hbomax::HboMax),
         Box::new(youtube_cdn::YoutubeCDN),
         Box::new(youtube_premium::YoutubePremium),
         Box::new(google_play_store::GooglePlayStore),
@@ -60,6 +60,8 @@ pub async fn check_all() {
         Box::new(animefesta::AnimeFesta),
         Box::new(mora::Mora),
     ];
+
+    let services_count = services.len();
 
     let (tx, mut rx) = mpsc::channel(100);
 
@@ -79,9 +81,12 @@ pub async fn check_all() {
         println!("{}", result);
     }
 
-    println!("Time taken: {:?}", time.elapsed());
+    println!(
+        "Tested {} projects took {:.2} seconds",
+        services_count,
+        time.elapsed().as_secs_f64()
+    );
 }
-
 impl Display for UnlockResult {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         // 创建一个标准输出流，并设置颜色选择为 Always
