@@ -177,3 +177,21 @@ pub fn hulu_jp_headers() -> HeaderMap {
     headers.insert("Priority", "u=1".parse().unwrap());
     headers
 }
+
+pub fn nowe_headers() -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    headers.insert("Content-Type", "application/json".parse().unwrap());
+    headers
+}
+
+pub fn viutv_headers() -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    headers.insert("Content-Type", "application/json".parse().unwrap());
+    headers
+}
+
+pub fn unext_headers() -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    headers.insert("content-type", "application/json".parse().unwrap());
+    headers
+}

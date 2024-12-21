@@ -13,9 +13,12 @@ mod lemino;
 mod mora;
 mod mytv_super;
 mod netflix;
+mod nowe;
 mod princess_connect_redive_japan;
 mod steam;
+mod unext;
 mod utils;
+mod viutv;
 mod youtube_cdn;
 mod youtube_premium;
 
@@ -67,6 +70,9 @@ pub async fn check_all() {
         Box::new(dazn::Dazn),
         Box::new(hulu_jp::HuluJP),
         Box::new(mytv_super::MyTVSuper),
+        Box::new(nowe::NowE),
+        Box::new(viutv::ViuTV),
+        Box::new(unext::UNext),
     ];
 
     let services_count = services.len();
