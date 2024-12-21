@@ -51,7 +51,7 @@ pub fn upload_stream_provider(
 async fn perform_upload() -> (f64, Vec<f64>) {
     let url = "https://speed.cloudflare.com/__up";
     let client = reqwest::Client::new();
-    let (mut tx, mut rx): (Sender<f64>, Receiver<f64>) = futures::channel::mpsc::channel(20);
+    let (tx, mut rx): (Sender<f64>, Receiver<f64>) = futures::channel::mpsc::channel(20);
     let conn = client
         .post(url)
         .body(reqwest::Body::wrap_stream(upload_stream_provider(10, tx)));
@@ -131,11 +131,13 @@ pub fn start_speedtest() {
         mean_speed_mbps, max
     );
     // Upload test
+    log.loading("Running single thread upload test...");
     let (mean_speed_mbps, speed_samples) = block_on(perform_upload());
     let max = speed_samples
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap();
+    log.done();
     println!(
         "UP  : 🔼 {:.2} Mbps | MAX : {:.2} Mbps",
         mean_speed_mbps, max
@@ -187,6 +189,7 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         total_mean_speed, max
     );
     // upload test
+    log.loading("Running multiple thread upload test...");
     let results = block_on(async {
         let mut handles = Vec::new();
         for _ in 0..num_concurrent {
@@ -220,7 +223,7 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap();
-
+    log.done();
     println!(
         "UP  : ⏫ {:.2} Mbps | MAX : {:.2} Mbps",
         total_mean_speed, max
