@@ -156,3 +156,24 @@ pub fn mora_headers() -> HeaderMap {
     headers.insert("host", "mora.jp".parse().unwrap());
     headers
 }
+
+pub fn dazn_headers() -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    headers.insert("Content-Type", "application/json".parse().unwrap());
+    headers
+}
+
+pub fn hulu_jp_headers() -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    headers.insert("Accept", "*/*;q=0.8".parse().unwrap());
+    headers.insert("Accept-Language", "en-US,en;q=0.5".parse().unwrap());
+    headers.insert("Accept-Encoding", "none".parse().unwrap());
+    headers.insert("Sec-GPC", "1".parse().unwrap());
+    headers.insert("Upgrade-Insecure-Requests", "1".parse().unwrap());
+    headers.insert("Sec-Fetch-Dest", "document".parse().unwrap());
+    headers.insert("Sec-Fetch-Mode", "navigate".parse().unwrap());
+    headers.insert("Sec-Fetch-Site", "none".parse().unwrap());
+    headers.insert("Sec-Fetch-User", "?1".parse().unwrap());
+    headers.insert("Priority", "u=1".parse().unwrap());
+    headers
+}

@@ -2,9 +2,11 @@ mod animefesta;
 mod bahamut;
 mod bbc_iplayer;
 mod bilibili;
+mod dazn;
 mod google_play_store;
 mod hbomax;
 mod headers;
+mod hulu_jp;
 mod iqiyi_oversea;
 mod kancolle;
 mod lemino;
@@ -61,6 +63,8 @@ pub async fn check_all() {
         Box::new(animefesta::AnimeFesta),
         Box::new(mora::Mora),
         Box::new(bbc_iplayer::BBCIPlayer),
+        Box::new(dazn::Dazn),
+        Box::new(hulu_jp::HuluJP),
     ];
 
     let services_count = services.len();
