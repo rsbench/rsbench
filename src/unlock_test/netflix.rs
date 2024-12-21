@@ -29,6 +29,7 @@ impl Service for Netflix {
             &client,
             "https://www.netflix.com/title/81280792",
             Some(netflix_headers()),
+            None,
         )
         .await
         {
@@ -43,6 +44,7 @@ impl Service for Netflix {
             &client,
             "https://www.netflix.com/title/70143836",
             Some(netflix_headers()),
+            None,
         )
         .await
         {
@@ -70,6 +72,7 @@ impl Service for Netflix {
                 &client,
                 "https://www.netflix.com/",
                 Some(netflix_headers()),
+                None,
             )
             .await
             {

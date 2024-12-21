@@ -21,7 +21,7 @@ impl Service for IqiyiOversea {
             Err(unlock_result) => return unlock_result,
         };
 
-        let result = match get_url(self.name(), &client, "https://www.iq.com/", None).await {
+        let result = match get_url(self.name(), &client, "https://www.iq.com/", None, None).await {
             Ok(result) => result,
             Err(unlock_result) => return unlock_result,
         };

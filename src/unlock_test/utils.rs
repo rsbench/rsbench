@@ -1,6 +1,6 @@
 use crate::unlock_test::UnlockResult;
 use reqwest::header::HeaderMap;
-use reqwest::Client;
+use reqwest::{Body, Client};
 use std::time::Duration;
 
 /// 从字符串的开头和结尾修剪指定数量的字符
@@ -109,6 +109,7 @@ pub async fn parse_response_to_html(
 /// * `client` - 用于发送请求的 reqwest 客户端
 /// * `url` - 要请求的 URL
 /// * `header_map` - 可选的请求头映射
+/// * `body` - 可选的请求体
 ///
 /// # 返回值
 /// * `Ok(reqwest::Response)` - 如果请求成功，返回响应
@@ -118,12 +119,16 @@ pub async fn get_url(
     client: &Client,
     url: &str,
     header_map: Option<HeaderMap>,
+    body: Option<Body>,
 ) -> Result<reqwest::Response, UnlockResult> {
     // 创建一个 GET 请求
     let mut request = client.get(url);
     // 如果存在 header_map，则将其添加到请求中
     if header_map.is_some() {
         request = request.headers(header_map.unwrap());
+    }
+    if body.is_some() {
+        request = request.body(body.unwrap());
     }
 
     // 发送请求并等待响应

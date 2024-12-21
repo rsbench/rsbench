@@ -4,6 +4,7 @@ mod google_play_store;
 mod hbomax;
 mod headers;
 mod iqiyi_oversea;
+mod kancolle;
 mod netflix;
 mod princess_connect_redive_japan;
 mod steam;
@@ -50,6 +51,7 @@ pub async fn check_all() {
         Box::new(bilibili::BilibiliChinaTWOnly),
         Box::new(bilibili::BilibiliChinaHKMOTW),
         Box::new(princess_connect_redive_japan::PrincessConnectReDiveJapan),
+        Box::new(kancolle::Kancolle),
     ];
 
     let futures = services.iter().map(|service| service.check_unlock());

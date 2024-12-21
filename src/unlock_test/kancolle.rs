@@ -4,25 +4,27 @@ use super::{Service, UnlockResult};
 use crate::unlock_test::utils::{create_reqwest_client, get_url};
 use async_trait::async_trait;
 
-pub struct PrincessConnectReDiveJapan;
+pub struct Kancolle;
 
 #[async_trait]
-impl Service for PrincessConnectReDiveJapan {
+impl Service for Kancolle {
     fn name(&self) -> String {
-        "Princess Connect Re:Dive Japan".to_string()
+        "Kancolle Japan".to_string()
     }
+
     async fn check_unlock(&self) -> UnlockResult {
         let client =
-            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER2), false, None)
+            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER2), true, None)
                 .await
             {
                 Ok(client) => client,
                 Err(unlock_result) => return unlock_result,
             };
+
         let result = match get_url(
             self.name(),
             &client,
-            "https://api-priconne-redive.cygames.jp/",
+            "http://203.104.209.7/kcscontents/twitter/maintenance_info.html",
             None,
             None,
         )
@@ -31,7 +33,8 @@ impl Service for PrincessConnectReDiveJapan {
             Ok(result) => result,
             Err(unlock_result) => return unlock_result,
         };
-        if result.status().as_u16() == 404 {
+
+        if result.status().as_u16() == 200 {
             UnlockResult {
                 service_name: self.name(),
                 available: true,
@@ -43,14 +46,14 @@ impl Service for PrincessConnectReDiveJapan {
                 service_name: self.name(),
                 available: false,
                 region: None,
-                error: Some(String::from("Not available")),
+                error: None,
             }
         } else {
             UnlockResult {
                 service_name: self.name(),
                 available: false,
                 region: None,
-                error: Some(String::from("Network connection error")),
+                error: None,
             }
         }
     }

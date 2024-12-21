@@ -26,6 +26,7 @@ impl Service for YoutubeCDN {
             &client,
             "https://redirector.googlevideo.com/report_mapping",
             None,
+            None,
         )
         .await
         {

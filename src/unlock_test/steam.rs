@@ -28,6 +28,7 @@ impl Service for Steam {
             &client,
             "https://store.steampowered.com/app/761830",
             Some(default_headers()),
+            None,
         )
         .await
         {

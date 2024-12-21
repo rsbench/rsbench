@@ -30,6 +30,7 @@ impl Service for BahamutAnime {
             &client,
             "https://ani.gamer.com.tw/ajax/getdeviceid.php",
             None,
+            None,
         )
         .await
         {
@@ -52,6 +53,7 @@ impl Service for BahamutAnime {
                 device_id
             ),
             None,
+            None,
         )
         .await
         {
@@ -64,6 +66,7 @@ impl Service for BahamutAnime {
             &client,
             "https://ani.gamer.com.tw/",
             Some(bahamut_headers2()),
+            None,
         )
         .await
         {

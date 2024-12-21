@@ -25,6 +25,7 @@ impl Service for GooglePlayStore {
             &client,
             "https://play.google.com/",
             Some(google_play_store_headers()),
+            None,
         )
         .await
         {

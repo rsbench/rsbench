@@ -24,7 +24,7 @@ async fn get_bilibili_url(name: String, url: String) -> UnlockResult {
         Err(unlock_result) => return unlock_result,
     };
 
-    let result = match get_url(name.clone(), &client, &url, None).await {
+    let result = match get_url(name.clone(), &client, &url, None, None).await {
         Ok(result) => result,
         Err(unlock_result) => return unlock_result,
     };

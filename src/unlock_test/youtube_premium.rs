@@ -27,6 +27,7 @@ impl Service for YoutubePremium {
             &client,
             "https://www.youtube.com/premium",
             Some(youtube_premium_headers()),
+            None,
         )
         .await
         {
