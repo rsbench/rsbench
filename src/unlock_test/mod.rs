@@ -11,6 +11,7 @@ mod iqiyi_oversea;
 mod kancolle;
 mod lemino;
 mod mora;
+mod mytv_super;
 mod netflix;
 mod princess_connect_redive_japan;
 mod steam;
@@ -65,6 +66,7 @@ pub async fn check_all() {
         Box::new(bbc_iplayer::BBCIPlayer),
         Box::new(dazn::Dazn),
         Box::new(hulu_jp::HuluJP),
+        Box::new(mytv_super::MyTVSuper),
     ];
 
     let services_count = services.len();
