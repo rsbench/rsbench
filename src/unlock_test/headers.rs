@@ -106,3 +106,35 @@ pub fn youtube_premium_headers() -> HeaderMap {
     headers.insert(header::COOKIE, "YSC=FSCWhKo2Zgw; VISITOR_PRIVACY_METADATA=CgJERRIEEgAgYQ%3D%3D; PREF=f7=4000; __Secure-YEC=CgtRWTBGTFExeV9Iayjele2yBjIKCgJERRIEEgAgYQ%3D%3D; SOCS=CAISOAgDEitib3FfaWRlbnRpdHlmcm9udGVuZHVpc2VydmVyXzIwMjQwNTI2LjAxX3AwGgV6aC1DTiACGgYIgMnpsgY; VISITOR_INFO1_LIVE=Di84mAIbgKY; __Secure-BUCKET=CGQ".parse().unwrap());
     headers
 }
+
+pub fn lemino_headers() -> HeaderMap {
+    let mut headers = header::HeaderMap::new();
+    headers.insert(
+        "accept",
+        "application/json, text/plain, */*".parse().unwrap(),
+    );
+    headers.insert("accept-language", "en-US,en;q=0.9".parse().unwrap());
+    headers.insert("content-type", "application/json".parse().unwrap());
+    headers.insert("origin", "https://lemino.docomo.ne.jp".parse().unwrap());
+    headers.insert("referer", "https://lemino.docomo.ne.jp/".parse().unwrap());
+    headers.insert(
+        "sec-ch-ua",
+        r#""Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24""#
+            .parse()
+            .unwrap(),
+    );
+    headers.insert("sec-ch-ua-mobile", "?0".parse().unwrap());
+    headers.insert("sec-ch-ua-platform", "\"Windows\"".parse().unwrap());
+    headers.insert("sec-fetch-dest", "empty".parse().unwrap());
+    headers.insert("sec-fetch-mode", "cors".parse().unwrap());
+    headers.insert("sec-fetch-site", "same-site".parse().unwrap());
+    headers.insert(
+        "x-service-token",
+        "f365771afd91452fa279863f240c233d".parse().unwrap(),
+    );
+    headers.insert(
+        "x-trace-id",
+        "556db33f-d739-4a82-84df-dd509a8aa179".parse().unwrap(),
+    );
+    headers
+}
