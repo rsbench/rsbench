@@ -67,20 +67,12 @@ jobs:
         uses: crazy-max/ghaction-upx@v3
         with:
           install-only: true
-          
       - name: Compress binary
         run: upx -v --ultra-brute -o target/${{ matrix.platform.target }}/release/rsbench-upxed target/${{ matrix.platform.target }}/release/rsbench
-      - name: Upload binary
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.platform.target }}
-          path: target/${{ matrix.platform.target }}/release/rsbench
-          
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/rsbench-${{ matrix.platform.release_for }}
       - name: Rename upxed binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench-upxed target/${{ matrix.platform.target }}/release/rsbench-${{ matrix.platform.release_for }}-upxed
-
       - name: Upload binary
         uses: actions/upload-artifact@v3
         with:
