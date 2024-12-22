@@ -17,75 +17,40 @@ jobs:
         platform:
           - release_for: linux_x86_64_musl
             target: x86_64-unknown-linux-musl
-            bin: rsbench
-            command: build
           - release_for: linux_x86_64_gnu
             target: x86_64-unknown-linux-gnu
-            bin: rsbench
-            command: build
           - release_for: linux_arm_gnueabi
             target: arm-unknown-linux-gnueabi
-            bin: rsbench
-            command: build
           - release_for: linux_arm_gnueabihf
             target: arm-unknown-linux-gnueabihf
-            bin: rsbench
-            command: build
           - release_for: linux_aarch64_gnu
             target: aarch64-unknown-linux-gnu
-            bin: rsbench
-            command: build
           - release_for: linux_aarch64_musl
             target: aarch64-unknown-linux-musl
-            bin: rsbench
-            command: build
           - release_for: linux_i686_gnu
             target: i686-unknown-linux-gnu
-            bin: rsbench
-            command: build
           - release_for: linux_i686_musl
             target: i686-unknown-linux-musl
-            bin: rsbench
-            command: build
           - release_for: linux_arm_gnueabi
             target: arm-unknown-linux-gnueabi
-            bin: rsbench
-            command: build
           - release_for: linux_arm_musleabi
             target: arm-unknown-linux-musleabi
-            bin: rsbench
-            command: build
           - release_for: linux_arm_musleabihf
             target: arm-unknown-linux-musleabihf
-            bin: rsbench
-            command: build
           - release_for: linux_armv5te_gnu
             target: armv5te-unknown-linux-gnueabi
-            bin: rsbench
-            command: build
           - release_for: linux_armv5te_musl
             target: armv5te-unknown-linux-musleabi
-            bin: rsbench
-            command: build
           - release_for: linux_armv7_gnueabi
             target: armv7-unknown-linux-gnueabi
-            bin: rsbench
-            command: build
           - release_for: linux_armv7_gnueabihf
             target: armv7-unknown-linux-gnueabihf
-            bin: rsbench
-            command: build
           - release_for: linux_armv7_musleabi
             target: armv7-unknown-linux-musleabi
-            bin: rsbench
-            command: build
           - release_for: linux_armv7_musleabihf
             target: armv7-unknown-linux-musleabihf
-            bin: rsbench
-            command: build
 
-
-    runs-on: [self-hosted, X64]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -94,7 +59,7 @@ jobs:
       - name: Build binary
         uses: houseabsolute/actions-rust-cross@v0
         with:
-          command: ${{ matrix.platform.command }}
+          command: build
           target: ${{ matrix.platform.target }}
           args: "--locked --release"
           strip: true
@@ -104,25 +69,25 @@ jobs:
           install-only: true
           
       - name: Compress binary
-        run: upx -v --ultra-brute -o target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-upxed target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
+        run: upx -v --ultra-brute -o target/${{ matrix.platform.target }}/release/rsbench-upxed target/${{ matrix.platform.target }}/release/rsbench
       - name: Upload binary
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.platform.target }}
-          path: target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}
+          path: target/${{ matrix.platform.target }}/release/rsbench
           
       - name: Rename binary
-        run: cp target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }} target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ matrix.platform.release_for }}
+        run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/rsbench-${{ matrix.platform.release_for }}
       - name: Rename upxed binary
-        run: cp target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-upxed target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ matrix.platform.release_for }}-upxed
+        run: cp target/${{ matrix.platform.target }}/release/rsbench-upxed target/${{ matrix.platform.target }}/release/rsbench-${{ matrix.platform.release_for }}-upxed
 
       - name: Upload binary
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.platform.target }}
-          path: target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ matrix.platform.release_for }}
+          path: target/${{ matrix.platform.target }}/release/rsbench-${{ matrix.platform.release_for }}
       - name: Upload upxed binary
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.platform.target }}
-          path: target/${{ matrix.platform.target }}/release/${{ matrix.platform.bin }}-${{ matrix.platform.release_for }}-upxed
+          path: target/${{ matrix.platform.target }}/release/rsbench-${{ matrix.platform.release_for }}-upxed
