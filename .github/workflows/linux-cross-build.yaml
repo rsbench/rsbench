@@ -61,7 +61,7 @@ jobs:
         with:
           command: build
           target: ${{ matrix.platform.target }}
-          args: "--locked --release"
+          args: "--locked --release --jobs 32"
           strip: true
       - name: Install UPX
         uses: crazy-max/ghaction-upx@v3
