@@ -81,17 +81,33 @@ async fn perform_upload() -> (f64, Vec<f64>) {
     (mean_speed, speed_samples)
 }
 
-async fn perform_download() -> (f64, Vec<f64>) {
+async fn perform_download() -> Result<(f64, Vec<f64>), String> {
     let url = "https://speed.cloudflare.com/__down?bytes=10000000000";
     let start_time = Instant::now();
 
-    let mut stream = reqwest::get(url).await.unwrap().bytes_stream();
+    let mut stream = match reqwest::get(url).await {
+        Ok(stream) => stream,
+        Err(_) => {
+            return Err(String::from(
+                "An error occurred while connecting to the Cloudflare speed test server",
+            ))
+        }
+    }
+    .bytes_stream();
     let mut speed_samples = Vec::new();
     let mut interval_bytes = 0u64;
     let mut last_time = Instant::now();
 
     while let Some(chunk) = stream.next().await {
-        let chunk_len = chunk.unwrap().len() as u64;
+        let chunk_len = match chunk {
+            Ok(bytes) => bytes,
+            Err(_) => {
+                return Err(String::from(
+                    "An error occurred while connecting to the Cloudflare speed test server",
+                ))
+            }
+        }
+        .len() as u64;
         interval_bytes += chunk_len;
 
         let elapsed = last_time.elapsed().as_secs_f64();
@@ -113,14 +129,23 @@ async fn perform_download() -> (f64, Vec<f64>) {
         0.0
     };
 
-    (mean_speed, speed_samples)
+    Ok((mean_speed, speed_samples))
 }
 
 pub fn start_speedtest() {
     //let rt = tokio::runtime::Runtime::new().unwrap();
     let mut log = paris::Logger::new();
     log.loading("Running single thread download test...");
-    let (mean_speed_mbps, speed_samples) = block_on(perform_download());
+    let result = block_on(perform_download());
+    let (mean_speed_mbps, speed_samples) = match result {
+        Ok(tuple) => tuple,
+        Err(error) => {
+            println!();
+            log.error(error);
+            return;
+        }
+    };
+
     let max = speed_samples
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
@@ -161,19 +186,34 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         results
     });
 
-    let total_mean_speed: f64 = results.iter().map(|(mean_speed, _)| mean_speed).sum();
+    let mut results_success = Vec::new();
+    for result in results {
+        match result {
+            Ok(tuple) => results_success.push(tuple),
+            Err(error) => {
+                println!();
+                log.error(error);
+                return;
+            }
+        }
+    }
+
+    let total_mean_speed: f64 = results_success
+        .iter()
+        .map(|(mean_speed, _)| mean_speed)
+        .sum();
 
     let mut all_speed_samples: Vec<f64> = Vec::new();
-    for (_, speed_samples) in &results {
+    for (_, speed_samples) in &results_success {
         all_speed_samples.extend(speed_samples);
     }
 
     let mut instant_speeds: Vec<f64> = Vec::new();
     for i in 0..all_speed_samples.len() {
         let mut instant_speed = 0.0;
-        for j in 0..results.len() {
-            if i < results[j].1.len() {
-                instant_speed += results[j].1[i];
+        for j in 0..results_success.len() {
+            if i < results_success[j].1.len() {
+                instant_speed += results_success[j].1[i];
             }
         }
         instant_speeds.push(instant_speed);
