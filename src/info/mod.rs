@@ -3,6 +3,7 @@ mod cpu;
 mod disk;
 mod mem;
 mod os;
+mod swap;
 mod virt;
 pub fn run_info() {
     let s = System::new_all();
@@ -14,6 +15,7 @@ pub fn run_info() {
     #[cfg(target_os = "linux")]
     {
         println!("VIRT: {}", virt::get_virt());
+        println!("SWAP: {}", swap::get_swap());
     }
     println!("OS  : {}", os::get_os());
 }
