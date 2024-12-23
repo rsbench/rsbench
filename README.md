@@ -28,3 +28,4 @@ Options:
 - [ ] 多地点回程 / 去程路由检测
 - [ ] 多地点服务器测速 (Based On Speedtest.net)
 - [ ] 多语言输出支持
+- [ ] Replace sysinfo with homebrewn library

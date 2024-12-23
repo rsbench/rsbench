@@ -24,6 +24,7 @@ regex = { version = "1.11.1", default-features = false, features = ["std", "unic
 termcolor = "1.4.1"
 bytes = "1.9.0"
 async-stream = "0.3.6"
+libc = "0.2.169"
 
 [profile]
 dev = { opt-level = 3 }
