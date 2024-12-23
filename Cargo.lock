@@ -1067,7 +1067,6 @@ dependencies = [
  "bytes",
  "clap",
  "futures",
- "libc",
  "paris",
  "regex",
  "reqwest",
