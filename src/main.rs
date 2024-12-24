@@ -5,6 +5,7 @@ mod config;
 mod info;
 mod tune;
 mod unlock_test;
+mod utils;
 
 #[tokio::main]
 async fn main() {

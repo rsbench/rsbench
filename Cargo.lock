@@ -1064,10 +1064,10 @@ version = "0.0.1"
 dependencies = [
  "async-stream",
  "async-trait",
- "bytes",
  "clap",
  "futures",
  "paris",
+ "rand",
  "regex",
  "reqwest",
  "sysinfo",
