@@ -33,4 +33,5 @@ pub fn run_info() {
     }
 
     set_default_colour();
+    println!();
 }

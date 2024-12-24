@@ -1,13 +1,17 @@
+// use std::sync::mpsc::{Receiver, Sender};
+use crate::utils::{set_colour, set_default_colour};
 use async_stream::stream;
 use futures::{
     channel::mpsc::{Receiver, Sender},
     executor::block_on,
     StreamExt,
 };
-// use std::sync::mpsc::{Receiver, Sender};
 use std::time::Instant;
+use termcolor::Color;
 
 pub fn ping() {
+    let mut log = paris::Logger::new();
+    log.loading("Tcping: 1.1.1.1:443 ...");
     let mut results = Vec::new();
     let addr = "1.1.1.1:443";
     for _ in 0..50 {
@@ -21,8 +25,17 @@ pub fn ping() {
             let _ = stream.local_addr();
         }
     }
+    log.done();
     let mean = results.iter().sum::<u128>() as f64 / results.len() as f64;
-    println!("PING: {:.2} ms", mean);
+    if mean < 0.02 {
+        log.error("Unable to connect to cloudflare server");
+        println!();
+        return;
+    }
+    set_colour(Color::Blue);
+    println!("TCPING TO CLOUDFLARE: {:.2} ms", mean);
+    set_default_colour();
+    println!();
 }
 
 pub fn upload_stream_provider(
@@ -133,6 +146,10 @@ async fn perform_download() -> Result<(f64, Vec<f64>), String> {
 }
 
 pub fn start_speedtest() {
+    set_colour(Color::Yellow);
+    println!("SINGLE:");
+    set_default_colour();
+
     //let rt = tokio::runtime::Runtime::new().unwrap();
     let mut log = paris::Logger::new();
     log.loading("Running single thread download test...");
@@ -151,10 +168,19 @@ pub fn start_speedtest() {
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap();
     log.done();
-    println!(
-        "DOWN: 🔽 {:.2} Mbps | MAX : {:.2} Mbps",
-        mean_speed_mbps, max
-    );
+
+    set_colour(Color::Yellow);
+    print!("DOWN: ⏬ ");
+    set_colour(Color::Rgb(64, 224, 208));
+    print!("{:.2} Mbps", mean_speed_mbps);
+    set_colour(Color::Yellow);
+    print!(" | ");
+    set_colour(Color::Yellow);
+    print!("MAX : ");
+    set_colour(Color::Rgb(65, 105, 225));
+    println!("{:.2} Mbps", max);
+    set_default_colour();
+
     // Upload test
     log.loading("Running single thread upload test...");
     let (mean_speed_mbps, speed_samples) = block_on(perform_upload());
@@ -163,13 +189,26 @@ pub fn start_speedtest() {
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap();
     log.done();
-    println!(
-        "UP  : 🔼 {:.2} Mbps | MAX : {:.2} Mbps",
-        mean_speed_mbps, max
-    );
+
+    set_colour(Color::Yellow);
+    print!("UP  : 🔼 ");
+    set_colour(Color::Rgb(139, 0, 139));
+    print!("{:.2} Mbps", mean_speed_mbps);
+    set_colour(Color::Yellow);
+    print!(" | ");
+    set_colour(Color::Yellow);
+    print!("MAX : ");
+    set_colour(Color::Rgb(72, 61, 139));
+    println!("{:.2} Mbps", max);
+    set_default_colour();
+    println!();
 }
 
 pub fn start_multithread_speedtest(num_concurrent: usize) {
+    set_colour(Color::Yellow);
+    println!("MULTI:");
+    set_default_colour();
+
     // let rt = tokio::runtime::Runtime::new().unwrap();
     let mut log = paris::Logger::new();
     log.loading("Running multiple thread download test...");
@@ -224,10 +263,18 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         .unwrap();
     log.done();
 
-    println!(
-        "DOWN: ⏬ {:.2} Mbps | MAX : {:.2} Mbps",
-        total_mean_speed, max
-    );
+    set_colour(Color::Yellow);
+    print!("DOWN: ⏬ ");
+    set_colour(Color::Rgb(64, 224, 208));
+    print!("{:.2} Mbps", total_mean_speed);
+    set_colour(Color::Yellow);
+    print!(" | ");
+    set_colour(Color::Yellow);
+    print!("MAX : ");
+    set_colour(Color::Rgb(65, 105, 225));
+    println!("{:.2} Mbps", max);
+    set_default_colour();
+
     // upload test
     log.loading("Running multiple thread upload test...");
     let results = block_on(async {
@@ -264,8 +311,17 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap();
     log.done();
-    println!(
-        "UP  : ⏫ {:.2} Mbps | MAX : {:.2} Mbps",
-        total_mean_speed, max
-    );
+
+    set_colour(Color::Yellow);
+    print!("UP  : 🔼 ");
+    set_colour(Color::Rgb(139, 0, 139));
+    print!("{:.2} Mbps", total_mean_speed);
+    set_colour(Color::Yellow);
+    print!(" | ");
+    set_colour(Color::Yellow);
+    print!("MAX : ");
+    set_colour(Color::Rgb(72, 61, 139));
+    println!("{:.2} Mbps", max);
+    set_default_colour();
+    println!();
 }

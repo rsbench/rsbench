@@ -22,10 +22,11 @@ mod viutv;
 mod youtube_cdn;
 mod youtube_premium;
 
+use crate::utils::{clear_last_line, set_colour, set_default_colour};
 use async_trait::async_trait;
 use futures::executor::block_on;
 use std::fmt::{Display, Formatter};
-use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+use termcolor::Color;
 use tokio::sync::mpsc;
 
 #[derive(Debug)]
@@ -48,6 +49,10 @@ trait Service {
 pub async fn check_all() {
     //    let mut log = paris::Logger::new();
     //    log.loading("Checking media services...");
+
+    set_colour(Color::Yellow);
+    println!("UNLOCK:");
+    set_default_colour();
 
     let services: Vec<Box<dyn Service + Send + Sync>> = vec![
         Box::new(netflix::Netflix),
@@ -91,65 +96,79 @@ pub async fn check_all() {
 
     drop(tx);
 
+    let mut results = Vec::new();
     while let Some(result) = rx.recv().await {
+        println!("{}", result);
+        results.push(result);
+    }
+
+    let time = time.elapsed().as_secs_f64();
+
+    for _ in 0..services_count + 1 {
+        clear_last_line();
+        tokio::time::sleep(std::time::Duration::from_millis(10)).await;
+    }
+
+    let mut unlocked_services = Vec::new();
+    let mut locked_services = Vec::new();
+    for result in results {
+        if result.available {
+            unlocked_services.push(result);
+        } else {
+            locked_services.push(result);
+        }
+    }
+    let unlocked_services_count = unlocked_services.len();
+    let locked_services_count = locked_services.len();
+
+    for result in unlocked_services {
+        println!("{}", result);
+    }
+    for result in locked_services {
         println!("{}", result);
     }
 
     println!(
-        "Tested {} projects took {:.2} seconds",
-        services_count,
-        time.elapsed().as_secs_f64()
+        "Tested {} projects took {:.2} seconds, {} services unlocked, {} services locked.",
+        services_count, time, unlocked_services_count, locked_services_count,
     );
 }
 impl Display for UnlockResult {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        // 创建一个标准输出流，并设置颜色选择为 Always
-        let mut stdout = StandardStream::stdout(ColorChoice::Always);
-
-        // 设置前景色为白色
-        stdout
-            .set_color(ColorSpec::new().set_fg(Some(Color::White)))
-            .unwrap();
+        set_default_colour();
 
         // 根据 available 字段的值来决定输出内容
         let result = if self.available {
-            // 设置前景色为绿色
-            stdout
-                .set_color(ColorSpec::new().set_fg(Some(Color::Green)))
-                .unwrap();
+            set_colour(Color::Green);
             // 根据 region 字段是否存在来决定输出内容
             match &self.region {
                 None => {
                     // 输出服务名称
-                    write!(f, "{}", self.service_name)
+                    write!(f, "[ Y ] {}", self.service_name)
                 }
                 Some(region) => {
                     // 输出服务名称和地区
-                    write!(f, "{} ({})", self.service_name, region)
+                    write!(f, "[ Y ] {} ({})", self.service_name, region)
                 }
             }
         } else {
             // 设置前景色为红色
-            stdout
-                .set_color(ColorSpec::new().set_fg(Some(Color::Red)))
-                .unwrap();
+            set_colour(Color::Red);
             // 根据 error 字段是否存在来决定输出内容
             match &self.error {
                 None => {
                     // 输出服务名称
-                    write!(f, "{}", self.service_name)
+                    write!(f, "[ N ] {}", self.service_name)
                 }
                 Some(error) => {
                     // 输出服务名称和错误信息
-                    write!(f, "{}: {}", self.service_name, error)
+                    write!(f, "[ N ] {}: {}", self.service_name, error)
                 }
             }
         };
 
         // 恢复前景色为白色
-        stdout
-            .set_color(ColorSpec::new().set_fg(Some(Color::White)))
-            .unwrap();
+        set_default_colour();
         // 返回格式化结果
         result
     }
