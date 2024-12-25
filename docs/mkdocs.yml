@@ -1,0 +1,5 @@
+site_name: RSBench
+
+site_url: https://rsbench.github.io
+theme:
+  name: material
