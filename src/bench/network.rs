@@ -33,9 +33,8 @@ pub fn ping() {
         return;
     }
     set_colour(Color::Blue);
-    println!("TCPING TO CLOUDFLARE: {:.2} ms", mean);
+    println!("PING: {:.2} ms", mean);
     set_default_colour();
-    println!();
 }
 
 pub fn upload_stream_provider(
@@ -146,10 +145,6 @@ async fn perform_download() -> Result<(f64, Vec<f64>), String> {
 }
 
 pub fn start_speedtest() {
-    set_colour(Color::Yellow);
-    println!("SINGLE:");
-    set_default_colour();
-
     //let rt = tokio::runtime::Runtime::new().unwrap();
     let mut log = paris::Logger::new();
     log.loading("Running single thread download test...");
@@ -170,7 +165,7 @@ pub fn start_speedtest() {
     log.done();
 
     set_colour(Color::Yellow);
-    print!("DOWN: ⏬ ");
+    print!("DOWN: 🔽 ");
     set_colour(Color::Rgb(64, 224, 208));
     print!("{:.2} Mbps", mean_speed_mbps);
     set_colour(Color::Yellow);
@@ -201,14 +196,9 @@ pub fn start_speedtest() {
     set_colour(Color::Rgb(72, 61, 139));
     println!("{:.2} Mbps", max);
     set_default_colour();
-    println!();
 }
 
 pub fn start_multithread_speedtest(num_concurrent: usize) {
-    set_colour(Color::Yellow);
-    println!("MULTI:");
-    set_default_colour();
-
     // let rt = tokio::runtime::Runtime::new().unwrap();
     let mut log = paris::Logger::new();
     log.loading("Running multiple thread download test...");
@@ -313,7 +303,7 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     log.done();
 
     set_colour(Color::Yellow);
-    print!("UP  : 🔼 ");
+    print!("UP  : ⏫ ");
     set_colour(Color::Rgb(139, 0, 139));
     print!("{:.2} Mbps", total_mean_speed);
     set_colour(Color::Yellow);
@@ -323,5 +313,4 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     set_colour(Color::Rgb(72, 61, 139));
     println!("{:.2} Mbps", max);
     set_default_colour();
-    println!();
 }
