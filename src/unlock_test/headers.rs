@@ -195,3 +195,22 @@ pub fn unext_headers() -> HeaderMap {
     headers.insert("content-type", "application/json".parse().unwrap());
     headers
 }
+
+pub fn four_gtv_headers() -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    headers.insert("origin", "https://www.4gtv.tv".parse().unwrap());
+    headers.insert("referer", "https://www.4gtv.tv/".parse().unwrap());
+    headers.insert("accept-language", "en-US,en;q=0.9".parse().unwrap());
+    headers.insert(
+        "sec-ch-ua",
+        r#""Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24""#
+            .parse()
+            .unwrap(),
+    );
+    headers.insert("sec-ch-ua-mobile", "?0".parse().unwrap());
+    headers.insert("sec-ch-ua-platform", "\"Windows\"".parse().unwrap());
+    headers.insert("sec-fetch-dest", "empty".parse().unwrap());
+    headers.insert("sec-fetch-mode", "cors".parse().unwrap());
+    headers.insert("sec-fetch-site", "same-site".parse().unwrap());
+    headers
+}
