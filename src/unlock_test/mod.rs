@@ -54,6 +54,7 @@ pub async fn check_all() {
 
     set_colour(Color::Yellow);
     println!("UNLOCK:");
+    println!("{:^5} {:^30} {}", "Y/N", "Service", "Error");
     set_default_colour();
 
     let services: Vec<Box<dyn Service + Send + Sync>> = vec![
@@ -108,7 +109,7 @@ pub async fn check_all() {
 
     let time = time.elapsed().as_secs_f64();
 
-    for _ in 0..services_count + 1 {
+    for _ in 0..services_count {
         clear_last_line();
         tokio::time::sleep(std::time::Duration::from_millis(10)).await;
     }
@@ -148,11 +149,12 @@ impl Display for UnlockResult {
             match &self.region {
                 None => {
                     // 输出服务名称
-                    write!(f, "[ Y ] {}", self.service_name)
+                    write!(f, "[ Y ] {:^30}", self.service_name)
                 }
                 Some(region) => {
                     // 输出服务名称和地区
-                    write!(f, "[ Y ] {} ({})", self.service_name, region)
+                    let service = format!("{} ({})", self.service_name, region);
+                    write!(f, "[ Y ] {:^30}", service)
                 }
             }
         } else {
@@ -162,11 +164,15 @@ impl Display for UnlockResult {
             match &self.error {
                 None => {
                     // 输出服务名称
-                    write!(f, "[ N ] {}", self.service_name)
+                    write!(f, "[ N ] {:^30}", self.service_name)
                 }
                 Some(error) => {
                     // 输出服务名称和错误信息
-                    write!(f, "[ N ] {}: {}", self.service_name, error)
+                    match write!(f, "[ N ] {:^30}", self.service_name) {
+                        _ => {}
+                    };
+                    set_colour(Color::Yellow);
+                    write!(f, " {}", error)
                 }
             }
         };
