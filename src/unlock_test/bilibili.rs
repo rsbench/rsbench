@@ -92,7 +92,7 @@ impl Service for BilibiliChinaMainland {
 #[async_trait]
 impl Service for BilibiliChinaTWOnly {
     fn name(&self) -> String {
-        String::from("Bilibili China Taiwan Only")
+        String::from("Bilibili China TW Only")
     }
 
     async fn check_unlock(&self) -> UnlockResult {
@@ -103,7 +103,7 @@ impl Service for BilibiliChinaTWOnly {
 #[async_trait]
 impl Service for BilibiliChinaHKMOTW {
     fn name(&self) -> String {
-        String::from("Bilibili China Hong Kong / Macau / Taiwan")
+        String::from("Bilibili China HK/MO/TW")
     }
 
     async fn check_unlock(&self) -> UnlockResult {
