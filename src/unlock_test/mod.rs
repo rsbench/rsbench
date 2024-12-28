@@ -5,6 +5,7 @@ mod bilibili;
 mod dazn;
 mod four_gtv;
 mod google_play_store;
+mod hami_video;
 mod hbomax;
 mod headers;
 mod hulu_jp;
@@ -16,13 +17,13 @@ mod mytv_super;
 mod netflix;
 mod nowe;
 mod princess_connect_redive_japan;
+mod sling_tv;
 mod steam;
 mod unext;
 mod utils;
 mod viutv;
 mod youtube_cdn;
 mod youtube_premium;
-mod sling_tv;
 
 use crate::utils::{clear_last_line, set_colour, set_default_colour};
 use async_trait::async_trait;
@@ -83,6 +84,7 @@ pub async fn check_all() {
         Box::new(unext::UNext),
         Box::new(four_gtv::FourGTV),
         Box::new(sling_tv::SlingTV),
+        Box::new(hami_video::HamiVideo),
     ];
 
     let services_count = services.len();
