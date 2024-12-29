@@ -20,7 +20,7 @@ async fn main() {
         bench::run_bench();
     }
     if args.unlock {
-        unlock_test::run_unlock_test();
+        unlock_test::run_unlock_test(&args);
     }
     if args.tune {
         tune::run_tune();

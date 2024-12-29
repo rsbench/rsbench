@@ -2,7 +2,8 @@ pub mod headers;
 mod unlock_script;
 mod utils;
 
-use crate::unlock_test::unlock_script::all_services;
+use crate::config::UnlockRegion;
+use crate::unlock_test::unlock_script::*;
 use crate::utils::{clear_last_line, set_colour, set_default_colour};
 use async_trait::async_trait;
 use futures::executor::block_on;
@@ -12,7 +13,7 @@ use tokio::sync::mpsc;
 
 #[derive(Debug)]
 #[allow(dead_code)]
-struct UnlockResult {
+pub(crate) struct UnlockResult {
     pub service_name: String,
     pub available: bool,
     pub region: Option<String>,
@@ -21,22 +22,19 @@ struct UnlockResult {
 
 #[async_trait]
 #[allow(dead_code)]
-trait Service {
+pub(crate) trait Service {
     fn name(&self) -> String;
 
     async fn check_unlock(&self) -> UnlockResult;
 }
 
-pub async fn check_all() {
-    //    let mut log = paris::Logger::new();
-    //    log.loading("Checking media services...");
-
+pub async fn check_all(args: &crate::config::Config) {
     set_colour(Color::Yellow);
     println!("UNLOCK:");
     println!("{:^5} {:^30} {}", "Y/N", "Service", "Error");
     set_default_colour();
 
-    let services = all_services();
+    let services = get_test_service(&args);
 
     let services_count = services.len();
 
@@ -137,6 +135,47 @@ impl Display for UnlockResult {
     }
 }
 
-pub fn run_unlock_test() {
-    block_on(check_all());
+pub fn get_test_service(args: &crate::config::Config) -> Vec<Box<dyn Service + Send + Sync>> {
+    let mut services = Vec::new();
+    if !args.region.is_some() {
+        services.extend(all_services());
+    } else {
+        let regions = args.region.as_ref().unwrap();
+        for region in regions {
+            match region {
+                UnlockRegion::HK => services.extend(hk_services()),
+                UnlockRegion::MO => services.extend(mo_services()),
+                UnlockRegion::TW => services.extend(tw_services()),
+                UnlockRegion::JP => services.extend(jp_services()),
+                UnlockRegion::CN => services.extend(cn_services()),
+                UnlockRegion::Asia => services.extend(asia_services()),
+                UnlockRegion::Euro => services.extend(euro_services()),
+                UnlockRegion::Afr => services.extend(afr_services()),
+                UnlockRegion::UK => services.extend(uk_services()),
+                UnlockRegion::US => services.extend(us_services()),
+                UnlockRegion::Global => services.extend(global_services()),
+            }
+        }
+    }
+
+    let mut services_new = Vec::new();
+
+    for service in services {
+        if services_new.contains(&service) {
+            continue;
+        }
+        services_new.push(service);
+    }
+
+    services_new
+}
+
+impl PartialEq for Box<dyn Service + Send + Sync> {
+    fn eq(&self, other: &Self) -> bool {
+        self.name() == other.name()
+    }
+}
+
+pub fn run_unlock_test(args: &crate::config::Config) {
+    block_on(check_all(args));
 }

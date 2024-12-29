@@ -1,7 +1,7 @@
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 
 #[derive(Parser, Debug)]
-#[command(name = "rsbench", version, about)]
+#[command(name = "RSBench", version, about)]
 pub struct Config {
     /// Run information gathering
     #[arg(short, long)]
@@ -11,11 +11,30 @@ pub struct Config {
     #[arg(short, long)]
     pub bench: bool,
 
-    /// Run Media Unlock test
+    /// Run services unlock test
     #[arg(short, long)]
     pub unlock: bool,
 
-    /// Run System Tuning
+    // Set services unlock region
+    #[arg(long)]
+    pub region: Option<Vec<UnlockRegion>>,
+
+    /// Run system tuning
     #[arg(short, long)]
     pub tune: bool,
+}
+
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
+pub enum UnlockRegion {
+    HK,
+    MO,
+    TW,
+    JP,
+    CN,
+    Asia,
+    Euro,
+    Afr,
+    UK,
+    US,
+    Global,
 }
