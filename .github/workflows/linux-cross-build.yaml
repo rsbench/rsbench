@@ -91,6 +91,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Cache Build
+        uses: actions/cache@v3
+        with:
+          path: ./target
+          key: ${{ matrix.platform.release_for }}
       - name: Build binary
         uses: moohr/actions-rust-cross@v0
         with:
