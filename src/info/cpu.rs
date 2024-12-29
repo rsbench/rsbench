@@ -7,10 +7,10 @@ pub fn get_cpu(s: &System) -> String {
             let cpu_threads = s.cpus().len();
             let cpu_speed = cpu.frequency();
             format!(
-                "CPU : {} {} Threads @ {}Mhz",
+                "{} {} Threads @ {}Mhz",
                 cpu_model, cpu_threads, cpu_speed
             )
         }
-        None => "CPU: Unknown CPU".to_string(),
+        None => "Unknown CPU".to_string(),
     }
 }
