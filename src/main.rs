@@ -1,6 +1,6 @@
 use crate::utils::{clear_screen, set_default_colour, set_random_colour};
 use clap::Parser;
-use paris::info;
+use paris::{info, warn};
 
 mod bench;
 mod config;
@@ -13,6 +13,7 @@ mod utils;
 async fn main() {
     clear_screen();
     info!("RSBench v{}", env!("CARGO_PKG_VERSION"));
+    warn!("This is Alpha software. Thing may and will break.");
     print_ascii_art();
 
     let args = config::Config::parse();
