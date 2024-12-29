@@ -1,5 +1,5 @@
 name: Linux Cross Build
-
+runs-on: self-hosted
 on:
   push:
     branches:
@@ -54,8 +54,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install Lib
-        run: sudo apt update && sudo apt install -y musl-tools musl-dev musl upx
       - name: Build binary
         uses: houseabsolute/actions-rust-cross@v0
         with:
