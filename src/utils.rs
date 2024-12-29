@@ -74,6 +74,11 @@ pub fn clear_last_line() {
     std::io::stdout().flush().unwrap();
 }
 
+pub fn clear_screen() {
+    print!("\x1b[2J");
+    std::io::stdout().flush().unwrap();
+}
+
 // 为 Box<dyn Service + Send + Sync> 实现 PartialEq trait，用于比较两个动态盒子是否相等
 impl PartialEq for Box<dyn Service + Send + Sync> {
     // 定义 eq 方法，比较两个动态盒子的名称是否相等
