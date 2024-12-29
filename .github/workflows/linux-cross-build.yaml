@@ -62,9 +62,9 @@ jobs:
           - release_for: linux_armv7_musleabihf
             target: armv7-unknown-linux-musleabihf
             binary_name: rsbench-linux-armv7-musleabihf
-          - release_for: linux_loongarch64_gnu
-            target: loongarch64-unknown-linux-gnu
-            binary_name: rsbench-linux-loongarch64-gnu
+#          - release_for: linux_loongarch64_gnu
+#            target: loongarch64-unknown-linux-gnu
+#            binary_name: rsbench-linux-loongarch64-gnu
           - release_for: linux_loongarch64_musl
             target: loongarch64-unknown-linux-musl
             binary_name: rsbench-linux-loongarch64-musl
