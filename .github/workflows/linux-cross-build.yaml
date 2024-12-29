@@ -1,4 +1,5 @@
 name: Linux Cross Build
+
 on:
   push:
     branches:
@@ -65,9 +66,9 @@ jobs:
 #          - release_for: linux_loongarch64_gnu
 #            target: loongarch64-unknown-linux-gnu
 #            binary_name: rsbench-linux-loongarch64-gnu
-          - release_for: linux_loongarch64_musl
-            target: loongarch64-unknown-linux-musl
-            binary_name: rsbench-linux-loongarch64-musl
+#          - release_for: linux_loongarch64_musl
+#            target: loongarch64-unknown-linux-musl
+#            binary_name: rsbench-linux-loongarch64-musl
           - release_for: linux_powerpc_gnu
             target: powerpc-unknown-linux-gnu
             binary_name: rsbench-linux-powerpc-gnu
@@ -90,12 +91,21 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - name: Cache Build
-        uses: actions/cache@v3
-        with:
-          path: ./target
-          key: ${{ matrix.platform.release_for }}
+        uses: actions/checkout@v4
+
+      - name: Restore previous build cache (if any)
+        run: |
+          # Ensure local target directory exists
+          mkdir -p target
+          # If there's a cache dir for this target on the runner, copy it in
+          CACHE_DIR="/actionscache/rsbench/${{ matrix.platform.target }}"
+          if [ -d "$CACHE_DIR" ]; then
+            echo "Found existing cache for $CACHE_DIR. Restoring..."
+            cp -R "$CACHE_DIR/." target
+          else
+            echo "No existing cache found for $CACHE_DIR."
+          fi
+
       - name: Build binary
         uses: moohr/actions-rust-cross@v0
         with:
@@ -103,16 +113,27 @@ jobs:
           target: ${{ matrix.platform.target }}
           args: "--locked --release --jobs 32"
           strip: true
+
       - name: Install UPX
         uses: crazy-max/ghaction-upx@v3
         with:
           install-only: true
+
       - name: Compress binary
         run: upx -v --ultra-brute target/${{ matrix.platform.target }}/release/rsbench
+
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
+
+      - name: Save build cache
+        run: |
+          # If build completed, copy updated target directory back into the cache
+          CACHE_DIR="/actionscache/rsbench/${{ matrix.platform.target }}"
+          mkdir -p "$CACHE_DIR"
+          cp -R target/. "$CACHE_DIR"
+
       - name: Upload binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform.target }}
           path: target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
