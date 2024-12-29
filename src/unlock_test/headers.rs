@@ -214,3 +214,26 @@ pub fn four_gtv_headers() -> HeaderMap {
     headers.insert("sec-fetch-site", "same-site".parse().unwrap());
     headers
 }
+
+pub fn showmax_headers() -> HeaderMap {
+    let mut headers = HeaderMap::new();
+    headers.insert("host", "www.showmax.com".parse().unwrap());
+    headers.insert("connection", "keep-alive".parse().unwrap());
+    headers.insert(
+        "sec-ch-ua",
+        "\"Chromium\";v=\"124\", \"Microsoft Edge\";v=\"124\", \"Not-A.Brand\";v=\"99\""
+            .parse()
+            .unwrap(),
+    );
+    headers.insert("sec-ch-ua-mobile", "?0".parse().unwrap());
+    headers.insert("sec-ch-ua-platform", "\"Windows\"".parse().unwrap());
+    headers.insert("upgrade-insecure-requests", "1".parse().unwrap());
+    headers.insert("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0".parse().unwrap());
+    headers.insert("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7".parse().unwrap());
+    headers.insert("sec-fetch-site", "none".parse().unwrap());
+    headers.insert("sec-fetch-mode", "navigate".parse().unwrap());
+    headers.insert("sec-fetch-user", "?1".parse().unwrap());
+    headers.insert("sec-fetch-dest", "document".parse().unwrap());
+    headers.insert("accept-language", "zh-CN,zh;q=0.9".parse().unwrap());
+    headers
+}

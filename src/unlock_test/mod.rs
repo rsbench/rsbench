@@ -17,6 +17,7 @@ mod mytv_super;
 mod netflix;
 mod nowe;
 mod princess_connect_redive_japan;
+mod showmax;
 mod sling_tv;
 mod steam;
 mod unext;
@@ -85,6 +86,7 @@ pub async fn check_all() {
         Box::new(four_gtv::FourGTV),
         Box::new(sling_tv::SlingTV),
         Box::new(hami_video::HamiVideo),
+        Box::new(showmax::ShowMax),
     ];
 
     let services_count = services.len();
