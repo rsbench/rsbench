@@ -1,5 +1,4 @@
 name: Linux Cross Build
-runs-on: self-hosted
 on:
   push:
     branches:
