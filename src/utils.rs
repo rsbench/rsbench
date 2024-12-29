@@ -37,7 +37,6 @@ pub fn set_random_colour() {
         .unwrap();
 }
 
-
 /// 设置终端输出的文本颜色为默认颜色（白色）
 pub fn set_default_colour() {
     // 获取标准输出的句柄，并指定颜色选择为 Always

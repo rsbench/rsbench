@@ -25,7 +25,6 @@ pub(crate) struct UnlockResult {
     pub error: Option<String>,
 }
 
-
 /// 定义一个异步 trait，用于表示一个服务
 #[async_trait]
 #[allow(dead_code)]
@@ -180,7 +179,6 @@ impl Display for UnlockResult {
         result
     }
 }
-
 
 /// 获取需要测试的服务列表
 pub fn get_test_service(args: &crate::config::Config) -> Vec<Box<dyn Service + Send + Sync>> {

@@ -20,7 +20,7 @@ pub fn run_info() {
     set_colour(Color::Yellow);
     print!("CPU : ");
     set_colour(Color::Green);
-    println!("{}", cpu::get_cpu(&s));
+    println!("{}", cpu::get_cpu().unwrap_or_default());
 
     set_colour(Color::Yellow);
     print!("MEM : ");

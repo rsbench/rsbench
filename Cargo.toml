@@ -24,6 +24,8 @@ regex = { version = "1.11.1", default-features = false, features = ["std", "unic
 termcolor = "1.4.1"
 async-stream = "0.3.6"
 rand = { version = "0.8.5", default-features = false, features = ["std", "std_rng"] }
+dmidecode = "0.8.5"
+
 
 [profile]
 dev = { opt-level = 3 }
