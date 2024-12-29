@@ -1,20 +1,21 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{Service, UnlockResult};
-use crate::unlock_test::headers::showmax_headers;
-use crate::unlock_test::utils::{create_reqwest_client, get_url, parse_response_to_html};
+use crate::unlock_test::utils::{
+    create_reqwest_client, get_url, parse_response_to_html, UA_BROWSER,
+};
+use crate::unlock_test::{Service, UnlockResult};
 use async_trait::async_trait;
 
-pub struct ShowMax;
+pub struct MyTVSuper;
 
 #[async_trait]
-impl Service for ShowMax {
+impl Service for MyTVSuper {
     fn name(&self) -> String {
-        "Showmax".to_string()
+        "myTV Super".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client = match create_reqwest_client(self.name(), None, true, None).await {
+        let client = match create_reqwest_client(self.name(), Some(UA_BROWSER), true, None).await {
             Ok(client) => client,
             Err(unlock_result) => return unlock_result,
         };
@@ -22,8 +23,8 @@ impl Service for ShowMax {
         let result = match get_url(
             self.name(),
             &client,
-            "https://www.showmax.com/",
-            Some(showmax_headers()),
+            "https://www.mytvsuper.com/api/auth/getSession/self/",
+            None,
             None,
         )
         .await
@@ -37,7 +38,7 @@ impl Service for ShowMax {
             Err(unlock_result) => return unlock_result,
         };
 
-        if html.contains("activeTerritory") {
+        if html.contains(r#""country_code":"HK""#) {
             UnlockResult {
                 service_name: self.name(),
                 available: true,

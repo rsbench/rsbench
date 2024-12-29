@@ -1,10 +1,10 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{Service, UnlockResult};
 use crate::unlock_test::headers::youtube_premium_headers;
 use crate::unlock_test::utils::{
     create_reqwest_client, get_url, parse_response_to_html, trim_string, UA_BROWSER,
 };
+use crate::unlock_test::{Service, UnlockResult};
 use async_trait::async_trait;
 use regex::Regex;
 

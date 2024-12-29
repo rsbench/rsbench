@@ -1,8 +1,8 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{Service, UnlockResult};
 use crate::unlock_test::headers::unext_headers;
-use crate::unlock_test::utils::{create_reqwest_client, parse_response_to_html};
+use crate::unlock_test::utils::{create_reqwest_client, parse_response_to_html, UA_BROWSER};
+use crate::unlock_test::{Service, UnlockResult};
 use async_trait::async_trait;
 
 pub struct UNext;
@@ -14,13 +14,10 @@ impl Service for UNext {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client =
-            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER), true, None)
-                .await
-            {
-                Ok(client) => client,
-                Err(unlock_result) => return unlock_result,
-            };
+        let client = match create_reqwest_client(self.name(), Some(UA_BROWSER), true, None).await {
+            Ok(client) => client,
+            Err(unlock_result) => return unlock_result,
+        };
 
         let result = match client.post("https://cc.unext.jp")
             .headers(unext_headers())

@@ -1,30 +1,29 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{Service, UnlockResult};
-use crate::unlock_test::utils::{create_reqwest_client, get_url, parse_response_to_html};
+use crate::unlock_test::utils::{
+    create_reqwest_client, get_url, parse_response_to_html, UA_BROWSER2,
+};
+use crate::unlock_test::{Service, UnlockResult};
 use async_trait::async_trait;
 
-pub struct MyTVSuper;
+pub struct HamiVideo;
 
 #[async_trait]
-impl Service for MyTVSuper {
+impl Service for HamiVideo {
     fn name(&self) -> String {
-        "myTV Super".to_string()
+        "HamiVideo".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client =
-            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER), true, None)
-                .await
-            {
-                Ok(client) => client,
-                Err(unlock_result) => return unlock_result,
-            };
+        let client = match create_reqwest_client(self.name(), Some(UA_BROWSER2), true, None).await {
+            Ok(client) => client,
+            Err(unlock_result) => return unlock_result,
+        };
 
         let result = match get_url(
             self.name(),
             &client,
-            "https://www.mytvsuper.com/api/auth/getSession/self/",
+            "https://hamivideo.hinet.net/api/play.do?id=OTT_VOD_0000249064&freeProduct=1",
             None,
             None,
         )
@@ -39,7 +38,7 @@ impl Service for MyTVSuper {
             Err(unlock_result) => return unlock_result,
         };
 
-        if html.contains(r#""country_code":"HK""#) {
+        if html.contains("06001-107") {
             UnlockResult {
                 service_name: self.name(),
                 available: true,
@@ -51,7 +50,7 @@ impl Service for MyTVSuper {
                 service_name: self.name(),
                 available: false,
                 region: None,
-                error: Some(String::from("Not available")),
+                error: Some("Not available".to_string()),
             }
         }
     }

@@ -1,7 +1,7 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{Service, UnlockResult};
-use crate::unlock_test::utils::{create_reqwest_client, get_url};
+use crate::unlock_test::utils::{create_reqwest_client, get_url, UA_BROWSER2};
+use crate::unlock_test::{Service, UnlockResult};
 use async_trait::async_trait;
 
 pub struct PrincessConnectReDiveJapan;
@@ -12,13 +12,11 @@ impl Service for PrincessConnectReDiveJapan {
         "Princess Connect Re:Dive Japan".to_string()
     }
     async fn check_unlock(&self) -> UnlockResult {
-        let client =
-            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER2), false, None)
-                .await
-            {
-                Ok(client) => client,
-                Err(unlock_result) => return unlock_result,
-            };
+        let client = match create_reqwest_client(self.name(), Some(UA_BROWSER2), false, None).await
+        {
+            Ok(client) => client,
+            Err(unlock_result) => return unlock_result,
+        };
         let result = match get_url(
             self.name(),
             &client,

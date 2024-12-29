@@ -1,8 +1,10 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{Service, UnlockResult};
 use crate::unlock_test::headers::netflix_headers;
-use crate::unlock_test::utils::{create_reqwest_client, get_url, parse_response_to_html};
+use crate::unlock_test::utils::{
+    create_reqwest_client, get_url, parse_response_to_html, UA_BROWSER,
+};
+use crate::unlock_test::{Service, UnlockResult};
 use async_trait::async_trait;
 use regex::Regex;
 use std::time::Duration;
@@ -16,13 +18,10 @@ impl Service for Netflix {
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client =
-            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER), false, None)
-                .await
-            {
-                Ok(client) => client,
-                Err(unlock_result) => return unlock_result,
-            };
+        let client = match create_reqwest_client(self.name(), Some(UA_BROWSER), false, None).await {
+            Ok(client) => client,
+            Err(unlock_result) => return unlock_result,
+        };
 
         let result1 = match get_url(
             self.name(),

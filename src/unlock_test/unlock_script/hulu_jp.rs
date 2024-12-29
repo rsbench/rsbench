@@ -1,35 +1,31 @@
 // https://github.com/lmc999/RegionRestrictionCheck/blob/main/check.sh
 
-use super::{Service, UnlockResult};
-use crate::unlock_test::headers::four_gtv_headers;
+use crate::unlock_test::headers::hulu_jp_headers;
 use crate::unlock_test::utils::{
-    create_reqwest_client, get_url, parse_response_to_html, trim_string,
+    create_reqwest_client, get_url, parse_response_to_html, UA_BROWSER,
 };
+use crate::unlock_test::{Service, UnlockResult};
 use async_trait::async_trait;
-use regex::Regex;
 
-pub struct FourGTV;
+pub struct HuluJP;
 
 #[async_trait]
-impl Service for FourGTV {
+impl Service for HuluJP {
     fn name(&self) -> String {
-        "4GTV".to_string()
+        "Hulu Japan".to_string()
     }
 
     async fn check_unlock(&self) -> UnlockResult {
-        let client =
-            match create_reqwest_client(self.name(), Some(super::utils::UA_BROWSER), true, None)
-                .await
-            {
-                Ok(client) => client,
-                Err(unlock_result) => return unlock_result,
-            };
+        let client = match create_reqwest_client(self.name(), Some(UA_BROWSER), true, None).await {
+            Ok(client) => client,
+            Err(unlock_result) => return unlock_result,
+        };
 
         let result = match get_url(
             self.name(),
             &client,
-            "https://api2.4gtv.tv/Web/IsTaiwanArea",
-            Some(four_gtv_headers()),
+            "https://id.hulu.jp/",
+            Some(hulu_jp_headers()),
             None,
         )
         .await
@@ -38,36 +34,43 @@ impl Service for FourGTV {
             Err(unlock_result) => return unlock_result,
         };
 
+        let status_code = result.status().as_u16();
+
         let html = match parse_response_to_html(self.name(), result).await {
             Ok(html) => html,
             Err(unlock_result) => return unlock_result,
         };
 
-        let re = Regex::new(r#""Data":"([^"]+)"#).unwrap();
-
-        let data = re.find(&html).unwrap().as_str();
-
-        let data = trim_string(data, 8, 0);
-
-        match data {
-            "N" => UnlockResult {
+        if html.contains("restrict") {
+            return UnlockResult {
                 service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some(String::from("Not available")),
-            },
-            "Y" => UnlockResult {
+            };
+        }
+
+        if status_code == 200 {
+            UnlockResult {
                 service_name: self.name(),
                 available: true,
                 region: None,
                 error: None,
-            },
-            _ => UnlockResult {
+            }
+        } else if status_code == 403 {
+            UnlockResult {
                 service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some(String::from("Not available")),
-            },
+            }
+        } else {
+            UnlockResult {
+                service_name: self.name(),
+                available: false,
+                region: None,
+                error: Some(String::from("Unknown error")),
+            }
         }
     }
 }

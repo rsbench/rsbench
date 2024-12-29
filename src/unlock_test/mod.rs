@@ -1,31 +1,8 @@
-mod animefesta;
-mod bahamut;
-mod bbc_iplayer;
-mod bilibili;
-mod dazn;
-mod four_gtv;
-mod google_play_store;
-mod hami_video;
-mod hbomax;
-mod headers;
-mod hulu_jp;
-mod iqiyi_oversea;
-mod kancolle;
-mod lemino;
-mod mora;
-mod mytv_super;
-mod netflix;
-mod nowe;
-mod princess_connect_redive_japan;
-mod showmax;
-mod sling_tv;
-mod steam;
-mod unext;
+pub mod headers;
+mod unlock_script;
 mod utils;
-mod viutv;
-mod youtube_cdn;
-mod youtube_premium;
 
+use crate::unlock_test::unlock_script::all_services;
 use crate::utils::{clear_last_line, set_colour, set_default_colour};
 use async_trait::async_trait;
 use futures::executor::block_on;
@@ -59,35 +36,7 @@ pub async fn check_all() {
     println!("{:^5} {:^30} {}", "Y/N", "Service", "Error");
     set_default_colour();
 
-    let services: Vec<Box<dyn Service + Send + Sync>> = vec![
-        Box::new(netflix::Netflix),
-        Box::new(hbomax::HboMax),
-        Box::new(youtube_cdn::YoutubeCDN),
-        Box::new(youtube_premium::YoutubePremium),
-        Box::new(google_play_store::GooglePlayStore),
-        Box::new(iqiyi_oversea::IqiyiOversea),
-        Box::new(steam::Steam),
-        Box::new(bahamut::BahamutAnime),
-        Box::new(bilibili::BilibiliChinaMainland),
-        Box::new(bilibili::BilibiliChinaTWOnly),
-        Box::new(bilibili::BilibiliChinaHKMOTW),
-        Box::new(princess_connect_redive_japan::PrincessConnectReDiveJapan),
-        Box::new(kancolle::Kancolle),
-        Box::new(lemino::Lemino),
-        Box::new(animefesta::AnimeFesta),
-        Box::new(mora::Mora),
-        Box::new(bbc_iplayer::BBCIPlayer),
-        Box::new(dazn::Dazn),
-        Box::new(hulu_jp::HuluJP),
-        Box::new(mytv_super::MyTVSuper),
-        Box::new(nowe::NowE),
-        Box::new(viutv::ViuTV),
-        Box::new(unext::UNext),
-        Box::new(four_gtv::FourGTV),
-        Box::new(sling_tv::SlingTV),
-        Box::new(hami_video::HamiVideo),
-        Box::new(showmax::ShowMax),
-    ];
+    let services = all_services();
 
     let services_count = services.len();
 
