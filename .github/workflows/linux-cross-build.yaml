@@ -107,14 +107,6 @@ jobs:
           args: "--locked --release --jobs 32"
           strip: true
 
-      - name: Install UPX
-        uses: crazy-max/ghaction-upx@v3
-        with:
-          install-only: true
-
-      - name: Compress binary
-        run: upx -v --ultra-brute target/${{ matrix.platform.target }}/release/rsbench
-
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
 
