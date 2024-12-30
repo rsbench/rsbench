@@ -162,9 +162,7 @@ impl Display for UnlockResult {
                 // 如果错误信息存在，输出服务名称和错误信息
                 Some(error) => {
                     // 尝试输出服务名称，如果失败则忽略
-                    match write!(f, "[ N ] {:^30}", self.service_name) {
-                        _ => {}
-                    };
+                    let _ = write!(f, "[ N ] {:^30}", self.service_name);
                     // 设置文本颜色为黄色
                     set_colour(Color::Yellow);
                     // 输出错误信息

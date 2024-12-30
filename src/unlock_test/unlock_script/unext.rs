@@ -37,14 +37,7 @@ impl Service for UNext {
             Err(unlock_result) => return unlock_result,
         };
 
-        if html.contains(r#""resultStatus":475"#) {
-            UnlockResult {
-                service_name: self.name(),
-                available: true,
-                region: None,
-                error: None,
-            }
-        } else if html.contains(r#""resultStatus":200"#) {
+        if html.contains(r#""resultStatus":475"#) || html.contains(r#""resultStatus":200"#)  {
             UnlockResult {
                 service_name: self.name(),
                 available: true,
@@ -63,7 +56,7 @@ impl Service for UNext {
                 service_name: self.name(),
                 available: false,
                 region: None,
-                error: Some("Not available".to_string()),
+                error: None,
             }
         }
     }

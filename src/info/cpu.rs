@@ -1,5 +1,3 @@
-
-
 // Using sysinfo temporarily for non-linux distributions
 #[cfg(not(target_os = "linux"))]
 pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {

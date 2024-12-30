@@ -3,6 +3,8 @@ use std::time::Instant;
 const BASELINE_FIB_SCORE: f32 = 8838.0;
 // intentionally unoptimized fibonacci
 fn fib(n: u64) -> u64 {
+    // Black Magic, if optimized, it will be BOOOOOM
+    #[allow(clippy::absurd_extreme_comparisons)]
     if n <= 0 {
         0
     } else if n == 1 {

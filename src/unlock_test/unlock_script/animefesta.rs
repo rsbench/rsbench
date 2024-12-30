@@ -39,13 +39,6 @@ impl Service for AnimeFesta {
                 region: None,
                 error: None,
             }
-        } else if result.status().as_u16() == 403 {
-            UnlockResult {
-                service_name: self.name(),
-                available: false,
-                region: None,
-                error: None,
-            }
         } else {
             UnlockResult {
                 service_name: self.name(),

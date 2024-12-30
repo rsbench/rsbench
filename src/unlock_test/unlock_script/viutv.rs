@@ -56,7 +56,7 @@ impl Service for ViuTV {
                 service_name: self.name(),
                 available: false,
                 region: None,
-                error: Some("Not available".to_string()),
+                error: None,
             }
         }
     }

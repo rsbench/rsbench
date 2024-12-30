@@ -79,14 +79,12 @@ impl Service for YoutubeCDN {
             cdn_node.to_uppercase()
         };
 
-        let mut count = 0;
         let mut cdn_region = String::new();
-        for char in cdn_node.chars() {
+        for (count, (_, char)) in cdn_node.chars().enumerate().enumerate() {
             if count == 3 {
                 break;
             }
             cdn_region.push(char);
-            count += 1;
         }
 
         UnlockResult {

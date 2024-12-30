@@ -6,6 +6,7 @@ use crate::unlock_test::utils::{
 use crate::unlock_test::{Service, UnlockResult};
 use async_trait::async_trait;
 use regex::Regex;
+use std::cmp::Ordering;
 
 const MAINLAND_URL: &str = r#"https://api.bilibili.com/pgc/player/web/playurl?avid=82846771&qn=0&type=&otype=json&ep_id=307247&fourk=1&fnver=0&fnval=16&session=2964df126ad2f9d834dd4fda26fe1061&module=bangumi"#;
 const TW_URL: &str = r#"https://api.bilibili.com/pgc/player/web/playurl?avid=50762638&cid=100279344&qn=0&type=&otype=json&ep_id=268176&fourk=1&fnver=0&fnval=16&session=2964df126ad2f9d834dd4fda26fe1061&module=bangumi"#;
@@ -43,27 +44,25 @@ async fn get_bilibili_url(name: String, url: String) -> UnlockResult {
 
     let code = trim_string(line, 7, 0).to_string().parse::<i32>().unwrap();
 
-    if code == 0 {
-        UnlockResult {
-            service_name: name,
-            available: true,
-            region: None,
-            error: None,
-        }
-    } else if code < 0 {
-        UnlockResult {
+    match code.cmp(&0) {
+        Ordering::Less => UnlockResult {
             service_name: name,
             available: false,
             region: None,
             error: Some(String::from("Not available")),
-        }
-    } else {
-        UnlockResult {
+        },
+        Ordering::Equal => UnlockResult {
+            service_name: name,
+            available: true,
+            region: None,
+            error: None,
+        },
+        Ordering::Greater => UnlockResult {
             service_name: name,
             available: false,
             region: None,
             error: None,
-        }
+        },
     }
 }
 
