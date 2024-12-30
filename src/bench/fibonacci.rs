@@ -1,5 +1,8 @@
+use crate::utils::{set_colour, set_default_colour};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
+use termcolor::Color;
+
 const BASELINE_FIB_SCORE: f32 = 8838.0;
 // intentionally unoptimized fibonacci
 fn fib(n: u64) -> u64 {
@@ -21,7 +24,14 @@ pub fn run_fibonacci() {
     let duration = start.elapsed();
     log.done();
     let score: f32 = BASELINE_FIB_SCORE / duration.as_millis() as f32;
-    println!("FIB : {} ({}ms)", score, duration.as_millis());
+    
+    set_colour(Color::Yellow);
+    print!("FIB : ");
+    set_colour(Color::White);
+    print!("{score}");
+    set_colour(Color::Magenta);
+    println!(" ({}ms)", duration.as_millis());
+    set_default_colour();
 }
 
 pub fn run_fibonacci_mt(threads: u32) {
@@ -54,7 +64,11 @@ pub fn run_fibonacci_mt(threads: u32) {
         total_score += BASELINE_FIB_SCORE / (*t as f32);
     }
 
-    println!(
-        "FIB{threads}: {total_score} ({total_time}ms total, thread times = {durations:?}ms each)"
-    );
+    set_colour(Color::Yellow);
+    print!("FIB{threads}: ");
+    set_colour(Color::White);
+    print!("{total_score}");
+    set_colour(Color::Magenta);
+    println!(" ({total_time}ms total)");
+    set_default_colour();
 }

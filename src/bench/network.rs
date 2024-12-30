@@ -164,17 +164,23 @@ pub fn start_speedtest() {
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap();
     log.done();
-
+    
+    let binding = mean_speed_mbps.to_string();
+    let mean_speed_mbps_str = &binding.as_str()[0.. 5];
+    
+    let binding = max.to_string();
+    let max_str = &binding.as_str()[0.. 5];
+    
     set_colour(Color::Yellow);
     print!("DOWN: 🔽 ");
     set_colour(Color::Rgb(64, 224, 208));
-    print!("{mean_speed_mbps:.2} Mbps");
+    print!("{mean_speed_mbps_str} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
     set_colour(Color::Rgb(65, 105, 225));
-    println!("{max:.2} Mbps");
+    println!("{max_str} Mbps");
     set_default_colour();
 
     // Upload test
@@ -186,16 +192,22 @@ pub fn start_speedtest() {
         .unwrap();
     log.done();
 
+    let binding = mean_speed_mbps.to_string();
+    let mean_speed_mbps_str = &binding.as_str()[0.. 5];
+
+    let binding = max.to_string();
+    let max_str = &binding.as_str()[0.. 5];
+
     set_colour(Color::Yellow);
     print!("UP  : 🔼 ");
     set_colour(Color::Rgb(139, 0, 139));
-    print!("{mean_speed_mbps:.2} Mbps");
+    print!("{mean_speed_mbps_str} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
     set_colour(Color::Rgb(72, 61, 139));
-    println!("{max:.2} Mbps");
+    println!("{max_str} Mbps");
     set_default_colour();
 }
 
@@ -254,16 +266,22 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         .unwrap();
     log.done();
 
+    let binding = total_mean_speed.to_string();
+    let total_mean_speed_str = &binding.as_str()[0.. 5];
+    
+    let binding = max.to_string();
+    let max_str = &binding.as_str()[0.. 5];
+    
     set_colour(Color::Yellow);
     print!("DOWN: ⏬ ");
     set_colour(Color::Rgb(64, 224, 208));
-    print!("{total_mean_speed:.2} Mbps");
+    print!("{total_mean_speed_str} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
     set_colour(Color::Rgb(65, 105, 225));
-    println!("{max:.2} Mbps");
+    println!("{max_str} Mbps");
     set_default_colour();
 
     // upload test
@@ -303,15 +321,21 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         .unwrap();
     log.done();
 
+    let binding = total_mean_speed.to_string();
+    let total_mean_speed_str = &binding.as_str()[0.. 5];
+
+    let binding = max.to_string();
+    let max_str = &binding.as_str()[0.. 5];
+
     set_colour(Color::Yellow);
     print!("UP  : ⏫ ");
     set_colour(Color::Rgb(139, 0, 139));
-    print!("{total_mean_speed:.2} Mbps");
+    print!("{total_mean_speed_str} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
     set_colour(Color::Rgb(72, 61, 139));
-    println!("{max:.2} Mbps");
+    println!("{max_str} Mbps");
     set_default_colour();
 }

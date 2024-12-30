@@ -12,7 +12,7 @@ use std::time::Duration;
 ///
 /// # 返回值
 /// * 修剪后的字符串切片
-pub fn trim_string(s: &str, leading: usize, trailing: usize) -> &str {
+pub(crate) fn trim_string(s: &str, leading: usize, trailing: usize) -> &str {
     // 计算修剪后的字符串的起始索引
     let start = leading;
     // 计算修剪后的字符串的结束索引，使用 saturating_sub 方法避免索引越界

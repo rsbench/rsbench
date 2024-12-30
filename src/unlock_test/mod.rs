@@ -1,6 +1,6 @@
 pub mod headers;
 mod unlock_script;
-mod utils;
+pub mod utils;
 
 use crate::config::UnlockRegion;
 use crate::unlock_test::unlock_script::{afr_services, all_services, asia_services, cn_services, euro_services, global_services, hk_services, jp_services, mo_services, tw_services, uk_services, us_services};
