@@ -1,4 +1,4 @@
-use std::env;
+
 
 // Using sysinfo temporarily for non-linux distributions
 #[cfg(not(target_os = "linux"))]
@@ -25,6 +25,7 @@ pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {
 // Use dmidecode for linux, which produces >>>> better results especially for aarch64 processors
 #[cfg(target_os = "linux")]
 pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {
+    use std::env;
     if env::var("USER") == Ok("root".to_string()) {
         use dmidecode::{EntryPoint, Structure};
         use std::fs;

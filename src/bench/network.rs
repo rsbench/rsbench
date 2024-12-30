@@ -11,7 +11,7 @@ use termcolor::Color;
 
 pub fn ping() {
     let mut log = paris::Logger::new();
-    log.loading("Tcping: 1.1.1.1:443 ...");
+    log.loading("Running PING test...");
     let mut results = Vec::new();
     let addr = "1.1.1.1:443";
     for _ in 0..50 {
@@ -28,7 +28,8 @@ pub fn ping() {
     log.done();
     let mean = results.iter().sum::<u128>() as f64 / results.len() as f64;
     if mean < 0.02 {
-        log.error("Unable to connect to cloudflare server");
+        log.done();
+        log.error("PING: FAILED: Cannot connect to Cloudflare");
         println!();
         return;
     }
@@ -240,9 +241,9 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     let mut instant_speeds: Vec<f64> = Vec::new();
     for i in 0..all_speed_samples.len() {
         let mut instant_speed = 0.0;
-        for j in 0..results_success.len() {
-            if i < results_success[j].1.len() {
-                instant_speed += results_success[j].1[i];
+        for result_success in &results_success {
+            if i < result_success.1.len() {
+                instant_speed += result_success.1[i];
             }
         }
         instant_speeds.push(instant_speed);
@@ -289,9 +290,9 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     let mut instant_speeds: Vec<f64> = Vec::new();
     for i in 0..all_speed_samples.len() {
         let mut instant_speed = 0.0;
-        for j in 0..results.len() {
-            if i < results[j].1.len() {
-                instant_speed += results[j].1[i];
+        for result in &results {
+            if i < result.1.len() {
+                instant_speed += result.1[i];
             }
         }
         instant_speeds.push(instant_speed);
