@@ -16,7 +16,7 @@ pub struct Config {
     pub unlock: bool,
 
     // Set services unlock region
-    #[arg(long)]
+    #[arg(long, requires = "unlock")]
     pub region: Option<Vec<UnlockRegion>>,
 
     /// Run system tuning
