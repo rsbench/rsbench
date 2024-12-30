@@ -97,7 +97,7 @@ impl Service for Netflix {
                 Some(country) => country.as_str(),
             };
             let re = Regex::new(r#"([A-Z]{2})"#).unwrap();
-            let country = re.find(&country).unwrap().as_str();
+            let country = re.find(country).unwrap().as_str();
 
             UnlockResult {
                 service_name: self.name(),

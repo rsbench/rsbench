@@ -43,12 +43,12 @@ pub async fn check_all(args: &crate::config::Config) {
     // 打印 UNLOCK 标题
     println!("UNLOCK:");
     // 打印表格标题
-    println!("{:^5} {:^30} {}", "Y/N", "Service", "Error");
+    println!("{:^5} {:^30} Error", "Y/N", "Service");
     // 设置文本颜色为默认颜色
     set_default_colour();
 
     // 获取需要测试的服务列表
-    let services = get_test_service(&args);
+    let services = get_test_service(args);
     // 获取服务列表的长度
     let services_count = services.len();
 
@@ -186,7 +186,7 @@ pub fn get_test_service(args: &crate::config::Config) -> Vec<Box<dyn Service + S
     let mut services = Vec::new();
 
     // 检查配置中是否指定了区域
-    if !args.region.is_some() {
+    if args.region.is_none() {
         // 如果没有指定区域，则添加所有服务
         services.extend(all_services());
     } else {

@@ -52,7 +52,7 @@ impl Service for Dazn {
                 Some(region) => UnlockResult {
                     service_name: self.name(),
                     available: true,
-                    region: Some(trim_string(&region.as_str(), 21, 1).to_uppercase()),
+                    region: Some(trim_string(region.as_str(), 21, 1).to_uppercase()),
                     error: None,
                 },
             }

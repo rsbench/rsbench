@@ -81,7 +81,7 @@ impl Service for BahamutAnime {
         let mut region = String::new();
 
         for line in re.find_iter(&html2) {
-            region = trim_string(&line.as_str(), 10, 1)
+            region = trim_string(line.as_str(), 10, 1)
                 .to_string()
                 .to_uppercase();
         }
