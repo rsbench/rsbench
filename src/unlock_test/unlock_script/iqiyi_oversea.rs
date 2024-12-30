@@ -31,7 +31,7 @@ impl Service for IqiyiOversea {
             Err(unlock_result) => return unlock_result,
         };
 
-        let re = Regex::new(r#"mod=[a-z]+"#).unwrap();
+        let re = Regex::new(r"mod=[a-z]+").unwrap();
         let region = match re.find(&html) {
             None => {
                 return UnlockResult {

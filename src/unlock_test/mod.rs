@@ -3,7 +3,7 @@ mod unlock_script;
 mod utils;
 
 use crate::config::UnlockRegion;
-use crate::unlock_test::unlock_script::*;
+use crate::unlock_test::unlock_script::{afr_services, all_services, asia_services, cn_services, euro_services, global_services, hk_services, jp_services, mo_services, tw_services, uk_services, us_services};
 use crate::utils::{clear_last_line, set_colour, set_default_colour};
 use async_trait::async_trait;
 use futures::executor::block_on;
@@ -80,7 +80,7 @@ pub async fn check_all(args: &crate::config::Config) {
     // 从通道中接收消息，直到通道关闭
     while let Some(result) = rx.recv().await {
         // 打印接收到的结果
-        println!("{}", result);
+        println!("{result}");
         // 将结果添加到结果向量中
         results.push(result);
     }
@@ -100,32 +100,31 @@ pub async fn check_all(args: &crate::config::Config) {
     let mut locked_services = Vec::new();
 
     // 遍历所有结果，将服务根据其解锁状态分类
-    results.iter().for_each(|result| {
+    for result in &results {
         if result.available {
             unlocked_services.push(result);
         } else {
             locked_services.push(result);
         }
-    });
+    }
 
     // 获取已解锁服务的数量
     let unlocked_services_count = unlocked_services.len();
     // 打印所有已解锁的服务
-    unlocked_services.iter().for_each(|result| {
-        println!("{}", result);
-    });
+    for result in &unlocked_services {
+        println!("{result}");
+    }
 
     // 获取未解锁服务的数量
     let locked_services_count = locked_services.len();
     // 打印所有未解锁的服务
-    locked_services.iter().for_each(|result| {
-        println!("{}", result);
-    });
+    for result in &locked_services {
+        println!("{result}");
+    }
 
     // 打印测试总结，包括测试的服务数量、花费的时间、已解锁和未解锁的服务数量
     println!(
-        "Tested {} projects took {:.2} seconds, {} services unlocked, {} services locked.",
-        services_count, time, unlocked_services_count, locked_services_count,
+        "Tested {services_count} projects took {time:.2} seconds, {unlocked_services_count} services unlocked, {locked_services_count} services locked.",
     );
 }
 
@@ -147,7 +146,7 @@ impl Display for UnlockResult {
                 // 如果区域存在，输出服务名称和区域
                 Some(region) => {
                     let service = format!("{} ({})", self.service_name, region);
-                    write!(f, "[ Y ] {:^30}", service)
+                    write!(f, "[ Y ] {service:^30}")
                 }
             }
         } else {
@@ -166,7 +165,7 @@ impl Display for UnlockResult {
                     // 设置文本颜色为黄色
                     set_colour(Color::Yellow);
                     // 输出错误信息
-                    write!(f, " {}", error)
+                    write!(f, " {error}")
                 }
             }
         };

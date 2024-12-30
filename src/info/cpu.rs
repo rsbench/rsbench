@@ -54,7 +54,7 @@ pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {
                     _ => continue,
                 },
                 Err(e) => {
-                    eprintln!("Error reading SMBIOS structure: {:?}", e);
+                    eprintln!("Error reading SMBIOS structure: {e:?}");
                 }
             }
         }
@@ -68,8 +68,7 @@ pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {
                 let cpu_threads = s.cpus().len();
                 let cpu_speed = cpu.frequency();
                 Ok(format!(
-                    "{} {} Threads @ {}Mhz",
-                    cpu_model, cpu_threads, cpu_speed
+                    "{cpu_model} {cpu_threads} Threads @ {cpu_speed}Mhz"
                 ))
             }
             None => Ok("Unknown CPU".to_string()),

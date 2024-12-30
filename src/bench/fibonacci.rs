@@ -55,7 +55,6 @@ pub fn run_fibonacci_mt(threads: u32) {
     }
 
     println!(
-        "FIB{}: {} ({}ms total, thread times = {:?}ms each)",
-        threads, total_score, total_time, durations
+        "FIB{threads}: {total_score} ({total_time}ms total, thread times = {durations:?}ms each)"
     );
 }

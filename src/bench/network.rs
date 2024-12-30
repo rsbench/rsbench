@@ -34,7 +34,7 @@ pub fn ping() {
         return;
     }
     set_colour(Color::Blue);
-    println!("PING: {:.2} ms", mean);
+    println!("PING: {mean:.2} ms");
     set_default_colour();
 }
 
@@ -168,13 +168,13 @@ pub fn start_speedtest() {
     set_colour(Color::Yellow);
     print!("DOWN: 🔽 ");
     set_colour(Color::Rgb(64, 224, 208));
-    print!("{:.2} Mbps", mean_speed_mbps);
+    print!("{mean_speed_mbps:.2} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
     set_colour(Color::Rgb(65, 105, 225));
-    println!("{:.2} Mbps", max);
+    println!("{max:.2} Mbps");
     set_default_colour();
 
     // Upload test
@@ -189,13 +189,13 @@ pub fn start_speedtest() {
     set_colour(Color::Yellow);
     print!("UP  : 🔼 ");
     set_colour(Color::Rgb(139, 0, 139));
-    print!("{:.2} Mbps", mean_speed_mbps);
+    print!("{mean_speed_mbps:.2} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
     set_colour(Color::Rgb(72, 61, 139));
-    println!("{:.2} Mbps", max);
+    println!("{max:.2} Mbps");
     set_default_colour();
 }
 
@@ -257,13 +257,13 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     set_colour(Color::Yellow);
     print!("DOWN: ⏬ ");
     set_colour(Color::Rgb(64, 224, 208));
-    print!("{:.2} Mbps", total_mean_speed);
+    print!("{total_mean_speed:.2} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
     set_colour(Color::Rgb(65, 105, 225));
-    println!("{:.2} Mbps", max);
+    println!("{max:.2} Mbps");
     set_default_colour();
 
     // upload test
@@ -306,12 +306,12 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     set_colour(Color::Yellow);
     print!("UP  : ⏫ ");
     set_colour(Color::Rgb(139, 0, 139));
-    print!("{:.2} Mbps", total_mean_speed);
+    print!("{total_mean_speed:.2} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
     set_colour(Color::Rgb(72, 61, 139));
-    println!("{:.2} Mbps", max);
+    println!("{max:.2} Mbps");
     set_default_colour();
 }

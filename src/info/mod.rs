@@ -27,11 +27,11 @@ pub fn run_info() {
     set_colour(Color::Cyan);
     println!("{}", mem::get_mem(&s));
 
-    for disk in disk::get_disk().iter() {
+    for disk in &disk::get_disk() {
         set_colour(Color::Yellow);
         print!("DISK: ");
         set_colour(Color::Red);
-        println!("{}", disk);
+        println!("{disk}");
     }
 
     #[cfg(target_os = "linux")]

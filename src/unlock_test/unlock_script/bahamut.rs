@@ -46,8 +46,7 @@ impl Service for BahamutAnime {
             self.name(),
             &client,
             &format!(
-                "https://ani.gamer.com.tw/ajax/token.php?adID=89422&sn=37783&device={}",
-                device_id
+                "https://ani.gamer.com.tw/ajax/token.php?adID=89422&sn=37783&device={device_id}"
             ),
             None,
             None,

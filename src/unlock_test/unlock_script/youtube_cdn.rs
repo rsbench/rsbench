@@ -39,7 +39,7 @@ impl Service for YoutubeCDN {
             Err(unlock_result) => return unlock_result,
         };
 
-        let re = Regex::new(r#"=>"#).unwrap();
+        let re = Regex::new(r"=>").unwrap();
 
         let mut first_line = "";
         for line in html.lines() {
@@ -62,8 +62,8 @@ impl Service for YoutubeCDN {
             Some(cdn_node) => cdn_node,
         };
 
-        let cdn_node = if cdn_node.contains("-") {
-            let binding = cdn_node.split("-").collect::<Vec<&str>>();
+        let cdn_node = if cdn_node.contains('-') {
+            let binding = cdn_node.split('-').collect::<Vec<&str>>();
             match binding.get(1) {
                 None => {
                     return UnlockResult {

@@ -1,4 +1,4 @@
-name: Check & Test
+name: Check & Test & Clippy
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   Test:
-    name: Check & Test - ${{ github.sha }}
+    name: Check & Test & Clippy - ${{ github.sha }}
     runs-on: self-hosted
     steps:
       - name: Checkout
@@ -25,3 +25,6 @@ jobs:
 
       - name: Cargo Test
         run: cargo test
+
+      - name: Cargo Clippy
+        run: cargo clippy
