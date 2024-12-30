@@ -31,6 +31,10 @@ async fn main() {
     if args.tune {
         tune::run_tune();
     }
+    if !args.info && !args.bench && !args.unlock && !args.tune {
+        warn!("No parameter is currently specified, info mode will be used by default.");
+        info::run_info();
+    }
 }
 
 fn print_ascii_art() {
