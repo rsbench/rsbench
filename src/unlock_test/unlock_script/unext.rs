@@ -37,7 +37,7 @@ impl Service for UNext {
             Err(unlock_result) => return unlock_result,
         };
 
-        if html.contains(r#""resultStatus":475"#) || html.contains(r#""resultStatus":200"#)  {
+        if html.contains(r#""resultStatus":475"#) || html.contains(r#""resultStatus":200"#) {
             UnlockResult {
                 service_name: self.name(),
                 available: true,

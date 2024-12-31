@@ -24,7 +24,7 @@ pub fn run_fibonacci() {
     let duration = start.elapsed();
     log.done();
     let score: f32 = BASELINE_FIB_SCORE / duration.as_millis() as f32;
-    
+
     set_colour(Color::Yellow);
     print!("FIB : ");
     set_colour(Color::White);

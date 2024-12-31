@@ -5,7 +5,11 @@ pub fn get_virt() -> String {
     {
         // Only implemented for systemd systems for now, to add later
         std::process::Command::new("systemd-detect-virt")
-            .output().map_or_else(|_| "unknown".to_string(), |output| String::from_utf8_lossy(&output.stdout).trim().to_string())
+            .output()
+            .map_or_else(
+                |_| "unknown".to_string(),
+                |output| String::from_utf8_lossy(&output.stdout).trim().to_string(),
+            )
     }
 
     #[cfg(not(target_os = "linux"))]
