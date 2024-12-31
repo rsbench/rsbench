@@ -95,17 +95,20 @@ jobs:
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
 
+      - name: Rename deb package
+        run: cp target/${{ matrix.platform.target }}/debian/*.deb target/${{ matrix.platform.target }}/debian/${{ matrix.platform.binary_name }}.deb
+
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform.target }}
           path: target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
 
-      - name: Upload binary
+      - name: Upload Deb package
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform.target }}-deb
-          path: target/${{ matrix.platform.target }}/debian/*.deb
+          path: target/${{ matrix.platform.target }}/debian/${{ matrix.platform.binary_name }}.deb
 
       - name: Delete deb package
         run: rm -rf target/debian
