@@ -8,6 +8,10 @@ description = "Benchmarking utility written in pure rust"
 readme = "README.md"
 repository = "https://github.com/rsbench/rsbench"
 license = "MIT"
+homepage = "https://rsbench.github.io"
+
+[package.metadata.deb]
+maintainer = "GenshinMinecraft"
 
 [badges]
 maintenance = { status = "actively-developed" }
