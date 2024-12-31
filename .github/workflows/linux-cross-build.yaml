@@ -111,7 +111,7 @@ jobs:
           path: target/${{ matrix.platform.target }}/debian/${{ matrix.platform.binary_name }}.deb
 
       - name: Publish to GitHub Release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v1
         with:
           files: |
