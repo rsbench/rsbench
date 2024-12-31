@@ -22,6 +22,9 @@ pub struct Config {
     /// Run system tuning
     #[arg(short, long)]
     pub tune: bool,
+    
+    #[arg(long, default_value_t = false)]
+    pub no_color: bool,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]

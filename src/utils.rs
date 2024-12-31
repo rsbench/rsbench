@@ -5,6 +5,11 @@ use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 /// 设置终端输出的文本颜色为随机颜色
 pub fn set_random_colour() {
+    let no_color = std::env::var("RSBENCH_NO_COLOR").unwrap_or("0".to_string());
+    if no_color == "1" {
+        return;
+    }
+    
     // 定义一个内部函数 random_colour，用于生成随机颜色
     fn random_colour() -> Color {
         // 创建一个颜色数组，包含多种颜色
@@ -39,6 +44,10 @@ pub fn set_random_colour() {
 
 /// 设置终端输出的文本颜色为默认颜色（白色）
 pub fn set_default_colour() {
+    let no_color = std::env::var("RSBENCH_NO_COLOR").unwrap_or("0".to_string());
+    if no_color == "1" {
+        return;
+    }
     // 获取标准输出的句柄，并指定颜色选择为 Always
     let mut stdout = StandardStream::stdout(ColorChoice::Always);
     // 设置标准输出的颜色为默认颜色（白色）
@@ -51,6 +60,10 @@ pub fn set_default_colour() {
 
 /// 设置终端输出的文本颜色
 pub fn set_colour(color: Color) {
+    let no_color = std::env::var("RSBENCH_NO_COLOR").unwrap_or("0".to_string());
+    if no_color == "1" {
+        return;
+    }
     // 获取标准输出的句柄，并指定颜色选择为 Always
     let mut stdout = StandardStream::stdout(ColorChoice::Always);
     // 设置标准输出的颜色为指定的颜色

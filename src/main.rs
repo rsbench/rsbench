@@ -13,12 +13,17 @@ mod utils;
 
 #[tokio::main]
 async fn main() {
+    let args = config::Config::parse();
+
+    if args.no_color {
+        std::env::set_var("RSBENCH_NO_COLOR", "1");
+    }
+
     clear_screen();
     info!("RSBench v{}", env!("CARGO_PKG_VERSION"));
     warn!("This is Alpha software. Thing may and will break.");
     print_ascii_art();
-
-    let args = config::Config::parse();
+    
     if args.info {
         info::run_info();
     }
