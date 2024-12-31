@@ -86,6 +86,12 @@ jobs:
           args: "--locked --release --jobs 32"
           strip: true
 
+      - name: Install Cargo-deb
+        run: cargo install cargo-deb
+
+      - name: Build deb package
+        run: cargo deb --target ${{ matrix.platform.target }} --no-build
+
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
 
@@ -94,3 +100,12 @@ jobs:
         with:
           name: ${{ matrix.platform.target }}
           path: target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform.target }}-deb
+          path: target/${{ matrix.platform.target }}/debian/*.deb
+
+      - name: Delete deb package
+        run: rm -rf target/debian
