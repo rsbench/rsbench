@@ -90,7 +90,7 @@ jobs:
         run: cargo install cargo-deb
 
       - name: Build deb package
-        run: cargo deb --target ${{ matrix.platform.target }} --no-build
+        run: cargo deb --target ${{ matrix.platform.target }} --no-build --no-strip
 
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
