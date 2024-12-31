@@ -1,4 +1,4 @@
-name: Check & Test & Clippy
+name: Cargo Publish To Crates.io
 
 on:
   push:
