@@ -4,6 +4,8 @@
 
 使用方法请见: <https://rsbench.github.io/rsbench>
 
+<video src="https://raw.githubusercontent.com/rsbench/rsbench/refs/heads/main/demos/Demo.mkv" controls="controls" width="500" height="300"></video>
+
 目前正在持续开发中!
 
 ## Todo
