@@ -27,10 +27,14 @@ pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {
     if env::var("USER") == Ok("root".to_string()) {
         use dmidecode::{EntryPoint, Structure};
         use std::fs;
-        let entry_point_bytes = fs::read("/sys/firmware/dmi/tables/smbios_entry_point")
-            .expect("Failed to read /sys/firmware/dmi/tables/smbios_entry_point");
-        let dmi_table_bytes = fs::read("/sys/firmware/dmi/tables/DMI")
-            .expect("Failed to read /sys/firmware/dmi/tables/DMI");
+        let entry_point_bytes = match fs::read("/sys/firmware/dmi/tables/smbios_entry_point") {
+            Ok(entry_point_bytes) => entry_point_bytes,
+            Err(_) => return Ok(classic_get_cpu()),
+        };
+        let dmi_table_bytes = match fs::read("/sys/firmware/dmi/tables/DMI") {
+            Ok(dmi_table_bytes) => dmi_table_bytes,
+            Err(_) => return Ok(classic_get_cpu()),
+        };
 
         let entry_point = EntryPoint::search(&entry_point_bytes)
             .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
@@ -53,25 +57,27 @@ pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {
                     }
                     _ => continue,
                 },
-                Err(e) => {
-                    eprintln!("Error reading SMBIOS structure: {e:?}");
+                Err(_) => {
+                    return Ok(classic_get_cpu())
                 }
             }
         }
 
         Ok("Read failed? Please report bug.".to_string())
     } else {
-        let s = sysinfo::System::new_all();
-        match s.cpus().first() {
-            Some(cpu) => {
-                let cpu_model = cpu.brand();
-                let cpu_threads = s.cpus().len();
-                let cpu_speed = cpu.frequency();
-                Ok(format!(
-                    "{cpu_model} {cpu_threads} Threads @ {cpu_speed}Mhz"
-                ))
-            }
-            None => Ok("Unknown CPU".to_string()),
+        Ok(classic_get_cpu())
+    }
+}
+
+fn classic_get_cpu() -> String {
+    let s = sysinfo::System::new_all();
+    match s.cpus().first() {
+        Some(cpu) => {
+            let cpu_model = cpu.brand();
+            let cpu_threads = s.cpus().len();
+            let cpu_speed = cpu.frequency();
+            format!("{cpu_model} {cpu_threads} Threads @ {cpu_speed}Mhz")
         }
+        None => "Unknown CPU".to_string(),
     }
 }

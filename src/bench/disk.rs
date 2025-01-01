@@ -71,19 +71,23 @@ pub fn write_disk_test() -> Result<(f64, bool), String> {
     };
 
     let buffer = vec![0u8; buffer_size as usize];
-    let mut test_file = if let Ok(file) = File::create(set_file_path()) { file } else {
+    let mut test_file = if let Ok(file) = File::create(set_file_path()) {
+        file
+    } else {
         error!("Unable to create test file");
         return Err("Unable to create test file".to_string());
     };
 
     let start = std::time::Instant::now();
 
-    if let Ok(()) = test_file.write_all(&buffer) {} else {
+    if let Ok(()) = test_file.write_all(&buffer) {
+    } else {
         error!("Unable to write to test file");
         return Err("Unable to write to test file".to_string());
     };
 
-    if let Ok(()) = test_file.sync_all() {} else {
+    if let Ok(()) = test_file.sync_all() {
+    } else {
         error!("Unable to sync test file");
         return Err("Unable to sync test file".to_string());
     }
@@ -100,7 +104,9 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
     let mut log = paris::Logger::new();
     log.loading("Running disk read speed benchmark...");
 
-    let mut test_file = if let Ok(file) = File::open(set_file_path()) { file } else {
+    let mut test_file = if let Ok(file) = File::open(set_file_path()) {
+        file
+    } else {
         error!("Unable to open test file");
         return Err("Unable to open test file".to_string());
     };
@@ -116,7 +122,9 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
     let start = std::time::Instant::now();
 
     while total_read < file_size * 1024 * 1024 {
-        let bytes_read = if let Ok(bytes_read) = test_file.read(&mut buffer) { bytes_read } else {
+        let bytes_read = if let Ok(bytes_read) = test_file.read(&mut buffer) {
+            bytes_read
+        } else {
             error!("Unable to read from test file");
             return Err("Unable to read from test file".to_string());
         };
