@@ -79,6 +79,9 @@ jobs:
 #          path: ./target
 #          key: ${{ matrix.platform.release_for }}
 
+      - name: Install Lib
+        run: sudo apt update && sudo apt install -y musl-tools musl-dev musl upx
+
       - name: Build binary
         uses: moohr/actions-rust-cross@v0
         with:
