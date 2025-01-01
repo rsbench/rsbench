@@ -67,16 +67,17 @@ jobs:
             target: s390x-unknown-linux-gnu
             binary_name: rsbench-linux-s390x-gnu
 
-    runs-on: self-hosted
+#    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache Build
-        uses: actions/cache@v4
-        with:
-          path: ./target
-          key: ${{ matrix.platform.release_for }}
+#      - name: Cache Build
+#        uses: actions/cache@v4
+#        with:
+#          path: ./target
+#          key: ${{ matrix.platform.release_for }}
 
       - name: Build binary
         uses: moohr/actions-rust-cross@v0
