@@ -7,7 +7,7 @@ use crate::unlock_test::unlock_script::{
     afr_services, all_services, asia_services, cn_services, euro_services, global_services,
     hk_services, jp_services, mo_services, tw_services, uk_services, us_services,
 };
-use crate::utils::{clear_last_line, set_colour, set_default_colour};
+use crate::utils::{set_colour, set_default_colour};
 use async_trait::async_trait;
 use futures::executor::block_on;
 use std::fmt::{Display, Formatter};
@@ -92,11 +92,11 @@ pub async fn check_all(args: &crate::config::Config) {
     let time = time.elapsed().as_secs_f64();
 
     // 打印分隔线
-    for _ in 0..services_count {
-        clear_last_line();
-        // 等待 10 毫秒，以便打印效果更清晰
-        tokio::time::sleep(std::time::Duration::from_millis(10)).await;
-    }
+    // for _ in 0..services_count {
+    //     clear_last_line();
+    //     // 等待 10 毫秒，以便打印效果更清晰
+    //     tokio::time::sleep(std::time::Duration::from_millis(10)).await;
+    // }
 
     // 创建两个向量，分别用于存储已解锁和未解锁的服务
     let mut unlocked_services = Vec::new();
@@ -114,16 +114,16 @@ pub async fn check_all(args: &crate::config::Config) {
     // 获取已解锁服务的数量
     let unlocked_services_count = unlocked_services.len();
     // 打印所有已解锁的服务
-    for result in &unlocked_services {
-        println!("{result}");
-    }
+    // for result in &unlocked_services {
+    //     println!("{result}");
+    // }
 
     // 获取未解锁服务的数量
     let locked_services_count = locked_services.len();
     // 打印所有未解锁的服务
-    for result in &locked_services {
-        println!("{result}");
-    }
+    // for result in &locked_services {
+    //     println!("{result}");
+    // }
 
     // 打印测试总结，包括测试的服务数量、花费的时间、已解锁和未解锁的服务数量
     println!(
