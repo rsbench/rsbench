@@ -5,9 +5,13 @@
 
 一个用纯 Rust 编写的 **简单**、**方便**、**跨平台**、**高性能** 基准测试工具
 
-使用方法请见: <https://rsbench.github.io/rsbench>
+**使用方法请见: <https://rsbench.github.io/rsbench>**
 
 https://github.com/user-attachments/assets/fe2c358f-0803-43ce-8979-cf1cb1c59335
+
+加入项目 TG 群组以反馈 / 交流:
+- TG Channel: <https://t.me/rsbench>
+- TG Chat: <https://t.me/rsbench_chat>
 
 目前正在持续开发中!
 
