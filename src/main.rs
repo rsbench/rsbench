@@ -19,16 +19,19 @@ async fn main() {
         std::env::set_var("RSBENCH_NO_COLOR", "1");
     }
 
-    clear_screen();
+    if !args.no_cls {
+        clear_screen();
+    }
+
     info!("RSBench v{}", env!("CARGO_PKG_VERSION"));
     warn!("This is Alpha software. Thing may and will break.");
     print_ascii_art();
-    
+
     if args.info {
         info::run_info();
     }
     if args.bench {
-        bench::run_bench();
+        bench::run_bench(&args);
     }
     if args.unlock {
         unlock_test::run_unlock_test(&args);

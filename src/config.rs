@@ -11,6 +11,14 @@ pub struct Config {
     #[arg(short, long)]
     pub bench: bool,
 
+    // Run network speedtest
+    #[arg(long, default_value_t = false, requires = "bench")]
+    pub network: bool,
+
+    // Run FIB CPU test
+    #[arg(long, default_value_t = false, requires = "bench")]
+    pub fib: bool,
+
     /// Run services unlock test
     #[arg(short, long)]
     pub unlock: bool,
@@ -22,9 +30,14 @@ pub struct Config {
     /// Run system tuning
     #[arg(short, long)]
     pub tune: bool,
-    
+
+    // Disable color output
     #[arg(long, default_value_t = false)]
     pub no_color: bool,
+
+    // Disable clear screen
+    #[arg(long, default_value_t = false)]
+    pub no_cls: bool,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]

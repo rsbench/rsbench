@@ -9,7 +9,7 @@ pub fn set_random_colour() {
     if no_color == "1" {
         return;
     }
-    
+
     // 定义一个内部函数 random_colour，用于生成随机颜色
     fn random_colour() -> Color {
         // 创建一个颜色数组，包含多种颜色

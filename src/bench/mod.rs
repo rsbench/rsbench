@@ -1,11 +1,33 @@
-use paris::warn;
+use crate::config;
+use paris::{info, warn};
 
 mod fibonacci;
 mod network;
-pub fn run_bench() {
+pub fn run_bench(args: &config::Config) {
+    if args.network || args.fib {
+        if args.network {
+            run_network();
+        } else {
+            info!("Network benchmark is disabled");
+        }
+        if args.fib {
+            run_fib();
+        } else {
+            info!("FIB benchmark is disabled");
+        }
+    } else {
+        run_network();
+        run_fib();
+    }
+}
+
+fn run_network() {
     network::ping();
     network::start_speedtest();
     network::start_multithread_speedtest(4);
+}
+
+fn run_fib() {
     if !cfg!(debug_assertions) {
         let total_threads = sysinfo::System::new_all().cpus().len() as u32;
         fibonacci::run_fibonacci();

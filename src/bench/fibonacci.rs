@@ -16,6 +16,7 @@ fn fib(n: u64) -> u64 {
         fib(n - 1) + fib(n - 2)
     }
 }
+
 pub fn run_fibonacci() {
     let mut log = paris::Logger::new();
     log.loading("Running fibonacci benchmark...");
