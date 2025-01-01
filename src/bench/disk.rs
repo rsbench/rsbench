@@ -64,13 +64,13 @@ pub fn write_disk_test() -> Result<(f64, bool), String> {
         return Err("Not enough space left on disk for disk benchmark".to_string());
     }
 
-    let buffer_size = if is_ssd {
+    let buffer_size: u64 = if is_ssd {
         1024 * 1024 * 1024 * 5 // 5GB
     } else {
         1024 * 1024 * 512 // 512MB
     };
 
-    let buffer = vec![0u8; buffer_size];
+    let buffer = vec![0u8; buffer_size as usize];
     let mut test_file = if let Ok(file) = File::create(set_file_path()) { file } else {
         error!("Unable to create test file");
         return Err("Unable to create test file".to_string());
