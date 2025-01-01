@@ -2,18 +2,7 @@
 
 一个用纯 Rust 编写的 **简单**、**方便**、**跨平台**、**高性能** 基准测试工具
 
-```
-ℹ RSBench v0.0.1
-Usage: rsbench [OPTIONS]
-
-Options:
-  -i, --info     Run information gathering
-  -b, --bench    Run the benchmark
-  -u, --unlock   Run Media Unlock test
-  -t, --tune     Run System Tuning
-  -h, --help     Print help
-  -V, --version  Print version
-```
+使用方法请见: <https://rsbench.github.io/rsbench>
 
 目前正在持续开发中!
 
