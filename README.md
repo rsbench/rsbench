@@ -4,7 +4,7 @@
 
 使用方法请见: <https://rsbench.github.io/rsbench>
 
-<video src="https://raw.githubusercontent.com/rsbench/rsbench/refs/heads/main/demos/Demo.mkv" controls="controls" width="500" height="300"></video>
+https://github.com/user-attachments/assets/fe2c358f-0803-43ce-8979-cf1cb1c59335
 
 目前正在持续开发中!
 
