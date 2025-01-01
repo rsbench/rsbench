@@ -17,6 +17,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Cache Build
+        uses: actions/cache@v4
+        with:
+          path: ./target
+          key: publish
+
       - name: Setup Rust
         uses: moonrepo/setup-rust@v1
 
