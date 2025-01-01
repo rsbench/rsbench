@@ -1,0 +1,73 @@
+name: MacOS Build
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: macos-13
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Rust Toolchain
+        uses: moonrepo/setup-rust@v1
+      - name: Cargo Build
+        run: cargo build --release
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos
+          path: target/release/rsbench
+      - name: Rename Binary
+        run: mv target/release/rsbench target/release/rsbench-macos-amd64
+      - name: Publish to GitHub Release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            target/release/rsbench-macos-amd64
+          tag_name: latest  # 使用固定的标签名称作为发布版本号
+          body: |
+            Note: All Release operations will publish the Binary and software packages here
+            Latest release for Commit: ${{ github.sha }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-arm64:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Rust Toolchain
+        uses: moonrepo/setup-rust@v1
+      - name: Cargo Build
+        run: cargo build --release
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos
+          path: target/release/rsbench
+      - name: Rename Binary
+        run: mv target/release/rsbench target/release/rsbench-macos-arm64
+      - name: Publish to GitHub Release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            target/release/rsbench-macos-arm64
+          tag_name: latest  # 使用固定的标签名称作为发布版本号
+          body: |
+            Note: All Release operations will publish the Binary and software packages here
+            Latest release for Commit: ${{ github.sha }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
