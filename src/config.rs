@@ -19,6 +19,10 @@ pub struct Config {
     #[arg(long, default_value_t = false, requires = "bench")]
     pub fib: bool,
 
+    /// Run disk speedtest
+    #[arg(long, default_value_t = false, requires = "bench")]
+    pub disk: bool,
+
     /// Run services unlock test
     #[arg(short, long)]
     pub unlock: bool,

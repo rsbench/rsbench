@@ -1,10 +1,13 @@
+use crate::bench::disk::run_disk_speed_test;
 use crate::config;
 use paris::{info, warn};
 
+mod disk;
 mod fibonacci;
 mod network;
+
 pub fn run_bench(args: &config::Config) {
-    if args.network || args.fib {
+    if args.network || args.fib || args.disk {
         if args.network {
             run_network();
         } else {
@@ -15,9 +18,15 @@ pub fn run_bench(args: &config::Config) {
         } else {
             info!("FIB benchmark is disabled");
         }
+        if args.disk {
+            run_disk();
+        } else {
+            info!("Disk benchmark is disabled");
+        }
     } else {
         run_network();
         run_fib();
+        run_disk();
     }
 }
 
@@ -37,4 +46,8 @@ fn run_fib() {
         warn!("Skipping fibonacci benchmark");
         println!();
     }
+}
+
+fn run_disk() {
+    run_disk_speed_test();
 }

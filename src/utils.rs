@@ -75,7 +75,7 @@ pub fn set_colour(color: Color) {
 }
 
 /// 清除终端中的最后一行文本
-pub fn clear_last_line() {
+pub fn _clear_last_line() {
     // 打印 ANSI 转义序列，将光标向上移动一行
     print!("\x1b[A");
     // 打印 ANSI 转义序列，清除当前行的内容
