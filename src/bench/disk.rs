@@ -107,7 +107,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
 
     let mut buffer = vec![0u8; 1024 * 1024]; // 1MB
     let mut total_read = 0;
-    let file_size = if is_ssd {
+    let file_size: u64 = if is_ssd {
         1024 * 1024 * 1024 * 5 // 5GB
     } else {
         1024 * 1024 * 512 // 512MB
@@ -123,7 +123,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
         if bytes_read == 0 {
             break;
         }
-        total_read += bytes_read;
+        total_read = bytes_read as u64 + total_read;
     }
 
     let read_time = start.elapsed();
