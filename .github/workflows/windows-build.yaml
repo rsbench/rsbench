@@ -24,3 +24,17 @@ jobs:
         with:
           name: windows
           path: target/release/rsbench.exe
+      - name: Publish to GitHub Release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            target/release/rsbench.exe
+          tag_name: latest  # 使用固定的标签名称作为发布版本号
+          body: |
+            Note: All Release operations will publish the Binary and software packages here
+            Latest release for Commit: ${{ github.sha }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
