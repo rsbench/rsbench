@@ -6,6 +6,7 @@ use futures::{
     executor::block_on,
     StreamExt,
 };
+use paris::error;
 use std::time::Instant;
 use termcolor::Color;
 
@@ -28,7 +29,6 @@ pub fn ping() {
     log.done();
     let mean = results.iter().sum::<u128>() as f64 / results.len() as f64;
     if mean < 0.02 {
-        log.done();
         log.error("PING: FAILED: Cannot connect to Cloudflare");
         println!();
         return;
@@ -146,7 +146,6 @@ async fn perform_download() -> Result<(f64, Vec<f64>), String> {
 }
 
 pub fn start_speedtest() {
-    //let rt = tokio::runtime::Runtime::new().unwrap();
     let mut log = paris::Logger::new();
     log.loading("Running single thread download test...");
     let result = block_on(perform_download());
@@ -162,7 +161,10 @@ pub fn start_speedtest() {
     let max = speed_samples
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap();
+        .unwrap_or_else(|| {
+            error!("Unable to find max speed");
+            &0.0
+        });
     log.done();
 
     let binding = mean_speed_mbps.to_string();
@@ -189,7 +191,10 @@ pub fn start_speedtest() {
     let max = speed_samples
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap();
+        .unwrap_or_else(|| {
+            error!("Unable to find max speed");
+            &0.0
+        });
     log.done();
 
     let binding = mean_speed_mbps.to_string();
@@ -212,7 +217,6 @@ pub fn start_speedtest() {
 }
 
 pub fn start_multithread_speedtest(num_concurrent: usize) {
-    // let rt = tokio::runtime::Runtime::new().unwrap();
     let mut log = paris::Logger::new();
     log.loading("Running multiple thread download test...");
 
@@ -263,7 +267,10 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     let max = instant_speeds
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap();
+        .unwrap_or_else(|| {
+            error!("Unable to find max speed");
+            &0.0
+        });
     log.done();
 
     let binding = total_mean_speed.to_string();
@@ -318,7 +325,10 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     let max = instant_speeds
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap();
+        .unwrap_or_else(|| {
+            error!("Unable to find max speed");
+            &0.0
+        });
     log.done();
 
     let binding = total_mean_speed.to_string();

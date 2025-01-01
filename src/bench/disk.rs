@@ -131,7 +131,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
         if bytes_read == 0 {
             break;
         }
-        total_read = bytes_read as u64 + total_read;
+        total_read += bytes_read as u64;
     }
 
     let read_time = start.elapsed();

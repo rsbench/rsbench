@@ -1,23 +1,7 @@
 // Using sysinfo temporarily for non-linux distributions
 #[cfg(not(target_os = "linux"))]
 pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {
-    use sysinfo::System;
-    let s = System::new_all();
-    match s.cpus().first() {
-        Some(cpu) => {
-            let cpu_model = cpu.brand().trim();
-            let cpu_threads = s.cpus().len();
-            let cpu_speed = cpu.frequency();
-            Ok(format!(
-                "{} {} Threads @ {}Mhz",
-                cpu_model, cpu_threads, cpu_speed
-            ))
-        }
-        None => Err(Box::new(std::io::Error::new(
-            std::io::ErrorKind::NotFound,
-            "no CPU cores exist? Please report bug.",
-        ))),
-    }
+    Ok(classic_get_cpu())
 }
 
 // Use dmidecode for linux, which produces >>>> better results especially for aarch64 processors
@@ -57,9 +41,7 @@ pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {
                     }
                     _ => continue,
                 },
-                Err(_) => {
-                    return Ok(classic_get_cpu())
-                }
+                Err(_) => return Ok(classic_get_cpu()),
             }
         }
 

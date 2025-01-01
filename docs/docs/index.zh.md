@@ -24,3 +24,4 @@
 目录:
 
 1. [安装](install.zh.md)
+2. [使用](usage.zh.md)

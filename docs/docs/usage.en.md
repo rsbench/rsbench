@@ -1,13 +1,13 @@
 # Usage
 
-This project is divided into four major modules:
+The project is divided into four major modules:
 
 - INFO:
-  Outputs information about the host's `System Environment / CPU / Memory / Disk / SWAP / Kernel / Virtualization Technology`, etc.
+  Outputs information about the host's `System Environment / CPU / Memory / Disk / SWAP / Kernel / Virtualization Technology`.
 
   The output information is for reference only and should not be used as a basis for performance evaluation.
 - BENCH:
-  Performs benchmark tests, including `Network Testing / CPU Performance Testing / Memory Performance Testing / Disk Performance Testing`, etc. (Some features are currently incomplete)
+  Performs benchmark tests, including `Network Testing / CPU Performance Testing / Disk Sequential Read/Write Testing`, etc. (Some features are currently incomplete)
 
   Test results are for reference only and should not be used as a basis for performance evaluation.
 - TUNE:
@@ -38,7 +38,7 @@ VIRT: none
 
 ## BENCH
 
-This module comprehensively evaluates host performance. Currently, it has implemented functions like `network testing / CPU performance testing / disk sequential read and write testing`, with more updates ongoing.
+This module comprehensively evaluates host performance. Currently, it has implemented functions like `network testing / CPU performance testing / disk sequential read/write testing`, with more updates ongoing.
 
 **PS: This module may fully utilize system resources, please use it cautiously**
 
@@ -194,3 +194,14 @@ hk, mo, tw, jp, cn, asia, euro, afr, uk, us, global
 - `--version`: Displays version information
 - `--no-color`: Disables color output
 - `--no-cls`: Disables screen clearing, which occurs by default before program execution.
+- `--no-logo`: Prevents the display of the Ascii Art Logo
+
+By default, you can combine the functionalities of the four modules together, for example:
+```bash
+> rsbench -ibtu --network --region cn
+```
+
+Or run all tests at once:
+```bash
+> rsbench -ibtu
+```

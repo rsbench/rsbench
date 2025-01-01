@@ -1,5 +1,8 @@
 # Rsbench
 
+![](https://rust-reportcard.xuri.me/badge/github.com/rsbench/rsbench?style=flat)
+![](https://img.shields.io/crates/v/rsbench.svg)
+
 一个用纯 Rust 编写的 **简单**、**方便**、**跨平台**、**高性能** 基准测试工具
 
 使用方法请见: <https://rsbench.github.io/rsbench>

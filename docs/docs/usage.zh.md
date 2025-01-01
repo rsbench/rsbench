@@ -195,4 +195,14 @@ hk, mo, tw, jp, cn, asia, euro, afr, uk, us, global
 - `--version`: 显示版本信息
 - `--no-color`: 禁用颜色输出
 - `--no-cls`: 禁用清屏，默认在程序执行前清屏
+- `--no-logo`: 不输出 Ascii Art Logo
 
+在默认情况下，你可以将四个模块的功能合并在一起使用，比如:
+```bash
+> rsbench -ibtu --network --region cn
+```
+
+或者直接全量运行测试:
+```bash
+> rsbench -ibtu
+```

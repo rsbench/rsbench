@@ -42,6 +42,10 @@ pub struct Config {
     // Disable clear screen
     #[arg(long, default_value_t = false)]
     pub no_cls: bool,
+
+    // Disable logo output
+    #[arg(long, default_value_t = false)]
+    pub no_logo: bool,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
