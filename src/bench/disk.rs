@@ -11,7 +11,7 @@ use termcolor::Color;
 fn get_space_left() -> (f64, bool) {
     // GB, HDD / SSD
     let disks = Disks::new_with_refreshed_list();
-    for disk in disks.iter() {
+    for disk in &disks {
         let disk_mount_point = match disk.mount_point().to_str() {
             None => continue,
             Some(mount_point) => mount_point,
@@ -26,7 +26,7 @@ fn get_space_left() -> (f64, bool) {
         }
     }
 
-    for disk in disks.iter() {
+    for disk in &disks {
         let disk_mount_point = match disk.mount_point().to_str() {
             None => continue,
             Some(mount_point) => mount_point,
@@ -71,30 +71,21 @@ pub fn write_disk_test() -> Result<(f64, bool), String> {
     };
 
     let buffer = vec![0u8; buffer_size];
-    let mut test_file = match File::create(set_file_path()) {
-        Ok(file) => file,
-        Err(_) => {
-            error!("Unable to create test file");
-            return Err("Unable to create test file".to_string());
-        }
+    let mut test_file = if let Ok(file) = File::create(set_file_path()) { file } else {
+        error!("Unable to create test file");
+        return Err("Unable to create test file".to_string());
     };
 
     let start = std::time::Instant::now();
 
-    match test_file.write_all(&buffer) {
-        Ok(_) => {}
-        Err(_) => {
-            error!("Unable to write to test file");
-            return Err("Unable to write to test file".to_string());
-        }
+    if let Ok(()) = test_file.write_all(&buffer) {} else {
+        error!("Unable to write to test file");
+        return Err("Unable to write to test file".to_string());
     };
 
-    match test_file.sync_all() {
-        Ok(_) => {}
-        Err(_) => {
-            error!("Unable to sync test file");
-            return Err("Unable to sync test file".to_string());
-        }
+    if let Ok(()) = test_file.sync_all() {} else {
+        error!("Unable to sync test file");
+        return Err("Unable to sync test file".to_string());
     }
 
     let write_time = start.elapsed();
@@ -109,12 +100,9 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
     let mut log = paris::Logger::new();
     log.loading("Running disk read speed benchmark...");
 
-    let mut test_file = match File::open(set_file_path()) {
-        Ok(file) => file,
-        Err(_) => {
-            error!("Unable to open test file");
-            return Err("Unable to open test file".to_string());
-        }
+    let mut test_file = if let Ok(file) = File::open(set_file_path()) { file } else {
+        error!("Unable to open test file");
+        return Err("Unable to open test file".to_string());
     };
 
     let mut buffer = vec![0u8; 1024 * 1024]; // 1MB
@@ -128,12 +116,9 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
     let start = std::time::Instant::now();
 
     while total_read < file_size * 1024 * 1024 {
-        let bytes_read = match test_file.read(&mut buffer) {
-            Ok(bytes_read) => bytes_read,
-            Err(_) => {
-                error!("Unable to read from test file");
-                return Err("Unable to read from test file".to_string());
-            }
+        let bytes_read = if let Ok(bytes_read) = test_file.read(&mut buffer) { bytes_read } else {
+            error!("Unable to read from test file");
+            return Err("Unable to read from test file".to_string());
         };
         if bytes_read == 0 {
             break;
@@ -181,10 +166,10 @@ pub fn run_disk_speed_test() {
     set_colour(Color::Yellow);
     print!("DISK: ");
     set_colour(Color::Rgb(175, 231, 154));
-    print!("{:.2} MB/s", disk_write);
+    print!("{disk_write:.2} MB/s");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Rgb(118, 26, 160));
-    println!("{:.2} MB/s", disk_read);
+    println!("{disk_read:.2} MB/s");
     set_default_colour();
 }
