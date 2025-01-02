@@ -47,9 +47,8 @@ jobs:
         with:
           command: build
           target: ${{ matrix.platform.target }}
-          args: "--locked --release --jobs 32 -Z build-std=std,alloc,test"
+          args: "--locked --release --jobs 32"
           strip: true
-          toolchain: nightly
 
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
