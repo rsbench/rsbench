@@ -1,6 +1,6 @@
 [package]
 name = "rsbench"
-version = "0.0.7" # It is recommended that every Commit that modifies a Rust file should update a minor version.
+version = "0.0.8" # It is recommended that every Commit that modifies a Rust file should update a minor version.
 edition = "2021"
 
 authors = ["moohr <moohric@moohric.com>", "GenshinMinecraft <gm@highp.ing>"]
@@ -21,7 +21,7 @@ async-trait = "0.1.83"
 clap = { version = "4.5.23", features = ["derive"] }
 futures = "0.3.31"
 paris = {version = "1.5.15", features=["macros"]}
-reqwest = { version = "0.12.9", default-features = false, features = ["rustls-tls", "cookies", "stream"] }
+reqwest = { version = "0.12.12", default-features = false, features = ["rustls-tls", "cookies", "stream"] }
 sysinfo = "0.33.0"
 tokio = {version="1.42.0", features = ["rt-multi-thread", "macros"]}
 regex = { version = "1.11.1", default-features = false, features = ["std", "unicode-perl"] }

@@ -24,7 +24,7 @@ async fn main() {
     }
 
     info!("RSBench v{}", env!("CARGO_PKG_VERSION"));
-    warn!("This is Alpha software. Thing may and will break.");
+    warn!("This is Alpha software. Things may and will break.");
     if !args.no_logo {
         print_ascii_art();
     }

@@ -60,6 +60,7 @@ pub fn write_disk_test() -> Result<(f64, bool), String> {
     let (space_left, is_ssd) = get_space_left();
 
     if (is_ssd && space_left < 5.0) || (!is_ssd && space_left < 1.0) {
+        log.done();
         error!("Not enough space left on disk for disk benchmark");
         return Err("Not enough space left on disk for disk benchmark".to_string());
     }
