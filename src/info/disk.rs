@@ -6,8 +6,17 @@ pub fn get_disk() -> Vec<String> {
         #[cfg(target_os = "linux")]
         {
             // Skip non-devices
-            if !disk.name().to_str().unwrap().starts_with("/dev/") {
+            if !disk.name().to_str().unwrap().starts_with("/dev/"){
                 continue;
+            };
+            // Skip boot partitions and unmounted partitions
+            match disk.mount_point().to_str() {
+                None => continue,
+                Some(mount_point) => {
+                    if mount_point.starts_with("/boot") {
+                        continue;
+                    }
+                }
             }
         }
 
@@ -17,6 +26,7 @@ pub fn get_disk() -> Vec<String> {
         */
 
         if disk.total_space() > 1_000_000_000 {
+            /* Shouldn't be needed anymore
             #[cfg(target_os = "linux")]
             {
                 /*  why tf is there a random 1GB partition for some linux systems? Only god knows
@@ -28,6 +38,7 @@ pub fn get_disk() -> Vec<String> {
                     continue;
                 }
             }
+            */
             diskinfo.push(format!(
                 "{}/{} GB",
                 (disk.total_space() - disk.available_space()) / 1_000_000_000,
