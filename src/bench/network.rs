@@ -7,34 +7,48 @@ use futures::{
     StreamExt,
 };
 use paris::error;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 use termcolor::Color;
+
+const PING_TIMES: usize = 50;
+
+struct TcpConnectTimedOut;
+
+async fn perform_ping() -> Result<u128, TcpConnectTimedOut> {
+    let addr = "1.1.1.1:443";
+    let start = Instant::now();
+    let stream = tokio::net::TcpStream::connect(addr);
+    match tokio::time::timeout(Duration::from_secs(1), stream).await {
+        Ok(Ok(stream)) => {
+            let _ = stream.peer_addr();
+            let _ = stream.local_addr();
+            let elapsed = start.elapsed().as_millis();
+            Ok(elapsed)
+        }
+        Ok(Err(_)) => Err(TcpConnectTimedOut),
+        Err(_) => Err(TcpConnectTimedOut),
+    }
+}
 
 pub fn ping() {
     let mut log = paris::Logger::new();
     log.loading("Running PING test...");
+    let mut timeouts = 0;
     let mut results = Vec::new();
-    let addr = "1.1.1.1:443";
-    for _ in 0..50 {
-        let start = Instant::now();
-        let stream = block_on(tokio::net::TcpStream::connect(addr));
-        let elapsed = start.elapsed().as_millis();
-        results.push(elapsed);
-        if let Ok(stream) = &stream {
-            // Do not remove, to prevent compiler optimization
-            let _ = stream.peer_addr();
-            let _ = stream.local_addr();
+
+    for _ in 0..PING_TIMES {
+        let result = block_on(perform_ping());
+        match result {
+            Ok(time) => results.push(time),
+            Err(_) => timeouts += 1,
         }
     }
     log.done();
     let mean = results.iter().sum::<u128>() as f64 / results.len() as f64;
-    if mean < 0.02 {
-        log.error("PING: FAILED: Cannot connect to Cloudflare");
-        println!();
-        return;
-    }
+    let loss = (timeouts as f64 / PING_TIMES as f64) * 100.0;
     set_colour(Color::Blue);
     println!("PING: {mean:.2} ms");
+    println!("LOSS: {loss:.2}%");
     set_default_colour();
 }
 
@@ -152,6 +166,7 @@ pub fn start_speedtest() {
     let (mean_speed_mbps, speed_samples) = match result {
         Ok(tuple) => tuple,
         Err(error) => {
+            log.done();
             println!();
             log.error(error);
             return;
@@ -237,6 +252,7 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         match result {
             Ok(tuple) => results_success.push(tuple),
             Err(error) => {
+                log.done();
                 println!();
                 log.error(error);
                 return;

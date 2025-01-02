@@ -6,7 +6,7 @@ pub fn get_disk() -> Vec<String> {
         #[cfg(target_os = "linux")]
         {
             // Skip non-devices
-            if !disk.name().to_str().unwrap().starts_with("/dev/"){
+            if !disk.name().to_str().unwrap().starts_with("/dev/") {
                 continue;
             };
             // Skip boot partitions and unmounted partitions
