@@ -47,7 +47,7 @@ jobs:
         with:
           command: build
           target: ${{ matrix.platform.target }}
-          args: "--locked --release --jobs 32 -Z build-std=std,core,alloc,test"
+          args: "--locked --release --jobs 32 -Z build-std=std,alloc,test"
           strip: true
           toolchain: nightly
 
