@@ -21,12 +21,15 @@ jobs:
           - release_for: android_armv7
             target: armv7-linux-androideabi
             binary_name: rsbench-android-armv7
-          - release_for: android_i686
-            target: i686-linux-android
-            binary_name: rsbench-android-i686
-          - release_for: android_x86_64
-            target: x86_64-linux-android
-            binary_name: rsbench-android-x86_64
+
+            # have no unwind
+#          - release_for: android_i686
+#            target: i686-linux-android
+#            binary_name: rsbench-android-i686
+#          - release_for: android_x86_64
+#            target: x86_64-linux-android
+#            binary_name: rsbench-android-x86_64
+
           - release_for: android_arm
             target: arm-linux-androideabi
             binary_name: rsbench-android-arm
