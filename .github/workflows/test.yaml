@@ -12,16 +12,16 @@ on:
 jobs:
   Test:
     name: Check & Test & Clippy - ${{ github.sha }}
-    runs-on: [self-hosted, linux]
+    runs-on: [self-hosted, macos]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Cache Build
-        uses: actions/cache@v4
-        with:
-          path: ./target
-          key: test
+#
+#      - name: Cache Build
+#        uses: actions/cache@v4
+#        with:
+#          path: ./target
+#          key: test
 
       - name: Setup Rust
         uses: moonrepo/setup-rust@v1
