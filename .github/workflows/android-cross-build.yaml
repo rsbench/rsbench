@@ -15,9 +15,6 @@ jobs:
     strategy:
       matrix:
         platform:
-          - release_for: android_aarch64
-            target: aarch64-linux-android
-            binary_name: rsbench-android-aarch64
           - release_for: android_armv7
             target: armv7-linux-androideabi
             binary_name: rsbench-android-armv7
@@ -40,6 +37,53 @@ jobs:
           target: ${{ matrix.platform.target }}
           args: "--locked --release --jobs 32"
           strip: true
+
+      - name: Rename binary
+        run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform.target }}
+          path: target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
+
+      - name: Publish to GitHub Release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
+          tag_name: latest  # 使用固定的标签名称作为发布版本号
+          body: |
+            Note: All Release operations will publish the Binary and software packages here
+            Latest release for Commit: ${{ github.sha }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release_arm64:
+    name: Build - ${{ matrix.platform.release_for }}
+    strategy:
+      matrix:
+        platform:
+          - release_for: android_aarch64
+            target: aarch64-linux-android
+            binary_name: rsbench-android-aarch64
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Lib
+        run: sudo apt update && sudo apt install -y musl-tools musl-dev musl upx
+
+      - name: Install Cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Build binary
+        run: cross build --target ${{ matrix.platform.target }} --release --jobs 32 --locked
 
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
