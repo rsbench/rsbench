@@ -4,11 +4,11 @@ use std::fs;
 use std::fs::File;
 use std::io::{Read, Write};
 use std::path::Path;
-use sysinfo::Disks;
 use termcolor::Color;
 
 #[cfg(not(target_os = "windows"))]
 fn get_space_left() -> (f64, bool) {
+    use sysinfo::Disks;
     // GB, HDD / SSD
     let disks = Disks::new_with_refreshed_list();
     for disk in &disks {
