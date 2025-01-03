@@ -11,8 +11,8 @@ on:
 
 jobs:
   Test:
-    name: Check & Test & Clippy - ${{ github.sha }}
-    runs-on: [self-hosted, linux]
+    name: Cargo Publish To Crates.io - ${{ github.sha }}
+    runs-on: [self-hosted, macOS]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
