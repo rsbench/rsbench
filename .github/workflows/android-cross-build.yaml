@@ -84,6 +84,8 @@ jobs:
 
       - name: Build binary
         run: cross build --target ${{ matrix.platform.target }} --release --jobs 32 --locked
+        env:
+          CROSS_NO_WARNINGS: 0
 
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
