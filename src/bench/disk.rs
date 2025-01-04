@@ -1,14 +1,17 @@
 use crate::utils::{set_colour, set_default_colour};
 use paris::error;
-use std::fs;
 use std::fs::File;
 use std::io::{Read, Write};
-use std::path::Path;
+use std::path::PathBuf;
+use std::str::FromStr;
+use std::{env, fs};
 use termcolor::Color;
 
 #[cfg(not(target_os = "windows"))]
 fn get_space_left() -> (f64, bool) {
     use sysinfo::Disks;
+    
+    let system_tmp_dir = env::var("TMPDIR").unwrap_or("/tmp".to_string());
     // GB, HDD / SSD
     let disks = Disks::new_with_refreshed_list();
     for disk in &disks {
@@ -16,6 +19,14 @@ fn get_space_left() -> (f64, bool) {
             None => continue,
             Some(mount_point) => mount_point,
         };
+        if disk_mount_point == system_tmp_dir {
+            let kind = disk.kind().to_string();
+            return if kind == "SSD" {
+                (disk.available_space() as f64 / 1000000000.0, true)
+            } else {
+                (disk.available_space() as f64 / 1000000000.0, false)
+            };
+        }
         if disk_mount_point == "/tmp" {
             let kind = disk.kind().to_string();
             return if kind == "SSD" {
@@ -148,13 +159,15 @@ fn delete_test_file() {
 }
 
 #[cfg(not(target_os = "windows"))]
-fn set_file_path() -> &'static Path {
-    Path::new("/tmp/rsbench_disk_test")
+fn set_file_path() -> PathBuf {
+    let system_tmp_dir = env::var("TMPDIR").unwrap_or("/tmp".to_string());
+    let pathbuf = PathBuf::from_str(&format!("{system_tmp_dir}/rsbench_disk_test")).unwrap_or(PathBuf::from_str("./rsbench_disk_test").unwrap());
+    pathbuf
 }
 
 #[cfg(target_os = "windows")]
-fn set_file_path() -> &'static Path {
-    Path::new("C:\\rsbench_disk_test")
+fn set_file_path() -> PathBuf {
+    PathBuf::from_str("C:\\rsbench_disk_test").unwrap();
 }
 
 pub fn run_disk_speed_test() {
