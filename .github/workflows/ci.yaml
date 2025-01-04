@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Rust Toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+        uses: moonrepo/setup-rust@v1
       - name: Cargo Test
         run: cargo test
 
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Rust Toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+        uses: moonrepo/setup-rust@v1
       - name: Cargo Check
         run: cargo check
 
@@ -39,7 +39,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Rust Toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+        uses: moonrepo/setup-rust@v1
       - name: Install Clippy
         run: rustup component add clippy
       - name: Cargo Clippy
@@ -52,7 +52,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Rust Toolchain
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+        uses: moonrepo/setup-rust@v1
       - uses: katyo/publish-crates@v2
         with:
           registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}

@@ -264,7 +264,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   macos-arm64-release:
-    runs-on: [self-hosted, macOS]
+#    runs-on: [self-hosted, macOS]
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
