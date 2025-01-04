@@ -86,6 +86,7 @@ pub fn write_disk_test() -> Result<(f64, bool), String> {
     let mut test_file = if let Ok(file) = File::create(set_file_path()) {
         file
     } else {
+        log.done();
         error!("Unable to create test file");
         return Err("Unable to create test file".to_string());
     };
@@ -94,12 +95,14 @@ pub fn write_disk_test() -> Result<(f64, bool), String> {
 
     if let Ok(()) = test_file.write_all(&buffer) {
     } else {
+        log.done();
         error!("Unable to write to test file");
         return Err("Unable to write to test file".to_string());
     };
 
     if let Ok(()) = test_file.sync_all() {
     } else {
+        log.done();
         error!("Unable to sync test file");
         return Err("Unable to sync test file".to_string());
     }
@@ -119,6 +122,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
     let mut test_file = if let Ok(file) = File::open(set_file_path()) {
         file
     } else {
+        log.done();
         error!("Unable to open test file");
         return Err("Unable to open test file".to_string());
     };
@@ -137,6 +141,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
         let bytes_read = if let Ok(bytes_read) = test_file.read(&mut buffer) {
             bytes_read
         } else {
+            log.done();
             error!("Unable to read from test file");
             return Err("Unable to read from test file".to_string());
         };

@@ -9,11 +9,6 @@ mod network;
 
 pub fn run_bench(args: &config::Config) {
     if args.network || args.fib || args.disk || args.mem {
-        if args.network {
-            run_network();
-        } else {
-            info!("Network benchmark is disabled");
-        }
         if args.fib {
             run_fib();
         } else {
@@ -29,11 +24,16 @@ pub fn run_bench(args: &config::Config) {
         } else {
             info!("Memory benchmark is disabled");
         }
+        if args.network {
+            run_network();
+        } else {
+            info!("Network benchmark is disabled");
+        }
     } else {
-        run_network();
         run_fib();
         run_disk();
         run_mem();
+        run_network();
     }
 }
 
