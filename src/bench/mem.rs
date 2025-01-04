@@ -1,5 +1,4 @@
 use crate::utils::{set_colour, set_default_colour};
-use libc::{c_void, mmap, munmap, MAP_ANON, MAP_PRIVATE, PROT_READ, PROT_WRITE};
 use paris::error;
 use std::hint::black_box;
 use std::ptr::null_mut;
@@ -15,15 +14,18 @@ fn get_avaliable_memory() -> f64 {
     memory as f64 / 1024.0 / 1024.0
 }
 
+#[cfg(not(target_os = "windows"))]
 fn mem_test() -> (f64, f64) {
-    // Write, Read
-
-    let _avaliable_memory = get_avaliable_memory();
-
-    // 一半可用内存
-    // let memory_size = (avaliable_memory * 0.5) as usize;
+    use libc::{c_void, mmap, munmap, MAP_ANON, MAP_PRIVATE, PROT_READ, PROT_WRITE};
     
-    let memory_size = 1024 * 1024 * 100; // 100MB
+    let available_memory = get_avaliable_memory();
+    let memory_size = if available_memory < 100.0 {
+        available_memory * 1024.0 * 1024.0 * 0.8
+    } else {
+        1024.0 * 1024.0 * 100.0 // 100MB
+    };
+    
+    let memory_size = memory_size as usize;
 
     let memory: *mut u8 = unsafe {
         mmap(
