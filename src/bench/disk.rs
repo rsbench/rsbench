@@ -168,7 +168,7 @@ fn set_file_path() -> PathBuf {
 
 #[cfg(target_os = "windows")]
 fn set_file_path() -> PathBuf {
-    PathBuf::from_str("C:\\rsbench_disk_test").unwrap();
+    PathBuf::from_str("C:\\rsbench_disk_test").unwrap()
 }
 
 pub fn run_disk_speed_test() {

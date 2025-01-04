@@ -10,7 +10,6 @@ fn get_avaliable_memory() -> f64 {
     let mut s = sysinfo::System::new();
     s.refresh_all();
     let memory = s.available_memory();
-    println!("{}", memory);
     memory as f64 / 1024.0 / 1024.0
 }
 
