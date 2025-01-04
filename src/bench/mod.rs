@@ -4,10 +4,11 @@ use paris::{info, warn};
 
 mod disk;
 mod fibonacci;
+mod mem;
 mod network;
 
 pub fn run_bench(args: &config::Config) {
-    if args.network || args.fib || args.disk {
+    if args.network || args.fib || args.disk || args.mem {
         if args.network {
             run_network();
         } else {
@@ -23,10 +24,16 @@ pub fn run_bench(args: &config::Config) {
         } else {
             info!("Disk benchmark is disabled");
         }
+        if args.mem {
+            run_mem();
+        } else {
+            info!("Memory benchmark is disabled");
+        }
     } else {
         run_network();
         run_fib();
         run_disk();
+        run_mem();
     }
 }
 
@@ -50,4 +57,8 @@ fn run_fib() {
 
 fn run_disk() {
     run_disk_speed_test();
+}
+
+fn run_mem() {
+    mem::run_men_test();
 }

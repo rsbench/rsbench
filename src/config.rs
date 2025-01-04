@@ -23,6 +23,9 @@ pub struct Config {
     #[arg(long, default_value_t = false, requires = "bench")]
     pub disk: bool,
 
+    #[arg(long, default_value_t = false, requires = "bench")]
+    pub mem: bool,
+
     /// Run services unlock test
     #[arg(short, long)]
     pub unlock: bool,

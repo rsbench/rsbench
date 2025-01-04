@@ -10,7 +10,7 @@ use termcolor::Color;
 #[cfg(not(target_os = "windows"))]
 fn get_space_left() -> (f64, bool) {
     use sysinfo::Disks;
-    
+
     let system_tmp_dir = env::var("TMPDIR").unwrap_or("/tmp".to_string());
     // GB, HDD / SSD
     let disks = Disks::new_with_refreshed_list();
@@ -161,8 +161,9 @@ fn delete_test_file() {
 #[cfg(not(target_os = "windows"))]
 fn set_file_path() -> PathBuf {
     let system_tmp_dir = env::var("TMPDIR").unwrap_or("/tmp".to_string());
-    let pathbuf = PathBuf::from_str(&format!("{system_tmp_dir}/rsbench_disk_test")).unwrap_or(PathBuf::from_str("./rsbench_disk_test").unwrap());
-    pathbuf
+
+    PathBuf::from_str(&format!("{system_tmp_dir}/rsbench_disk_test"))
+        .unwrap_or(PathBuf::from_str("./rsbench_disk_test").unwrap())
 }
 
 #[cfg(target_os = "windows")]
@@ -185,13 +186,19 @@ pub fn run_disk_speed_test() {
         }
     };
 
+    let binding = disk_write.to_string();
+    let disk_write = &binding.as_str()[0..6];
+
+    let binding = disk_read.to_string();
+    let disk_read = &binding.as_str()[0..6];
+
     set_colour(Color::Yellow);
     print!("DISK: ");
     set_colour(Color::Rgb(175, 231, 154));
-    print!("{disk_write:.2} MB/s");
+    print!("{disk_write} MB/s");
     set_colour(Color::Yellow);
     print!(" | ");
     set_colour(Color::Rgb(118, 26, 160));
-    println!("{disk_read:.2} MB/s");
+    println!("{disk_read} MB/s");
     set_default_colour();
 }

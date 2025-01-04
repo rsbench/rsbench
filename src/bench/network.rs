@@ -183,10 +183,10 @@ pub fn start_speedtest() {
     log.done();
 
     let binding = mean_speed_mbps.to_string();
-    let mean_speed_mbps_str = &binding.as_str()[0..5];
+    let mean_speed_mbps_str = &binding.as_str()[0..6];
 
     let binding = max.to_string();
-    let max_str = &binding.as_str()[0..5];
+    let max_str = &binding.as_str()[0..6];
 
     set_colour(Color::Yellow);
     print!("DOWN: 🔽 ");
@@ -213,10 +213,10 @@ pub fn start_speedtest() {
     log.done();
 
     let binding = mean_speed_mbps.to_string();
-    let mean_speed_mbps_str = &binding.as_str()[0..5];
+    let mean_speed_mbps_str = &binding.as_str()[0..6];
 
     let binding = max.to_string();
-    let max_str = &binding.as_str()[0..5];
+    let max_str = &binding.as_str()[0..6];
 
     set_colour(Color::Yellow);
     print!("UP  : 🔼 ");
@@ -290,10 +290,10 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     log.done();
 
     let binding = total_mean_speed.to_string();
-    let total_mean_speed_str = &binding.as_str()[0..5];
+    let total_mean_speed_str = &binding.as_str()[0..6];
 
     let binding = max.to_string();
-    let max_str = &binding.as_str()[0..5];
+    let max_str = &binding.as_str()[0..6];
 
     set_colour(Color::Yellow);
     print!("DOWN: ⏬ ");
@@ -348,10 +348,10 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     log.done();
 
     let binding = total_mean_speed.to_string();
-    let total_mean_speed_str = &binding.as_str()[0..5];
+    let total_mean_speed_str = &binding.as_str()[0..6];
 
     let binding = max.to_string();
-    let max_str = &binding.as_str()[0..5];
+    let max_str = &binding.as_str()[0..6];
 
     set_colour(Color::Yellow);
     print!("UP  : ⏫ ");

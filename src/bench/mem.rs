@@ -1,0 +1,93 @@
+use crate::utils::{set_colour, set_default_colour};
+use libc::{c_void, mmap, munmap, MAP_ANON, MAP_PRIVATE, PROT_READ, PROT_WRITE};
+use paris::error;
+use std::hint::black_box;
+use std::ptr::null_mut;
+use std::time::Instant;
+use termcolor::Color;
+
+fn get_avaliable_memory() -> f64 {
+    // MB
+    let mut s = sysinfo::System::new();
+    s.refresh_all();
+    let memory = s.available_memory();
+    println!("{}", memory);
+    memory as f64 / 1024.0 / 1024.0
+}
+
+fn mem_test() -> (f64, f64) {
+    // Write, Read
+
+    let _avaliable_memory = get_avaliable_memory();
+
+    // 一半可用内存
+    // let memory_size = (avaliable_memory * 0.5) as usize;
+    
+    let memory_size = 1024 * 1024 * 100; // 100MB
+
+    let memory: *mut u8 = unsafe {
+        mmap(
+            null_mut(),             // 让系统选择映射地址
+            memory_size,            // 映射的大小
+            PROT_READ | PROT_WRITE, // 可读可写
+            MAP_ANON | MAP_PRIVATE, // 匿名映射，私有
+            -1,                     // 文件描述符（匿名映射时为 -1）
+            0,                      // 偏移量
+        ) as *mut u8
+    };
+
+    if memory.is_null() {
+        error!("Failed to allocate memory with mmap");
+        return (0.0, 0.0);
+    }
+
+    // 测试写入速度
+    let start_write = Instant::now();
+    unsafe {
+        for i in 0..memory_size {
+            *(memory.add(i)) = (i % 256) as u8;
+        }
+    }
+    let write_duration = start_write.elapsed();
+    let write_speed = (memory_size as f64 / 1024.0 / 1024.0) / write_duration.as_secs_f64();
+
+    // 测试读取速度
+    let start_read = Instant::now();
+    let mut sum = 0u8;
+    unsafe {
+        for i in 0..memory_size {
+            sum = sum.wrapping_add(*(memory.add(i)));
+        }
+    }
+    let read_duration = start_read.elapsed();
+    let read_speed = (memory_size as f64 / 1024.0 / 1024.0) / read_duration.as_secs_f64();
+
+    // 防止编译器优化掉读取操作
+    black_box(sum);
+
+    // 释放内存
+    unsafe {
+        munmap(memory as *mut c_void, memory_size);
+    }
+    (write_speed, read_speed)
+}
+
+pub fn run_men_test() {
+    let (write_speed, read_speed) = mem_test();
+
+    let binding = write_speed.to_string();
+    let write_speed = &binding.as_str()[0..6];
+
+    let binding = read_speed.to_string();
+    let read_speed = &binding.as_str()[0..6];
+
+    set_colour(Color::Yellow);
+    print!("MEM : ");
+    set_colour(Color::Rgb(250, 91, 122));
+    print!("{write_speed} MB/s");
+    set_colour(Color::Yellow);
+    print!(" | ");
+    set_colour(Color::Rgb(59, 124, 63));
+    println!("{read_speed} MB/s");
+    set_default_colour();
+}

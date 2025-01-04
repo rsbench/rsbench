@@ -1076,13 +1076,14 @@ dependencies = [
 
 [[package]]
 name = "rsbench"
-version = "0.0.14"
+version = "0.1.0"
 dependencies = [
  "async-stream",
  "async-trait",
  "clap",
  "dmidecode",
  "futures",
+ "libc",
  "paris",
  "rand",
  "regex",

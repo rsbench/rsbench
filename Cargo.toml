@@ -1,6 +1,6 @@
 [package]
 name = "rsbench"
-version = "0.0.14" # It is recommended that every Commit that modifies a Rust file should update a minor version.
+version = "0.1.0" # It is recommended that every Commit that modifies a Rust file should update a minor version.
 edition = "2021"
 
 authors = ["moohr <moohric@moohric.com>", "GenshinMinecraft <gm@highp.ing>"]
@@ -17,6 +17,7 @@ maintainer = "GenshinMinecraft"
 maintenance = { status = "actively-developed" }
 
 [dependencies]
+libc = "0.2.169"
 async-trait = "0.1.83"
 clap = { version = "4.5.23", features = ["derive"] }
 futures = "0.3.31"
