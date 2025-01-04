@@ -11,7 +11,7 @@ on:
 
 jobs:
   cargo-test:
-    name: Check - ${{ github.sha }}
+    name: Test - ${{ github.sha }}
     runs-on: [self-hosted]
     steps:
       - name: Checkout
