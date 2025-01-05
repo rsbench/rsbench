@@ -44,14 +44,14 @@ fn run_network() {
 }
 
 fn run_fib() {
-    if !cfg!(debug_assertions) {
-        let total_threads = sysinfo::System::new_all().cpus().len() as u32;
-        fibonacci::run_fibonacci();
-        fibonacci::run_fibonacci_mt(total_threads);
-    } else {
+    if cfg!(debug_assertions) {
         warn!("This program should be built in release mode for accurate benchmarking");
         warn!("Skipping fibonacci benchmark");
         println!();
+    } else {
+        let total_threads = sysinfo::System::new_all().cpus().len() as u32;
+        fibonacci::run_fibonacci();
+        fibonacci::run_fibonacci_mt(total_threads);
     }
 }
 

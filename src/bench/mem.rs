@@ -35,7 +35,7 @@ fn mem_test() -> (f64, f64) {
             MAP_ANON | MAP_PRIVATE, // 匿名映射，私有
             -1,                     // 文件描述符（匿名映射时为 -1）
             0,                      // 偏移量
-        ) as *mut u8
+        ).cast::<u8>()
     };
 
     if memory.is_null() {
@@ -69,7 +69,7 @@ fn mem_test() -> (f64, f64) {
 
     // 释放内存
     unsafe {
-        munmap(memory as *mut c_void, memory_size);
+        munmap(memory.cast::<c_void>(), memory_size);
     }
     (write_speed, read_speed)
 }

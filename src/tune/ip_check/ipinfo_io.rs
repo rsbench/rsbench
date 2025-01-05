@@ -30,7 +30,7 @@ impl IPCheck for IpInfoIo {
 
             let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
                 Ok(client) => client,
-                Err(_) => {
+                Err(()) => {
                     return (None, None, None);
                 }
             };
@@ -48,7 +48,7 @@ impl IPCheck for IpInfoIo {
         let handle_v6 = tokio::spawn(async move {
             let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), true).await {
                 Ok(client) => client,
-                Err(_) => {
+                Err(()) => {
                     return (None, None, None);
                 }
             };

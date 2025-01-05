@@ -16,10 +16,10 @@ pub async fn create_reqwest_client(
         builder = builder.user_agent(ua.unwrap());
     }
 
-    if !ipv6 {
-        builder = builder.local_address(Some(IpAddr::V4(Ipv4Addr::from_str("0.0.0.0").unwrap())))
+    if ipv6 {
+        builder = builder.local_address(Some(IpAddr::V6(Ipv6Addr::from_str("::").unwrap())));
     } else {
-        builder = builder.local_address(Some(IpAddr::V6(Ipv6Addr::from_str("::").unwrap())))
+        builder = builder.local_address(Some(IpAddr::V4(Ipv4Addr::from_str("0.0.0.0").unwrap())));
     }
 
     // 构建客户端

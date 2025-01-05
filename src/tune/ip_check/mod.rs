@@ -73,7 +73,7 @@ impl Display for IPCheckProvider {
             write!(f, "{:^10}", self.provider)?;
             match &self.ipv4 {
                 Some(ip) => {
-                    write!(f, "   {:^40}", ip)?;
+                    write!(f, "   {ip:^40}")?;
                 }
                 None => {
                     write!(f, "   {:^40}", "N/A")?;
@@ -81,7 +81,7 @@ impl Display for IPCheckProvider {
             }
             match &self.ipv4_org {
                 Some(org) => {
-                    write!(f, "   {:^30}", org)?;
+                    write!(f, "   {org:^30}")?;
                 }
                 None => {
                     write!(f, "   {:^30}", "N/A")?;
@@ -89,7 +89,7 @@ impl Display for IPCheckProvider {
             }
             match &self.ipv4_region {
                 Some(region) => {
-                    write!(f, "   {:^20}", region)?;
+                    write!(f, "   {region:^20}")?;
                 }
                 None => {
                     write!(f, "   {:^20}", "N/A")?;
@@ -97,7 +97,7 @@ impl Display for IPCheckProvider {
             }
             match &self.risk_score_v4 {
                 Some(risk) => {
-                    write!(f, "   {:^5}", risk)?;
+                    write!(f, "   {risk:^5}")?;
                 }
                 None => {
                     write!(f, "   {:^5}", "N/A")?;
@@ -108,7 +108,7 @@ impl Display for IPCheckProvider {
             write!(f, "{:^10}", self.provider)?;
             match &self.ipv6 {
                 Some(ip) => {
-                    write!(f, "   {:^40}", ip)?;
+                    write!(f, "   {ip:^40}")?;
                 }
                 None => {
                     write!(f, "   {:^40}", "N/A")?;
@@ -116,7 +116,7 @@ impl Display for IPCheckProvider {
             }
             match &self.ipv6_org {
                 Some(org) => {
-                    write!(f, "   {:^30}", org)?;
+                    write!(f, "   {org:^30}")?;
                 }
                 None => {
                     write!(f, "   {:^30}", "N/A")?;
@@ -124,7 +124,7 @@ impl Display for IPCheckProvider {
             }
             match &self.ipv6_region {
                 Some(region) => {
-                    write!(f, "   {:^20}", region)?;
+                    write!(f, "   {region:^20}")?;
                 }
                 None => {
                     write!(f, "   {:^20}", "N/A")?;
@@ -132,7 +132,7 @@ impl Display for IPCheckProvider {
             }
             match &self.risk_score_v6 {
                 Some(risk) => {
-                    write!(f, "   {:^5}", risk)?;
+                    write!(f, "   {risk:^5}")?;
                 }
                 None => {
                     write!(f, "   {:^5}", "N/A")?;

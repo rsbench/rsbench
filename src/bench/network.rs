@@ -45,7 +45,7 @@ pub fn ping() {
     }
     log.done();
     let mean = results.iter().sum::<u128>() as f64 / results.len() as f64;
-    let loss = (timeouts as f64 / PING_TIMES as f64) * 100.0;
+    let loss = (f64::from(timeouts) / PING_TIMES as f64) * 100.0;
     set_colour(Color::Blue);
     println!("PING: {mean:.2} ms");
     println!("LOSS: {loss:.2}%");
@@ -99,10 +99,10 @@ async fn perform_upload() -> (f64, Vec<f64>) {
     let speed_samples = speed_samples_task.await.unwrap();
 
     // Calculate the mean speed
-    let mean_speed = if !speed_samples.is_empty() {
-        speed_samples.iter().sum::<f64>() / speed_samples.len() as f64
-    } else {
+    let mean_speed = if speed_samples.is_empty() {
         0.0
+    } else {
+        speed_samples.iter().sum::<f64>() / speed_samples.len() as f64
     };
 
     (mean_speed, speed_samples)
@@ -150,10 +150,10 @@ async fn perform_download() -> Result<(f64, Vec<f64>), String> {
         }
     }
 
-    let mean_speed = if !speed_samples.is_empty() {
-        speed_samples.iter().sum::<f64>() / speed_samples.len() as f64
-    } else {
+    let mean_speed = if speed_samples.is_empty() {
         0.0
+    } else {
+        speed_samples.iter().sum::<f64>() / speed_samples.len() as f64
     };
 
     Ok((mean_speed, speed_samples))
