@@ -53,7 +53,7 @@ impl IPCheck for IpInfoIo {
                 }
             };
 
-            let result = match client_v4.get("https://ipinfo.io").send().await {
+            let result = match client_v4.get("https://v6.ipinfo.io").send().await {
                 Ok(result) => result,
                 Err(_) => {
                     return (None, None, None);
