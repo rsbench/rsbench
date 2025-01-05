@@ -103,8 +103,11 @@ impl Display for IPCheckProvider {
                     write!(f, "   {:^5}", "N/A")?;
                 }
             }
+            writeln!(f, "")?;
         }
+
         if self.ipv6.is_some() {
+            set_random_colour();
             write!(f, "{:^10}", self.provider)?;
             match &self.ipv6 {
                 Some(ip) => {
@@ -138,6 +141,7 @@ impl Display for IPCheckProvider {
                     write!(f, "   {:^5}", "N/A")?;
                 }
             }
+            writeln!(f, "")?;
         }
         set_default_colour();
         write!(f, "")
