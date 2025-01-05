@@ -1,14 +1,15 @@
 use crate::utils::{set_colour, set_default_colour};
 use paris::error;
+use std::fs;
 use std::fs::File;
 use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::str::FromStr;
-use std::{env, fs};
 use termcolor::Color;
 
 #[cfg(not(target_os = "windows"))]
 fn get_space_left() -> (f64, bool) {
+    use std::env;
     use sysinfo::Disks;
 
     let system_tmp_dir = env::var("TMPDIR").unwrap_or("/tmp".to_string());
@@ -165,6 +166,7 @@ fn delete_test_file() {
 
 #[cfg(not(target_os = "windows"))]
 fn set_file_path() -> PathBuf {
+    use std::env;
     let system_tmp_dir = env::var("TMPDIR").unwrap_or("/tmp".to_string());
 
     PathBuf::from_str(&format!("{system_tmp_dir}/rsbench_disk_test"))
