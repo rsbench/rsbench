@@ -39,7 +39,7 @@ async fn main() {
         unlock_test::run_unlock_test(&args);
     }
     if args.tune {
-        tune::run_tune();
+        tune::run_tune(&args);
     }
     if !args.info && !args.bench && !args.unlock && !args.tune {
         warn!("No parameter is currently specified, info mode will be used by default.");

@@ -38,6 +38,9 @@ pub struct Config {
     #[arg(short, long)]
     pub tune: bool,
 
+    #[arg(long, requires = "tune")]
+    pub ip: bool,
+
     // Disable color output
     #[arg(long, default_value_t = false)]
     pub no_color: bool,

@@ -12,24 +12,9 @@ pub fn set_random_colour() {
 
     // 定义一个内部函数 random_colour，用于生成随机颜色
     fn random_colour() -> Color {
-        // 创建一个颜色数组，包含多种颜色
-        let colours = [
-            Color::White,
-            Color::Green,
-            Color::Red,
-            Color::Black,
-            Color::Blue,
-            Color::Cyan,
-            Color::Magenta,
-            Color::Yellow,
-        ];
-
         // 创建一个随机数生成器
         let mut rng = rand::thread_rng();
-        // 生成一个随机索引，范围在颜色数组的长度内
-        let random_index = rng.gen_range(0..colours.len());
-        // 返回随机索引对应的颜色
-        colours[random_index]
+        Color::Rgb(rng.gen_range(0..255), rng.gen_range(0..255), rng.gen_range(0..255))
     }
 
     // 获取标准输出的句柄，并指定颜色选择为 Always
