@@ -34,8 +34,8 @@ pub async fn ip_all() {
     set_colour(Color::Yellow);
     println!("IP  :");
     println!(
-        "{:^10} | {:^40} | {:^30} | {:^20} | {:^5}",
-        "Provider", "IP", "Org", "Region", "Risk"
+        "{:^10} | {:^40} | {:^30} | {:^5} | {}",
+        "Provider", "IP", "Region", "Risk", "Org"
     );
     set_default_colour();
 
@@ -79,17 +79,9 @@ impl Display for IPCheckProvider {
                     write!(f, "   {:^40}", "N/A")?;
                 }
             }
-            match &self.ipv4_org {
-                Some(org) => {
-                    write!(f, "   {org:^30}")?;
-                }
-                None => {
-                    write!(f, "   {:^30}", "N/A")?;
-                }
-            }
             match &self.ipv4_region {
                 Some(region) => {
-                    write!(f, "   {region:^20}")?;
+                    write!(f, "   {region:^30}")?;
                 }
                 None => {
                     write!(f, "   {:^20}", "N/A")?;
@@ -101,6 +93,14 @@ impl Display for IPCheckProvider {
                 }
                 None => {
                     write!(f, "   {:^5}", "N/A")?;
+                }
+            }
+            match &self.ipv4_org {
+                Some(org) => {
+                    write!(f, "   {org}")?;
+                }
+                None => {
+                    write!(f, "   {:^30}", "N/A")?;
                 }
             }
             writeln!(f, "")?;
@@ -117,17 +117,9 @@ impl Display for IPCheckProvider {
                     write!(f, "   {:^40}", "N/A")?;
                 }
             }
-            match &self.ipv6_org {
-                Some(org) => {
-                    write!(f, "   {org:^30}")?;
-                }
-                None => {
-                    write!(f, "   {:^30}", "N/A")?;
-                }
-            }
             match &self.ipv6_region {
                 Some(region) => {
-                    write!(f, "   {region:^20}")?;
+                    write!(f, "   {region:^30}")?;
                 }
                 None => {
                     write!(f, "   {:^20}", "N/A")?;
@@ -139,6 +131,14 @@ impl Display for IPCheckProvider {
                 }
                 None => {
                     write!(f, "   {:^5}", "N/A")?;
+                }
+            }
+            match &self.ipv6_org {
+                Some(org) => {
+                    write!(f, "   {org}")?;
+                }
+                None => {
+                    write!(f, "   {}", "N/A")?;
                 }
             }
             writeln!(f, "")?;

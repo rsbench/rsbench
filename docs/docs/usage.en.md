@@ -1,27 +1,27 @@
-# Usage
+# Usage Method
 
-The project is divided into four major modules:
+This project is divided into four major modules
 
 - INFO:
-  Outputs information about the host's `System Environment / CPU / Memory / Disk / SWAP / Kernel / Virtualization Technology`.
+  Outputs information about the host `system environment / CPU / memory / hard disk / SWAP / kernel / virtualization technology`, etc.
 
-  The output information is for reference only and should not be used as a basis for performance evaluation.
+  The output information is for reference only and does not serve as a basis for performance judgment
 - BENCH:
-  Performs benchmark tests, including `Network Testing / CPU Performance Testing / Disk Sequential Read/Write Testing`, etc. (Some features are currently incomplete)
+  Conducts benchmark tests, including `network test / CPU performance test / memory performance test / hard disk performance test`, etc. (some functions are not yet complete)
 
-  Test results are for reference only and should not be used as a basis for performance evaluation.
+  The test results are for reference only and do not serve as a basis for performance judgment
 - TUNE:
-  This part is completely unfinished and cannot be used temporarily.
+  - IPCheck: Detects detailed information about the IP
 - UNLOCK:
-  Internet service unlock testing, used to test whether users can normally use internet services such as streaming media, gaming platforms, etc.
+  Internet service unlocking test, used to test whether users can use internet services normally, such as streaming media, gaming platforms, etc.
 
 ## INFO
 
-When executing the Binary without passing any parameters, it defaults to running the `INFO` module.
+When the Binary is executed without any parameters, the `INFO` module is executed by default
 
-Usage:
+Usage method:
 ```bash
-> rsbench -i 
+rsbench -i 
 ```
 
 This function has no other parameters. After execution, it will output the host information:
@@ -38,23 +38,23 @@ VIRT: none
 
 ## BENCH
 
-This module comprehensively evaluates host performance. Currently, it has implemented functions like `network testing / CPU performance testing / disk sequential read/write testing`, with more updates ongoing.
+This module will comprehensively evaluate the host's performance. It has currently implemented functions such as `network test / CPU performance test / disk sequential read and write test`, and more are continuously being updated.
 
-**PS: This module may fully utilize system resources, please use it cautiously**
+**Note: This module may attempt to occupy system resources, please use with caution**
 
-Usage:
+Usage method:
 ```bash
-> rsbench -b [OPTIONS]
+rsbench -b [OPTIONS]
 ```
 
-Optional Parameters:
-- `--network`: Perform network testing
-- `--fib`: Perform CPU FIB operation performance testing
-- `--disk`: Perform disk sequential read/write testing
+Optional parameters:
+- `--network`: Perform network test
+- `--fib`: Perform CPU FIB calculation performance test
+- `--disk`: Perform disk sequential read and write test
 
-Without any parameters, all tests will be executed.
+If no parameters are given, all tests will be executed
 
-Output: (If only some test items are enabled, not all information will be output)
+Output: (if only some test items are enabled, not all information will be output)
 ```
 PING: 1.22 ms
 DOWN: 🔽 68.39 Mbps | MAX : 95.24 Mbps
@@ -65,79 +65,102 @@ FIB : 0.9673818 (9136ms)
 FIB16: 7.3711944 (19455ms total)
 ```
 
-### Network Testing
+### Network Test
 
-Corresponding Parameter: `--network`
+Corresponding parameter: `--network`
 
-`PING` represents the TCPing latency to Cloudflare `1.1.1.1:443`, in units of ms:
+`PING` is the TCPing delay test for connecting to Cloudflare `1.1.1.1:443`, in ms:
 ```
 PING: 1.22 ms
 ```
 
-This test connects to the Cloudflare Speedtest server to test download speed and upload speed.
+This test will connect to the Cloudflare Speedtest server to test download and upload speeds
 
-The first two lines represent single-threaded download speeds (marked by 🔽), with the left and right sides showing *average speed* and *maximum speed*, respectively, in Mbps, displaying 5 digits:
+The first two lines are single-threaded download speeds (marked with 🔽), with *average speed* and *maximum speed* on the left and right, in Mbps, showing 5 digits:
 ```
 DOWN: 🔽 68.39 Mbps | MAX : 95.24 Mbps
 UP  : 🔼 39.66 Mbps | MAX : 79.75 Mbps
 ```
 
-The last two lines represent multi-threaded download speeds (marked by ⏬), with the left and right sides showing *average speed* and *maximum speed*, respectively, in Mbps, displaying 5 digits:
+The last two lines are multi-threaded download speeds (marked with ⏬), with *average speed* and *maximum speed* on the left and right, in Mbps, showing 5 digits:
 ```
 DOWN: ⏬ 97.25 Mbps | MAX : 171.4 Mbps
 UP  : ⏫ 48.91 Mbps | MAX : 113.6 Mbps
 ```
 
-### FIB Operation Testing
+### FIB Calculation Test
 
-Corresponding Parameter: `--fib`
+Corresponding parameter: `--fib`
 
-This test uses the CPU to calculate the Fibonacci sequence and measures the time taken as well as the score.
+This test will use the CPU to calculate the Fibonacci sequence and calculate the time taken and the score
 
-The benchmark is based on testing using the specifications of the [Mech-Revolution Dragon 16 Pro](https://www.mechrevo.com/content/details92_4817.html). The score is calculated as `benchmark / test time`, with higher scores indicating better performance.
+The baseline is the test conducted using the [Mechrevo蛟龙 16 Pro](https://www.mechrevo.com/content/details92_4817.html) specifications, with the score being `baseline / test time`, a higher score indicates better performance
 
-The upper and lower figures represent *single-threaded score* and *multi-threaded score*, respectively:
+The top and bottom represent *single-threaded score* and *multi-threaded score*:
 ```
 FIB : 0.9673818 (9136ms)
 FIB16: 7.3711944 (19455ms total)
 ```
 
-### Disk Sequential Read/Write Testing
+### Disk Sequential Read and Write Test
 
-Corresponding Parameter: `--disk`
+Corresponding parameter: `--disk`
 
-This test performs sequential read/write tests on the disk and calculates the time taken as well as the score.
+This test will use the disk for sequential read and write tests and calculate the time taken and the score
 
-For Windows, the default test file storage path is `C:\\rsbench_disk_test`; for other systems, it is `/tmp/rsbench_disk_test`.
+For Windows, the default test file path is `C:\\rsbench_disk_test`; for other systems, it is `/tmp/rsbench_disk_test`.
 
-The left side shows the write speed, and the right side shows the read speed, both in units of MB/s:
+The left value represents the write speed, and the right value represents the read speed, both in units of MB/s:
 ```bash
 DISK: 1102.68 MB/s | 2129.57 MB/s
 ```
 
 ## TUNE
 
-This module is temporarily unavailable as it has not been completed yet.
+Usage method:
+```bash
+rsbench -t [OPTIONS]
+```
+
+Optional parameters:
+- `--ip`: Perform an IP check
+
+### IPCheck
+
+Corresponding parameter: `--ip`
+
+This test will detect the user's IP address and output detailed information.
+
+The test uses multiple IP service providers, so if you have multiple IPs locally or corresponding分流 rules, multiple IPs may appear, which is normal.
+
+Example output:
+```bash
+IP  :
+ Provider  |                    IP                    |             Region             | Risk  | Org
+Ipinfo.io                 141.**.**.220                      TW - Taiwan - Neihu          N/A    AS38136 Akari Networks
+Ipinfo.io            2409:****:****:9c60::67e              CN - Shanghai - Shanghai       N/A    AS9808 China Mobile Communications Group Co., Ltd.
+```
 
 ## UNLOCK
 
-This module detects whether the user can normally use internet services such as streaming media, gaming platforms, etc., in multiple threads.
+This module performs multi-threaded checks to determine whether users can use internet services normally, such as streaming media, gaming platforms, etc.
 
-Usage:
+Usage method:
 ```bash
 rsbench -u [OPTIONS]
 ```
 
-Optional Parameters:
-- `--region [location]`: Specifies regions, multiple can be specified, e.g., `--region cn --region us`
+Optional parameters:
+- `--region [location]`: Specify regions, multiple regions can be specified, like `--region cn --region us`
 
-By default, if no region is specified, it will test internet services for all regions.
+By default, not specifying a region means testing all regional internet services.
 
-**Please note that due to the timeliness and specificity of the unlock test scripts, there may be discrepancies with actual conditions!**
+**Please note that due to the timeliness and uniqueness of the unlocking test scripts, there might be discrepancies with actual conditions!**
 
-Example Output:
+Example output:
 ```bash
-> rsbench -u
+rsbench -u
+
 UNLOCK:
  Y/N             Service             Error
 [ Y ]           myTV Super          
@@ -172,7 +195,8 @@ Tested 27 projects took 3.24 seconds, 12 services unlocked, 15 services locked.
 
 Specifying regions:
 ```bash
-> rsbench -u --region cn --region us
+rsbench -u --region cn --region us
+
 UNLOCK:
  Y/N             Service             Error
 [ Y ]    Bilibili China Mainland    
@@ -186,22 +210,23 @@ Currently categorized regions:
 hk, mo, tw, jp, cn, asia, euro, afr, uk, us, global
 ```
 
-`global` refers to platforms available globally, such as Netflix (which is unsupported in very few regions).
+`global` refers to platforms that provide services worldwide, such as Netflix (with extremely limited regional exceptions).
 
 ## General Parameters
 
-- `--help`: Displays help information
-- `--version`: Displays version information
-- `--no-color`: Disables color output
-- `--no-cls`: Disables screen clearing, which occurs by default before program execution.
-- `--no-logo`: Prevents the display of the Ascii Art Logo
+- `--help`: Display help information
+- `--version`: Display version information
+- `--no-color`: Disable colored output
+- `ensure_ascii=False`: Prevents JSON from being escaped to ensure non-ASCII characters are output correctly (this parameter seems out of place here and might be intended for another context)
+- `--no-cls`: Disable screen clearing, by default the screen is cleared before program execution
+- `--no-logo`: Do not output Ascii Art Logo
 
 By default, you can combine the functionalities of the four modules together, for example:
 ```bash
-> rsbench -ibtu --network --region cn
+rsbench -ibtu --network --region cn
 ```
 
-Or run all tests at once:
+Or run all tests directly:
 ```bash
-> rsbench -ibtu
+rsbench -ibtu
 ```

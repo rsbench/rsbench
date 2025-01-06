@@ -11,7 +11,7 @@
 
     测试结果仅供参考，不作为判断性能依据
 - TUNE:
-     该部分完全没有完成，暂时无法使用
+     - IPCheck: 检测 IP 的详细信息
 - UNLOCK:
     互联网服务解锁测试，用于测试用户是否可以正常使用互联网服务，如流媒体、游戏平台等
 
@@ -21,7 +21,7 @@
 
 使用方法: 
 ```bash
-> rsbench -i 
+rsbench -i 
 ```
 
 该功能无其他参数，执行后会输出主机信息:
@@ -44,9 +44,8 @@ VIRT: none
 
 使用方法: 
 ```bash
-> rsbench -b [OPTIONS]
+rsbench -b [OPTIONS]
 ```
-
 
 可选参数: 
 - `--network`: 执行网络测试
@@ -118,7 +117,29 @@ DISK: 1102.68 MB/s | 2129.57 MB/s
 
 ## TUNE
 
-该模块暂时没有完成，暂时无法使用
+使用方法: 
+```bash
+rsbench -t [OPTIONS]
+```
+
+可选参数:
+- `--ip`: 执行网络测试
+
+### IPCheck
+
+对应参数: `--ip`
+
+该测试会检测用户的 IP 地址，并输出详细信息
+
+该测试会使用多个 IP 提供服务商进行测试，如果本地多 IP 或有对应的分流规则，将会出现多个 IP 情况，这是正常的
+
+示例输出:
+```bash
+IP  :
+ Provider  |                    IP                    |             Region             | Risk  | Org
+Ipinfo.io                 141.**.**.220                      TW - Taiwan - Neihu          N/A    AS38136 Akari Networks
+Ipinfo.io            2409:****:****:9c60::67e              CN - Shanghai - Shanghai       N/A    AS9808 China Mobile Communications Group Co., Ltd.
+```
 
 ## UNLOCK
 
@@ -138,7 +159,8 @@ rsbench -u [OPTIONS]
 
 示例输出:
 ```bash
-> rsbench -u
+rsbench -u
+
 UNLOCK:
  Y/N             Service             Error
 [ Y ]           myTV Super          
@@ -173,7 +195,8 @@ Tested 27 projects took 3.24 seconds, 12 services unlocked, 15 services locked.
 
 指定地区: 
 ```bash
-> rsbench -u --region cn --region us
+rsbench -u --region cn --region us
+
 UNLOCK:
  Y/N             Service             Error
 [ Y ]    Bilibili China Mainland    
@@ -199,10 +222,10 @@ hk, mo, tw, jp, cn, asia, euro, afr, uk, us, global
 
 在默认情况下，你可以将四个模块的功能合并在一起使用，比如:
 ```bash
-> rsbench -ibtu --network --region cn
+rsbench -ibtu --network --region cn
 ```
 
 或者直接全量运行测试:
 ```bash
-> rsbench -ibtu
+rsbench -ibtu
 ```
