@@ -116,10 +116,7 @@ async fn parse_ipquery_json(
 
     let risk_score = if risk.is_some() {
         match risk.unwrap().get("risk_score") {
-            Some(risk) => match risk.as_u64() {
-                Some(risk) => Some(risk as u8),
-                None => None,
-            },
+            Some(risk) => risk.as_u64().map(|risk| risk as u8),
             None => None,
         }
     } else {
@@ -149,16 +146,16 @@ async fn parse_ipquery_json(
     };
 
     let mut locate = String::new();
-    if country.is_some() {
-        locate.push_str(country.unwrap().as_str());
+    if let Some(country) = country {
+        locate.push_str(country.as_str());
     }
-    if state.is_some() {
+    if let Some(state) = state {
         locate.push_str(" - ");
-        locate.push_str(state.unwrap().as_str());
+        locate.push_str(state.as_str());
     }
-    if city.is_some() {
+    if let Some(city) = city {
         locate.push_str(" - ");
-        locate.push_str(city.unwrap().as_str());
+        locate.push_str(city.as_str());
     }
     let locate = if locate.is_empty() {
         None
@@ -167,16 +164,16 @@ async fn parse_ipquery_json(
     };
 
     let mut isp_string = String::new();
-    if asn.is_some() {
-        isp_string.push_str(asn.unwrap().as_str());
+    if let Some(asn) = asn {
+        isp_string.push_str(asn.as_str());
     }
-    if org.is_some() {
+    if let Some(org) = org {
         isp_string.push_str(" - ");
-        isp_string.push_str(org.unwrap().as_str());
+        isp_string.push_str(org.as_str());
     }
-    if isp.is_some() {
+    if let Some(isp) = isp {
         isp_string.push_str(" - ");
-        isp_string.push_str(isp.unwrap().as_str());
+        isp_string.push_str(isp.as_str());
     }
     let isp_string = if isp_string.is_empty() {
         None

@@ -37,3 +37,23 @@ pub fn json_value_to_string(json: &Value, key: &str) -> Option<String> {
         Some(value) => Some(value.as_str()?.to_string()),
     }
 }
+
+// For Chinese output
+pub fn format_center(s: &str, width: usize) -> String {
+    let display_width = s
+        .chars()
+        .map(|c| if c.is_ascii() { 1 } else { 2 })
+        .sum::<usize>();
+    if display_width >= width {
+        return s.to_string();
+    }
+    let padding = width - display_width;
+    let left_padding = padding / 2;
+    let right_padding = padding - left_padding;
+    format!(
+        "{}{}{}",
+        " ".repeat(left_padding),
+        s,
+        " ".repeat(right_padding)
+    )
+}

@@ -1,7 +1,9 @@
 mod ipinfo_io;
+mod ipip_net;
 mod ipquery_io;
 mod utils;
 
+use crate::tune::ip_check::utils::format_center;
 use crate::utils::{set_colour, set_default_colour, set_random_colour};
 use async_trait::async_trait;
 use std::fmt::Display;
@@ -35,14 +37,15 @@ pub async fn ip_all() {
     set_colour(Color::Yellow);
     println!("IP  :");
     println!(
-        "{:^10} | {:^40} | {:^30} | {:^5} | {}",
-        "Provider", "IP", "Region", "Risk", "Org"
+        "{:^10} | {:^40} | {:^30} | {:^5} | Org",
+        "Provider", "IP", "Region", "Risk"
     );
     set_default_colour();
 
     let provider_list: Vec<Box<dyn IPCheck + Send + Sync>> = vec![
         Box::new(ipinfo_io::IpInfoIo),
         Box::new(ipquery_io::IPQueryIo),
+        Box::new(ipip_net::IpIpNet),
     ];
 
     let (tx, mut rx) = mpsc::channel(100);
@@ -85,7 +88,8 @@ impl Display for IPCheckProvider {
             }
             match &self.ipv4_region {
                 Some(region) => {
-                    write!(f, "   {region:^30}")?;
+                    let region = format_center(region, 30);
+                    write!(f, "   {region}")?;
                 }
                 None => {
                     write!(f, "   {:^20}", "N/A")?;
@@ -104,10 +108,10 @@ impl Display for IPCheckProvider {
                     write!(f, "   {org}")?;
                 }
                 None => {
-                    write!(f, "   {:^30}", "N/A")?;
+                    write!(f, "   N/A")?;
                 }
             }
-            writeln!(f, "")?;
+            writeln!(f)?;
         }
 
         if self.ipv6.is_some() {
@@ -123,7 +127,8 @@ impl Display for IPCheckProvider {
             }
             match &self.ipv6_region {
                 Some(region) => {
-                    write!(f, "   {region:^30}")?;
+                    let region = format_center(region, 30);
+                    write!(f, "   {region}")?;
                 }
                 None => {
                     write!(f, "   {:^20}", "N/A")?;
@@ -142,10 +147,10 @@ impl Display for IPCheckProvider {
                     write!(f, "   {org}")?;
                 }
                 None => {
-                    write!(f, "   {}", "N/A")?;
+                    write!(f, "   N/A")?;
                 }
             }
-            writeln!(f, "")?;
+            writeln!(f)?;
         }
         set_default_colour();
         write!(f, "")
