@@ -61,7 +61,7 @@ pub async fn ip_all() {
 
     let mut results = Vec::new();
     while let Some(provider) = rx.recv().await {
-        println!("{provider}");
+        print!("{provider}");
         results.push(provider);
     }
     let time = time.elapsed().as_secs_f32();
@@ -145,7 +145,7 @@ impl Display for IPCheckProvider {
                     write!(f, "   {}", "N/A")?;
                 }
             }
-            write!(f, "")?;
+            writeln!(f, "")?;
         }
         set_default_colour();
         write!(f, "")
