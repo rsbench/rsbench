@@ -1,4 +1,5 @@
 mod ipinfo_io;
+mod ipquery_io;
 mod utils;
 
 use crate::utils::{set_colour, set_default_colour, set_random_colour};
@@ -39,7 +40,10 @@ pub async fn ip_all() {
     );
     set_default_colour();
 
-    let provider_list: Vec<Box<dyn IPCheck + Send + Sync>> = vec![Box::new(ipinfo_io::IpInfoIo)];
+    let provider_list: Vec<Box<dyn IPCheck + Send + Sync>> = vec![
+        Box::new(ipinfo_io::IpInfoIo),
+        Box::new(ipquery_io::IPQueryIo),
+    ];
 
     let (tx, mut rx) = mpsc::channel(100);
 
@@ -141,7 +145,7 @@ impl Display for IPCheckProvider {
                     write!(f, "   {}", "N/A")?;
                 }
             }
-            writeln!(f, "")?;
+            write!(f, "")?;
         }
         set_default_colour();
         write!(f, "")

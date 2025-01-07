@@ -35,7 +35,8 @@ fn mem_test() -> (f64, f64) {
             MAP_ANON | MAP_PRIVATE, // 匿名映射，私有
             -1,                     // 文件描述符（匿名映射时为 -1）
             0,                      // 偏移量
-        ).cast::<u8>()
+        )
+        .cast::<u8>()
     };
 
     if memory.is_null() {

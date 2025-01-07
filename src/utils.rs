@@ -14,7 +14,11 @@ pub fn set_random_colour() {
     fn random_colour() -> Color {
         // 创建一个随机数生成器
         let mut rng = rand::thread_rng();
-        Color::Rgb(rng.gen_range(0..255), rng.gen_range(0..255), rng.gen_range(0..255))
+        Color::Rgb(
+            rng.gen_range(0..255),
+            rng.gen_range(0..255),
+            rng.gen_range(0..255),
+        )
     }
 
     // 获取标准输出的句柄，并指定颜色选择为 Always
