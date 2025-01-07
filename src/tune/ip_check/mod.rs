@@ -1,6 +1,7 @@
 mod ipinfo_io;
 mod ipip_net;
 mod ipquery_io;
+mod myip_la;
 mod utils;
 
 use crate::tune::ip_check::utils::format_center;
@@ -46,6 +47,7 @@ pub async fn ip_all() {
         Box::new(ipinfo_io::IpInfoIo),
         Box::new(ipquery_io::IPQueryIo),
         Box::new(ipip_net::IpIpNet),
+        Box::new(myip_la::MyIpLa),
     ];
 
     let (tx, mut rx) = mpsc::channel(100);
