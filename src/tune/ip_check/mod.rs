@@ -1,3 +1,4 @@
+mod cloudflare;
 mod ipinfo_io;
 mod ipip_net;
 mod ipquery_io;
@@ -48,6 +49,7 @@ pub async fn ip_all() {
         Box::new(ipquery_io::IPQueryIo),
         Box::new(ipip_net::IpIpNet),
         Box::new(myip_la::MyIpLa),
+        Box::new(cloudflare::Cloudflare),
     ];
 
     let (tx, mut rx) = mpsc::channel(100);
@@ -94,7 +96,7 @@ impl Display for IPCheckProvider {
                     write!(f, "   {region}")?;
                 }
                 None => {
-                    write!(f, "   {:^20}", "N/A")?;
+                    write!(f, "   {:^30}", "N/A")?;
                 }
             }
             match &self.risk_score_v4 {
@@ -133,7 +135,7 @@ impl Display for IPCheckProvider {
                     write!(f, "   {region}")?;
                 }
                 None => {
-                    write!(f, "   {:^20}", "N/A")?;
+                    write!(f, "   {:^30}", "N/A")?;
                 }
             }
             match &self.risk_score_v6 {

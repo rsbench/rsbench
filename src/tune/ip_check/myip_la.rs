@@ -34,14 +34,14 @@ impl IPCheck for MyIpLa {
         });
 
         let handle_v6 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), true).await {
+            let client_v6 = match create_reqwest_client(Some("curl/8.11.1"), true).await {
                 Ok(client) => client,
                 Err(()) => {
                     return (None, None);
                 }
             };
 
-            let result = match client_v4.get("https://api.myip.la/cn?json").send().await {
+            let result = match client_v6.get("https://api.myip.la/cn?json").send().await {
                 Ok(result) => result,
                 Err(_) => {
                     return (None, None);
