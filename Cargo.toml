@@ -1,6 +1,6 @@
 [package]
 name = "rsbench"
-version = "0.2.9" # It is recommended that every Commit that modifies a Rust file should update a minor version.
+version = "0.3.0" # It is recommended that every Commit that modifies a Rust file should update a minor version.
 edition = "2021"
 
 authors = ["moohr <moohric@moohric.com>", "GenshinMinecraft <gm@highp.ing>"]
@@ -31,6 +31,8 @@ rand = { version = "0.8.5", default-features = false, features = ["std", "std_rn
 dmidecode = "0.8.5"
 serde = { version = "1.0.217", default-features = false, features = ["std", "derive"]}
 serde_json = { version = "1.0.134", default-features = false, features = ["std"] }
+crossterm = "0.28.1"
+prettytable = "0.10.0"
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2.169"

@@ -1,6 +1,8 @@
 use crate::unlock_test::Service;
+use crossterm::terminal::ClearType;
+use crossterm::{cursor, execute, terminal};
 use rand::Rng;
-use std::io::Write;
+use std::io::stdout;
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 /// 设置终端输出的文本颜色为随机颜色
@@ -64,20 +66,23 @@ pub fn set_colour(color: Color) {
 }
 
 /// 清除终端中的最后一行文本
-pub fn _clear_last_line() {
-    // 打印 ANSI 转义序列，将光标向上移动一行
-    print!("\x1b[A");
-    // 打印 ANSI 转义序列，清除当前行的内容
-    print!("\x1b[2K");
-    // 打印回车符，将光标移动到行首
-    print!("\r");
-    // 刷新标准输出，确保所有字符都被打印出来
-    std::io::stdout().flush().unwrap();
+pub fn clear_last_line() {
+    execute!(
+        stdout(),
+        cursor::MoveUp(1),
+        cursor::MoveToColumn(0),
+        terminal::Clear(ClearType::CurrentLine)
+    )
+    .unwrap();
 }
 
 pub fn clear_screen() {
-    print!("\x1b[2J");
-    std::io::stdout().flush().unwrap();
+    execute!(
+        stdout(),
+        terminal::Clear(ClearType::All),
+        cursor::MoveTo(0, 0)
+    )
+    .unwrap();
 }
 
 // 为 Box<dyn Service + Send + Sync> 实现 PartialEq trait，用于比较两个动态盒子是否相等

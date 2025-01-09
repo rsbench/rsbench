@@ -1,5 +1,5 @@
 use crate::tune::ip_check::utils::create_reqwest_client;
-use crate::tune::ip_check::{IPCheck, IPCheckProvider};
+use crate::tune::ip_check::{IPCheck, IPCheckProviderV4, IPCheckProviderV6};
 use async_trait::async_trait;
 use reqwest::Response;
 use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
@@ -13,7 +13,7 @@ impl IPCheck for Cloudflare {
         "Cloudflare".to_string()
     }
 
-    async fn check(&self) -> IPCheckProvider {
+    async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
             let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
                 Ok(client) => client,
@@ -55,24 +55,25 @@ impl IPCheck for Cloudflare {
         let ip_v4 = handle_v4.await.unwrap_or(None);
         let ip_v6 = handle_v6.await.unwrap_or(None);
 
-        let mut response = IPCheckProvider {
+        let response_v4 = IPCheckProviderV4 {
             provider: self.provider_name(),
-            success: true,
-            ipv4: ip_v4,
-            ipv4_org: None,
-            ipv4_region: None,
-            ipv6: ip_v6,
-            ipv6_org: None,
-            ipv6_region: None,
-            risk_score_v4: None,
-            risk_score_v6: None,
+            success: ip_v4.is_some(),
+            ip: ip_v4,
+            org: None,
+            region: None,
+            risk_score: None,
         };
 
-        if ip_v4.is_none() {
-            response.success = false;
-        }
+        let response_v6 = IPCheckProviderV6 {
+            provider: self.provider_name(),
+            success: ip_v6.is_some(),
+            ip: ip_v6,
+            org: None,
+            region: None,
+            risk_score: None,
+        };
 
-        response
+        (response_v4, response_v6)
     }
 }
 
@@ -90,7 +91,7 @@ async fn parse_cloudflare(response: Response) -> Option<IpAddr> {
     let mut ip = String::new();
     for line in html.lines() {
         if line.starts_with("ip=") {
-            ip = line.split("=").collect::<Vec<&str>>()[1].to_string();
+            ip = line.split('=').collect::<Vec<&str>>()[1].to_string();
             break;
         }
     }

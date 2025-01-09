@@ -1,5 +1,5 @@
 use crate::tune::ip_check::utils::{create_reqwest_client, json_value_to_string};
-use crate::tune::ip_check::{IPCheck, IPCheckProvider};
+use crate::tune::ip_check::{IPCheck, IPCheckProviderV4, IPCheckProviderV6};
 use async_trait::async_trait;
 use reqwest::Response;
 use serde_json::Value;
@@ -14,20 +14,8 @@ impl IPCheck for IpInfoIo {
         "Ipinfo.io".to_string()
     }
 
-    async fn check(&self) -> IPCheckProvider {
+    async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
-            // let client_v4 = match Client::builder()
-            //     .user_agent("curl/8.11.1")
-            //     .timeout(Duration::from_secs(10))
-            //     .local_address(Some(IpAddr::V4(Ipv4Addr::from_str("0.0.0.0").unwrap())))
-            //     .build()
-            // {
-            //     Ok(client) => client,
-            //     Err(_) => {
-            //         return (None, None, None);
-            //     }
-            // };
-
             let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
                 Ok(client) => client,
                 Err(()) => {
@@ -66,24 +54,25 @@ impl IPCheck for IpInfoIo {
         let (ip_v4, org_v4, locate_v4) = handle_v4.await.unwrap_or((None, None, None));
         let (ip_v6, org_v6, locate_v6) = handle_v6.await.unwrap_or((None, None, None));
 
-        let mut response = IPCheckProvider {
+        let response_v4 = IPCheckProviderV4 {
             provider: self.provider_name(),
-            success: true,
-            ipv4: ip_v4,
-            ipv4_org: org_v4,
-            ipv4_region: locate_v4,
-            ipv6: ip_v6,
-            ipv6_org: org_v6,
-            ipv6_region: locate_v6,
-            risk_score_v4: None,
-            risk_score_v6: None,
+            success: ip_v4.is_some(),
+            ip: ip_v4,
+            org: org_v4,
+            region: locate_v4,
+            risk_score: None,
         };
 
-        if ip_v4.is_none() && ip_v6.is_none() {
-            response.success = false;
-        }
+        let response_v6 = IPCheckProviderV6 {
+            provider: self.provider_name(),
+            success: ip_v6.is_some(),
+            ip: ip_v6,
+            org: org_v6,
+            region: locate_v6,
+            risk_score: None,
+        };
 
-        response
+        (response_v4, response_v6)
     }
 }
 

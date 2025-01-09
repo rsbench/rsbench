@@ -1,5 +1,5 @@
 use crate::tune::ip_check::utils::{create_reqwest_client, json_value_to_string};
-use crate::tune::ip_check::{IPCheck, IPCheckProvider};
+use crate::tune::ip_check::{IPCheck, IPCheckProviderV4, IPCheckProviderV6};
 use async_trait::async_trait;
 use reqwest::Response;
 use serde_json::Value;
@@ -14,7 +14,7 @@ impl IPCheck for IpIpNet {
         "Ipip.net".to_string()
     }
 
-    async fn check(&self) -> IPCheckProvider {
+    async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
             let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
                 Ok(client) => client,
@@ -35,24 +35,25 @@ impl IPCheck for IpIpNet {
 
         let (ip_v4, locate_v4) = handle_v4.await.unwrap_or((None, None));
 
-        let mut response = IPCheckProvider {
+        let response_v4 = IPCheckProviderV4 {
             provider: self.provider_name(),
-            success: true,
-            ipv4: ip_v4,
-            ipv4_org: None,
-            ipv4_region: locate_v4,
-            ipv6: None,
-            ipv6_org: None,
-            ipv6_region: None,
-            risk_score_v4: None,
-            risk_score_v6: None,
+            success: ip_v4.is_some(),
+            ip: ip_v4,
+            org: locate_v4,
+            region: None,
+            risk_score: None,
         };
 
-        if ip_v4.is_none() {
-            response.success = false;
-        }
+        let response_v6 = IPCheckProviderV6 {
+            provider: self.provider_name(),
+            success: false,
+            ip: None,
+            org: None,
+            region: None,
+            risk_score: None,
+        };
 
-        response
+        (response_v4, response_v6)
     }
 }
 
