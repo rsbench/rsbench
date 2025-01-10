@@ -102,6 +102,7 @@ pub async fn ip_all() {
 
     set_colour(Color::Yellow);
     println!("Tested {results_count} projects took {time:.2} seconds",);
+    set_default_colour();
 }
 
 impl Display for IPCheckProviderV4 {
