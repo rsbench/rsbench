@@ -65,7 +65,7 @@ impl IPCheck for MyIpLa {
 
         let response_v6 = IPCheckProviderV6 {
             provider: self.provider_name(),
-            success: ip_v4.is_some(),
+            success: ip_v6.is_some(),
             ip: ip_v6,
             org: None,
             region: locate_v6,

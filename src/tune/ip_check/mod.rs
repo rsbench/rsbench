@@ -6,6 +6,7 @@ mod ipquery_io;
 mod myip_la;
 mod pconline;
 mod utils;
+mod vore_api;
 
 use crate::tune::ip_check::utils::format_center;
 use crate::utils::{clear_last_line, set_colour, set_default_colour, set_random_colour};
@@ -57,6 +58,7 @@ pub async fn ip_all() {
         Box::new(cloudflare::Cloudflare),
         Box::new(ipcheck_ing::IPCheckIng),
         Box::new(pconline::PcOnline),
+        Box::new(vore_api::VoreAPI),
     ];
 
     let (tx, mut rx) = mpsc::channel(100);
