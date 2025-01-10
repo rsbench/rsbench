@@ -1,4 +1,5 @@
 mod cloudflare;
+mod ip_sb;
 mod ipcheck_ing;
 mod ipinfo_io;
 mod ipip_net;
@@ -59,6 +60,7 @@ pub async fn ip_all() {
         Box::new(ipcheck_ing::IPCheckIng),
         Box::new(pconline::PcOnline),
         Box::new(vore_api::VoreAPI),
+        Box::new(ip_sb::IpSb),
     ];
 
     let (tx, mut rx) = mpsc::channel(100);
