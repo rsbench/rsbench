@@ -10,7 +10,7 @@ pub struct IPCheckIng;
 #[async_trait]
 impl IPCheck for IPCheckIng {
     fn provider_name(&self) -> String {
-        "IpcheckIng".to_string()
+        "Ipcheck.ing".to_string()
     }
 
     async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {

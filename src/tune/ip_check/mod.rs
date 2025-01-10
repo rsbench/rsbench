@@ -4,6 +4,7 @@ mod ipinfo_io;
 mod ipip_net;
 mod ipquery_io;
 mod myip_la;
+mod pconline;
 mod utils;
 
 use crate::tune::ip_check::utils::format_center;
@@ -55,6 +56,7 @@ pub async fn ip_all() {
         Box::new(myip_la::MyIpLa),
         Box::new(cloudflare::Cloudflare),
         Box::new(ipcheck_ing::IPCheckIng),
+        Box::new(pconline::PcOnline),
     ];
 
     let (tx, mut rx) = mpsc::channel(100);
