@@ -1,6 +1,8 @@
-use crate::utils::{set_colour, set_default_colour, set_random_colour};
+use crate::utils::{clear_last_line, set_colour, set_default_colour, set_random_colour};
 use futures::StreamExt;
 use paris::error;
+use prettytable::{color, format, Attr, Cell, Row, Table};
+use std::collections::HashMap;
 use std::time::Instant;
 use termcolor::Color;
 
@@ -72,59 +74,46 @@ async fn run_speedtest_download_with_url(url: &str) -> Result<(f64, Vec<f64>), S
 
 pub async fn single_thread_download() {
     let mut log = paris::Logger::new();
-    log.loading("Speedtest is running (China Mobile)...");
-    let (cn_cm_speed, cn_cm_samples) =
-        run_speedtest_download_with_url(CN_CM)
+
+    let mut node_hashmap = HashMap::new();
+    node_hashmap.insert("China Mobile", CN_CM);
+    node_hashmap.insert("China Unicom", CN_CU);
+    node_hashmap.insert("China Telecom", CN_CT);
+    node_hashmap.insert("China Broadnet", CN_CBN);
+
+    let mut result_hashmap = HashMap::new();
+
+    for (name, url) in node_hashmap.iter() {
+        log.loading(format!("Speedtest is running ({})...", name));
+        let (speed, samples) = run_speedtest_download_with_url(url)
             .await
             .unwrap_or_else(|e| {
                 error!("An error occurred while running the speedtest: {}", e);
                 (0.0, Vec::new())
             });
-    log.done();
-    print_download_output("China Mobile", cn_cm_speed, cn_cm_samples).await;
-
-    log.loading("Speedtest is running (China Unicom)...");
-    let (cn_cu_speed, cn_cu_samples) =
-        run_speedtest_download_with_url(CN_CU)
-            .await
-            .unwrap_or_else(|e| {
-                error!("An error occurred while running the speedtest: {}", e);
-                (0.0, Vec::new())
+        log.done();
+        let max = samples.clone();
+        let max = max
+            .iter()
+            .max_by(|a, b| a.partial_cmp(b).unwrap())
+            .unwrap_or_else(|| {
+                error!("Unable to find max speed");
+                &0.0
             });
-    log.done();
-    print_download_output("China Unicom", cn_cu_speed, cn_cu_samples).await;
+        result_hashmap.insert(name, (speed, max.clone()));
+        print_download_output(name, speed, max).await;
+    }
 
-    log.loading("Speedtest is running (China Telecom)...");
-    let (cn_ct_speed, cn_ct_samples) =
-        run_speedtest_download_with_url(CN_CT)
-            .await
-            .unwrap_or_else(|e| {
-                error!("An error occurred while running the speedtest: {}", e);
-                (0.0, Vec::new())
-            });
-    log.done();
-    print_download_output("China Telecom", cn_ct_speed, cn_ct_samples).await;
+    for _ in 0..4 {
+        clear_last_line();
+    }
 
-    log.loading("Speedtest is running (China Broadnet)...");
-    let (cn_cbn_speed, cn_cbn_samples) = run_speedtest_download_with_url(CN_CBN)
-        .await
-        .unwrap_or_else(|e| {
-            error!("An error occurred while running the speedtest: {}", e);
-            (0.0, Vec::new())
-        });
-    log.done();
-    print_download_output("China Broadnet", cn_cbn_speed, cn_cbn_samples).await;
+    let table = get_table(result_hashmap).await;
+    table.printstd();
+    set_default_colour();
 }
 
-async fn print_download_output(name: &str, speed: f64, samples: Vec<f64>) {
-    let max = samples
-        .iter()
-        .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap_or_else(|| {
-            error!("Unable to find max speed");
-            &0.0
-        });
-
+async fn print_download_output(name: &str, speed: f64, max: &f64) {
     let binding = speed.to_string();
     let total_mean_speed_str = &binding.as_str()[0..6];
 
@@ -144,4 +133,36 @@ async fn print_download_output(name: &str, speed: f64, samples: Vec<f64>) {
     set_colour(Color::Rgb(65, 105, 225));
     println!("{max_str} Mbps");
     set_default_colour();
+}
+
+async fn get_table(results: HashMap<&&str, (f64, f64)>) -> Table {
+    let mut table = Table::new();
+    table.set_format(*format::consts::FORMAT_NO_BORDER_LINE_SEPARATOR);
+    table.set_titles(Row::new(vec![
+        Cell::new("Area")
+            .with_style(Attr::ForegroundColor(color::YELLOW))
+            .with_style(Attr::Bold),
+        Cell::new("Max Speed")
+            .with_style(Attr::ForegroundColor(color::YELLOW))
+            .with_style(Attr::Bold),
+        Cell::new("Avg Speed")
+            .with_style(Attr::ForegroundColor(color::YELLOW))
+            .with_style(Attr::Bold),
+    ]));
+
+    for (name, (speed, max)) in results.iter() {
+        table.add_row(Row::new(vec![
+            Cell::new(*name)
+                .with_style(Attr::ForegroundColor(color::CYAN))
+                .with_style(Attr::Bold),
+            Cell::new(format!("{:.2}", max).as_str())
+                .with_style(Attr::ForegroundColor(color::GREEN))
+                .with_style(Attr::Bold),
+            Cell::new(format!("{:.2}", speed).as_str())
+                .with_style(Attr::ForegroundColor(color::GREEN))
+                .with_style(Attr::Bold),
+        ]));
+    }
+
+    table
 }
