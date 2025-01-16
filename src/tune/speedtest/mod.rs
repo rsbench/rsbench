@@ -2,7 +2,6 @@ use crate::utils::{clear_last_line, set_colour, set_default_colour, set_random_c
 use futures::StreamExt;
 use paris::error;
 use prettytable::{color, format, Attr, Cell, Row, Table};
-use std::collections::HashMap;
 use std::time::Instant;
 use termcolor::Color;
 
@@ -75,15 +74,16 @@ async fn run_speedtest_download_with_url(url: &str) -> Result<(f64, Vec<f64>), S
 pub async fn single_thread_download() {
     let mut log = paris::Logger::new();
 
-    let mut node_hashmap = HashMap::new();
-    node_hashmap.insert("China Mobile", CN_CM);
-    node_hashmap.insert("China Unicom", CN_CU);
-    node_hashmap.insert("China Telecom", CN_CT);
-    node_hashmap.insert("China Broadnet", CN_CBN);
+    let node_vec = vec![
+        ("China Mobile", CN_CM),
+        ("China Telecom", CN_CT),
+        ("China Unicom", CN_CU),
+        ("China Broadnet", CN_CBN),
+    ];
 
-    let mut result_hashmap = HashMap::new();
+    let mut result_vec: Vec<(&str, (f64, f64))> = Vec::new();
 
-    for (name, url) in node_hashmap.iter() {
+    for (name, url) in node_vec {
         log.loading(format!("Speedtest is running ({})...", name));
         let (speed, samples) = run_speedtest_download_with_url(url)
             .await
@@ -100,7 +100,7 @@ pub async fn single_thread_download() {
                 error!("Unable to find max speed");
                 &0.0
             });
-        result_hashmap.insert(name, (speed, max.clone()));
+        result_vec.push((name, (speed, max.clone())));
         print_download_output(name, speed, max).await;
     }
 
@@ -108,7 +108,7 @@ pub async fn single_thread_download() {
         clear_last_line();
     }
 
-    let table = get_table(result_hashmap).await;
+    let table = get_table(result_vec).await;
     table.printstd();
     set_default_colour();
 }
@@ -135,7 +135,7 @@ async fn print_download_output(name: &str, speed: f64, max: &f64) {
     set_default_colour();
 }
 
-async fn get_table(results: HashMap<&&str, (f64, f64)>) -> Table {
+async fn get_table(results: Vec<(&str, (f64, f64))>) -> Table {
     let mut table = Table::new();
     table.set_format(*format::consts::FORMAT_NO_BORDER_LINE_SEPARATOR);
     table.set_titles(Row::new(vec![
