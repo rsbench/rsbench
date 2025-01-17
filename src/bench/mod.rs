@@ -5,7 +5,7 @@ use paris::{info, warn};
 mod disk;
 mod fibonacci;
 mod mem;
-mod network;
+pub(crate) mod network;
 
 pub fn run_bench(args: &config::Config) {
     if args.network || args.fib || args.disk || args.mem {
