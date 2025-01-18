@@ -29,7 +29,7 @@ fn run_speedtest() {
     let (single_download, single_upload) = run_single();
     let (multi_download, multi_upload) = run_multi();
 
-    for _ in 0..((4 + 2 + 1) * 4) {
+    for _ in 0..((3 + 2 + 1) * 4) {
         clear_last_line();
     }
 

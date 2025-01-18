@@ -11,7 +11,6 @@ const CN_CM: &str = "speedtest1.sc.chinamobile.com:8080";
 const _CN_CM2: &str = "speedtest.139play.com:8080";
 const CN_CU: &str = "36.250.1.90:8080";
 const CN_CT: &str = "speedtest1.online.sh.cn:8080";
-const CN_CBN: &str = "speedtest1.cqccn.com:8080";
 
 pub fn run_single() -> (
     Vec<(String, f64, f64, Vec<f64>)>,
@@ -23,7 +22,6 @@ pub fn run_single() -> (
         ("China Mobile", CN_CM),
         ("China Unicom", CN_CU),
         ("China Telecom", CN_CT),
-        ("China Broadnet", CN_CBN),
     ];
 
     let mut download_results = Vec::new();
@@ -94,7 +92,6 @@ pub fn run_multi() -> (
         ("China Mobile", CN_CM),
         ("China Unicom", CN_CU),
         ("China Telecom", CN_CT),
-        ("China Broadnet", CN_CBN),
     ];
 
     let mut download_results = Vec::new();
