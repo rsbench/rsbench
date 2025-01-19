@@ -60,10 +60,6 @@ pub fn get_providers() -> Vec<(&'static str, String)> {
                 "JP xTom",
                 "speedtest-kix.xtom.info.prod.hosts.ooklaserver.net:8080".to_string(),
             ),
-            (
-                "SG IX",
-                "speedtest-eqx-sg1.ixtelecom.net.prod.hosts.ooklaserver.net:8080".to_string(),
-            ),
         ]
     }
 }

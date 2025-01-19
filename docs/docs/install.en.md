@@ -1,20 +1,22 @@
 # Installation
 
-We are striving to support one-click installation across multiple platforms...
+We are working hard to support one-click installation on multiple platforms...
 
-Even so, the installation methods are quite simple.
+Even so, the installation methods are very simple.
 
-*PS: The following instructions are given for Linux as an example, although they can also be applied to other operating systems.*
+*PS: All methods below use Linux as an example, even though they can also be used on other devices.*
 
-## Cargo Install Binary
+## Cargo Install Binary Installation
 
-If your execution device has Cargo and a compilation environment, then this is the **simplest and most reliable** way to install.
+If your execution device has Cargo and a compilation environment, installing in this way is the **simplest and most
+reliable way to ensure availability**.
 
 ```bash
 > cargo install rsbench
 ```
 
-After successful installation, run the `rsbench` command and check if the output displays the `RSBench` Ascii-art to verify the installation:
+After successful installation, execute the `rsbench` command to check if the `RSBench` Ascii-art is output to verify
+successful installation.
 
 ```bash
 > rsbench
@@ -30,30 +32,33 @@ After successful installation, run the `rsbench` command and check if the output
 
 ## Binary Installation
 
-This method is also straightforward. First, visit the [Releases page](https://github.com/rsbench/rsbench/releases/tag/latest) of this project to find the Binary that matches your system/architecture (the file without any extension), and copy its link.
+This installation method is also very simple. First, go to
+the [Release page](https://github.com/rsbench/rsbench/releases/tag/latest) of this project and find the Binary that
+matches the operating system/architecture of your execution device (i.e., the file without any suffix). Copy its link.
 
-Then use various methods to download/upload the Binary to your execution device (here we use Wget CLI as an example):
-
+Then, use various methods to download/upload the Binary to the execution device (here using Wget CLI download as an
+example):
 ```bash
-> wget -O rsbench https://github.com/rsbench/rsbench/releases/download/latest/rsbench_xxxx # Make sure to replace with the actual download link
+> wget -O rsbench https://github.com/rsbench/rsbench/releases/download/latest/rsbench_xxxx # Be sure to replace the download link
 ```
 
-Grant it executable permissions:
+Then, add execute permissions to it:
 ```bash
 > chmod +x rsbench
 ```
 
-If you have **privileges** on the device and wish to add it to the PATH environment variable, you can move it to `/usr/bin/rsbench`: (optional)
+If you have **privileges** on the device and want to add it to the PATH environment variable, you can move it to
+`/usr/bin/rsbench`: (optional)
 ```bash
-> mv ./rsbench /usr/bin/rsbench # Ensure you have the necessary privileges
+> mv ./rsbench /usr/bin/rsbench # Be sure you have device privileges
 ```
 
-Then execute the `./rsbench` command and check if the `RSBench` Ascii-art is displayed to verify the installation:
+Then execute the `./rsbench` command to check if the `RSBench` Ascii-art is output to verify successful installation.
 
-*PS: If you've moved it to `/usr/bin/`, you don't need to prefix it with the local path; just run `rsbench`.*
+*PS: If you have already placed it in `/usr/bin/`, you do not need to include the local path; just run `rsbench`.*
 
 ```bash
-> ./rsbench 
+> ./rsbench
   _____   _____ ____                  _
  |  __ \ / ____|  _ \                | |
  | |__) | (___ | |_) | ___ _ __   ___| |__
@@ -64,26 +69,30 @@ Then execute the `./rsbench` command and check if the `RSBench` Ascii-art is dis
 ......
 ```
 
-## Debian-based Distributions Deb Package Installation
+## Debian Series Distribution Deb Package Installation
 
-This method is only suitable for Debian-based Linux distributions like Ubuntu and its derivatives, and you must have system **privileges**.
+This method is only applicable to Debian-based Linux distributions, such as Ubuntu and its various derivatives, and
+requires system **privileges**.
 
-Visit the [Releases page](https://github.com/rsbench/rsbench/releases/tag/latest) of this project to find the Deb package matching your system/architecture (files with the `.deb` extension).
+Please go to the [Release page](https://github.com/rsbench/rsbench/releases/tag/latest) of this project and find the Deb
+package that matches the operating system/architecture of your execution device (files with the `.deb` suffix).
 
-Download the Deb package to your execution device using various methods (here we use Wget CLI as an example):
+Then, use various methods to download/upload the Binary to the execution device (here using Wget CLI download as an
+example):
 ```bash
-> wget -O rsbench.deb https://github.com/rsbench/rsbench/releases/download/latest/rsbench_xxxx.deb # Replace with the actual download link
+> wget -O rsbench https://github.com/rsbench/rsbench/releases/download/latest/rsbench_xxxx.deb # Be sure to replace the download link
 ```
 
-Next, install the Deb package using a **privileged** user:
+Next, install this Deb package with a system **privileged** user:
 ```bash
-> sudo dpkg -i ./rsbench.deb
+> dpkg -i ./rsbench_xxx.deb
 ```
 
-After successful installation, run the `rsbench` command and check if the `RSBench` Ascii-art is displayed to verify the installation:
+After successful installation, execute the `rsbench` command to check if the `RSBench` Ascii-art is output to verify
+successful installation.
 
 ```bash
-> rsbench 
+> rsbench
   _____   _____ ____                  _
  |  __ \ / ____|  _ \                | |
  | |__) | (___ | |_) | ___ _ __   ___| |__
@@ -96,16 +105,18 @@ After successful installation, run the `rsbench` command and check if the `RSBen
 
 ## MacOS Installation
 
-This method is only applicable for MacOS systems.
+This method is only applicable to MacOS systems.
 
-Visit the [Releases page](https://github.com/rsbench/rsbench/releases/tag/latest) of this project to find the Binary that matches your device architecture.
+Please go to the [Release page](https://github.com/rsbench/rsbench/releases/tag/latest) of this project and find the
+Binary that matches the architecture of your execution device (i.e., the file without any suffix).
 
-The naming format will be `rsbench-macos-[amd64 | arm64]`. After downloading, you can execute it directly.
+The naming format is `rsbench-macos-[amd64 | arm64]`. Execute it after downloading.
 
-After installation, run the `./rsbench` command and check if the `RSBench` Ascii-art is displayed to verify the installation:
+After successful installation, execute the `./rsbench` command to check if the `RSBench` Ascii-art is output to verify
+successful installation.
 
 ```bash
-> ./rsbench 
+> ./rsbench
   _____   _____ ____                  _
  |  __ \ / ____|  _ \                | |
  | |__) | (___ | |_) | ___ _ __   ___| |__

@@ -124,6 +124,9 @@ rsbench -t [OPTIONS]
 
 可选参数:
 - `--ip`: 执行网络测试
+- `--speedtest`: 执行 Speedtest 测试
+
+在不带任何参数的情况下，会执行所有测试
 
 ### IPCheck
 
@@ -136,10 +139,74 @@ rsbench -t [OPTIONS]
 示例输出:
 ```bash
 IP  :
- Provider  |                    IP                    |             Region             | Risk  | Org
-Ipinfo.io                 141.**.**.220                      TW - Taiwan - Neihu          N/A    AS38136 Akari Networks
-Ipinfo.io            2409:****:****:9c60::67e              CN - Shanghai - Shanghai       N/A    AS9808 China Mobile Communications Group Co., Ltd.
+ Provider    | IP                        | Region                        | Risk | Org 
+-------------+---------------------------+-------------------------------+------+---------------------------------------------------
+ Ipinfo.io   | 68.233.xxx.xx             | IN - Telangana - Srīrāmnagar  | N/A  | AS31898 Oracle Corporation 
+ Ipip.net    | 68.233.xxx.xx             | N/A                           | N/A  | 印度 - 特伦甘纳邦 - 海得拉巴oracle.com 
+ Ip.sb       | 68.233.xxx.xx             | India - Telangana - Hyderabad | N/A  | AS31898 - Oracle Cloud - ORACLE-BMC-31898 
+ Myip.la     | 68.233.xxx.xx             | 印度 - 特伦甘纳邦 - 海得拉巴  | N/A  | N/A 
+ Ipquery.io  | 68.233.xxx.xx             | India - Telangana - Hyderabad | 0    | AS31898 - Oracle Corporation - Oracle Corporation 
+ Vore.top    | 68.233.xxx.xx             | N/A                           | N/A  | 印度特伦加纳海得拉巴 - 甲骨文公司 
+ Ipcheck.ing | 68.233.xxx.xx             | 印度 - 特伦甘纳邦 - 海得拉巴  | 66   | AS31898 Oracle Corporation 
+ PcOnline    | 68.233.xxx.xx             | N/A                           | N/A  | N/A 
+ Cloudflare  | 2603:c024:8000:xxxx::xxxx | N/A                           | N/A  | N/A 
+ Ipinfo.io   | 2603:c024:8000:xxxx::xxxx | IN - Telangana - Srīrāmnagar  | N/A  | AS31898 Oracle Corporation 
+ Ip.sb       | 2603:c024:8000:xxxx::xxxx | India - Telangana - Hyderabad | N/A  | AS31898 - Oracle Cloud - ORACLE-BMC-31898 
+ Myip.la     | 2603:c024:8000:xxxx::xxxx | 印度 - 印度 -                 | N/A  | N/A 
+ Ipquery.io  | 2603:c024:8000:xxxx::xxxx | India - Telangana - Hyderabad | 0    | AS31898 - Oracle Corporation - Oracle Corporation 
+ Ipcheck.ing | 2603:c024:8000:xxxx::xxxx | 印度 - 特伦甘纳邦 - 海得拉巴  | 66   | AS31898 Oracle Corporation 
+Tested 14 projects took 5.84 seconds
 ```
+
+### Speedtest
+
+对应参数: `--speedtest`
+
+该测试会使用 Speedtest.net / cn 进行单线程 / 多线程测试，输出详细信息
+
+可选参数:
+
+- `--custom-speedtest-host <CUSTOM_SPEEDTEST_HOST>`: 自定义 Speedtest 服务器地址，格式 `DOMAIN:PORT`，不需要 `http` 等协议前缀
+
+示例输出:
+
+```bash
+Single Thread Speedtest: 
+ Provider      | Avg Down | Max Down | Avg Up | Max Up 
+---------------+----------+----------+--------+--------
+ Speedtest.net | 34.62    | 34.22    | 39.64  | 63.67 
+ China Mobile  | 87.61    | 87.02    | 46.95  | 70.23 
+ China Unicom  | 96.34    | 97.35    | 46.49  | 63.04 
+ China Telecom | 30.98    | 30.62    | 45.93  | 67.04 
+ HK I3D        | 0.28     | 0.77     | 28.87  | 59.26 
+ TW HiNet      | 84.80    | 84.50    | 52.70  | 86.57 
+ JP xTom       | 0.69     | 0.71     | 14.57  | 31.89 
+
+Multi Thread Speedtest: 
+ Provider      | Avg Down | Max Down | Avg Up | Max Up 
+---------------+----------+----------+--------+--------
+ Speedtest.net | 77.43    | 77.14    | 49.71  | 90.23 
+ China Mobile  | 91.54    | 91.58    | 47.96  | 65.48 
+ China Unicom  | 100.87   | 101.75   | 45.47  | 58.95 
+ China Telecom | 28.76    | 78.35    | 48.68  | 72.82 
+ HK I3D        | 0.47     | 1.07     | 50.97  | 99.50 
+ TW HiNet      | 92.11    | 91.96    | 65.39  | 119.48 
+ JP xTom       | 25.72    | 68.65    | 56.44  | 159.33 
+```
+
+默认测速服务器:
+
+- `Speedtest.net`: 默认测速服务器，根据 API 选择最近的测速服务器
+- `China Mobile`: speedtest1.sc.chinamobile.com:8080
+- `China Unicom`: 36.250.1.90:8080
+- `China Telecom`: speedtest1.online.sh.cn:8080
+- `HK I3D`: hk.ap.speedtest.i3d.net.prod.hosts.ooklaserver.net:8080
+- `TW HiNet`: ntp1.chtm.hinet.net:8080
+- `JP xTom`: speedtest-kix.xtom.info.prod.hosts.ooklaserver.net:8080
+
+有关更多信息，可以参考 [
+`12101111 Blog 的此文`](https://12101111.github.io/speedtest-net/#https-www-speedtest-net-api-js-servers-engine-js) 与
+测速服务器收集列表: [CN](https://github.com/spiritLHLS/speedtest.cn-CN-ID) / [Net](https://github.com/spiritLHLS/speedtest.net-CN-ID)
 
 ## UNLOCK
 
