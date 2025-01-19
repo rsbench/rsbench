@@ -1,4 +1,8 @@
+use crate::tune::speedtest::get_providers;
 use crate::tune::speedtest::single::{single_download, single_upload};
+use crate::utils::{set_colour, set_default_colour, set_random_colour};
+use futures::executor::block_on;
+use termcolor::Color;
 
 pub async fn multi_download(url: &str, thread_count: u8) -> (f64, f64, Vec<Vec<f64>>) {
     let mut handles = Vec::new();
@@ -80,4 +84,70 @@ pub async fn multi_upload(url: &str, thread_count: u8) -> (f64, f64, Vec<Vec<f64
         .unwrap_or_else(|| &0.0);
 
     (avg_speed, *max, speeds)
+}
+
+pub fn run_multi() -> (
+    Vec<(String, f64, f64, Vec<Vec<f64>>)>,
+    Vec<(String, f64, f64, Vec<Vec<f64>>)>,
+) {
+    println!();
+    let mut log = paris::Logger::new();
+
+    let providers = get_providers();
+
+    let mut download_results = Vec::new();
+    set_colour(Color::Yellow);
+    print!("Running multi thread download test for the following providers:");
+    println!(
+        "\n{:^15} | {:^15} | {:^15}",
+        "Provider", "Avg Speed", "Max Speed"
+    );
+    set_default_colour();
+    for provider in providers.clone() {
+        let (name, host) = provider;
+        let url = format!("http://{}/download?size=1000000000", host);
+        log.loading(&format!(
+            "Running multi thread downloading test for \"{}\"",
+            name
+        ));
+        let (avg_speed, max_speed, speeds) = block_on(multi_download(url.as_str(), 4));
+        log.done();
+        download_results.push((name.to_string(), avg_speed, max_speed, speeds));
+
+        set_random_colour();
+        print!("{name:^15}");
+        set_random_colour();
+        print!(" | {avg_speed:^10.2} Mbps");
+        set_random_colour();
+        println!(" | {max_speed:^10.2} Mbps");
+    }
+
+    let mut upload_results = Vec::new();
+    set_colour(Color::Yellow);
+    println!();
+    print!("Running multi thread upload test for the following providers:");
+    println!(
+        "\n{:^15} | {:^10} | {:^10}",
+        "Provider", "Avg Speed", "Max Speed"
+    );
+    for provider in providers.clone() {
+        let (name, host) = provider;
+        let url = format!("http://{}/upload", host);
+        log.loading(&format!(
+            "Running multi thread uploading test for \"{}\"",
+            name
+        ));
+        let (avg_speed, max_speed, speeds) = block_on(multi_upload(url.as_str(), 4));
+        log.done();
+        upload_results.push((name.to_string(), avg_speed, max_speed, speeds));
+
+        set_random_colour();
+        print!("{name:^15}");
+        set_random_colour();
+        print!(" | {avg_speed:^10.2} Mbps");
+        set_random_colour();
+        println!(" | {max_speed:^10.2} Mbps");
+    }
+
+    (download_results, upload_results)
 }

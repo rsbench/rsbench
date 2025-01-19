@@ -1,7 +1,6 @@
 use crate::config;
 use crate::tune::ip_check::ip_all;
-use crate::tune::speedtest::{get_table, run_multi, run_single};
-use crate::utils::clear_last_line;
+use crate::tune::speedtest::run_speedtest_single_multi;
 use futures::executor::block_on;
 
 mod ip_check;
@@ -12,12 +11,15 @@ pub fn run_tune(args: &config::Config) {
         if args.ip {
             check_ip_status();
         }
-        if args.speedtest {
-            run_speedtest();
+        if args.speedtest && args.custom_speedtest_host.is_none() {
+            run_speedtest(None);
+        }
+        if args.custom_speedtest_host.is_some() {
+            run_speedtest(args.custom_speedtest_host.as_deref());
         }
     } else {
         check_ip_status();
-        run_speedtest();
+        run_speedtest(args.custom_speedtest_host.as_deref());
     }
 }
 
@@ -25,21 +27,9 @@ fn check_ip_status() {
     block_on(ip_all());
 }
 
-fn run_speedtest() {
-    let (single_download, single_upload) = run_single();
-    let (multi_download, multi_upload) = run_multi();
-
-    for _ in 0..((3 + 2 + 1) * 4) {
-        clear_last_line();
+fn run_speedtest(custom_host: Option<&str>) {
+    if let Some(host) = custom_host {
+        std::env::set_var("CUSTOM_SPEEDTEST_SERVER", host);
     }
-
-    let (table_single, table_multi) =
-        get_table(single_download, single_upload, multi_download, multi_upload);
-
-    println!("Single Thread Speedtest");
-    table_single.printstd();
-
-    println!();
-    println!("Multi Thread Speedtest");
-    table_multi.printstd();
+    run_speedtest_single_multi();
 }

@@ -1,154 +1,71 @@
-use crate::tune::speedtest::single::{single_download, single_upload};
-use crate::utils::{set_colour, set_default_colour, set_random_colour};
-use futures::executor::block_on;
+use crate::tune::speedtest::multi::run_multi;
+use crate::tune::speedtest::single::run_single;
+use crate::utils::{clear_last_line, set_colour, set_default_colour};
 use prettytable::{color, format, Attr, Cell, Row, Table};
+use reqwest::Client;
+use serde_json::Value;
 use termcolor::Color;
 
 mod multi;
 mod single;
 
-const CN_CM: &str = "speedtest1.sc.chinamobile.com:8080";
-const _CN_CM2: &str = "speedtest.139play.com:8080";
-const CN_CU: &str = "36.250.1.90:8080";
-const CN_CT: &str = "speedtest1.online.sh.cn:8080";
+pub fn run_speedtest_single_multi() {
+    let (single_download, single_upload) = run_single();
+    let (multi_download, multi_upload) = run_multi();
 
-pub fn run_single() -> (
-    Vec<(String, f64, f64, Vec<f64>)>,
-    Vec<(String, f64, f64, Vec<f64>)>,
-) {
-    let mut log = paris::Logger::new();
-
-    let providers = vec![
-        ("China Mobile", CN_CM),
-        ("China Unicom", CN_CU),
-        ("China Telecom", CN_CT),
-    ];
-
-    let mut download_results = Vec::new();
-    set_colour(Color::Yellow);
-    print!("Running single thread download test for the following providers:");
-    println!(
-        "\n{:^15} | {:^15} | {:^15}",
-        "Provider", "Avg Speed", "Max Speed"
-    );
-    set_default_colour();
-    for provider in providers.clone() {
-        let (name, host) = provider;
-        let url = format!("http://{}/download?size=1000000000", host);
-        log.loading(&format!(
-            "Running single thread downloading test for \"{}\"",
-            name
-        ));
-        let (avg_speed, max_speed, speeds) = block_on(single_download(url.as_str()));
-        log.done();
-        download_results.push((name.to_string(), avg_speed, max_speed, speeds));
-
-        set_random_colour();
-        print!("{name:^15}");
-        set_random_colour();
-        print!(" | {avg_speed:^10.2} Mbps");
-        set_random_colour();
-        println!(" | {max_speed:^10.2} Mbps");
+    for _ in 0..((get_providers().len() + 2 + 1) * 4 - 1) {
+        clear_last_line();
     }
 
-    let mut upload_results = Vec::new();
+    let (table_single, table_multi) =
+        get_table(single_download, single_upload, multi_download, multi_upload);
+
+    set_colour(Color::Yellow);
+    println!("Single Thread Speedtest: ");
+    set_default_colour();
+    table_single.printstd();
+
     set_colour(Color::Yellow);
     println!();
-    print!("Running single thread upload test for the following providers:");
-    println!(
-        "\n{:^15} | {:^15} | {:^15}",
-        "Provider", "Avg Speed", "Max Speed"
-    );
-    for provider in providers.clone() {
-        let (name, host) = provider;
-        let url = format!("http://{}/upload", host);
-        log.loading(&format!(
-            "Running single thread uploading test for \"{}\"",
-            name
-        ));
-        let (avg_speed, max_speed, speeds) = block_on(single_upload(url.as_str()));
-        log.done();
-        upload_results.push((name.to_string(), avg_speed, max_speed, speeds));
-
-        set_random_colour();
-        print!("{name:^15}");
-        set_random_colour();
-        print!(" | {avg_speed:^10.2} Mbps");
-        set_random_colour();
-        println!(" | {max_speed:^10.2} Mbps");
-    }
-
-    (download_results, upload_results)
+    println!("Multi Thread Speedtest: ");
+    set_default_colour();
+    table_multi.printstd();
 }
 
-pub fn run_multi() -> (
-    Vec<(String, f64, f64, Vec<Vec<f64>>)>,
-    Vec<(String, f64, f64, Vec<Vec<f64>>)>,
-) {
-    println!();
-    let mut log = paris::Logger::new();
-
-    let providers = vec![
-        ("China Mobile", CN_CM),
-        ("China Unicom", CN_CU),
-        ("China Telecom", CN_CT),
-    ];
-
-    let mut download_results = Vec::new();
-    set_colour(Color::Yellow);
-    print!("Running multi thread download test for the following providers:");
-    println!(
-        "\n{:^15} | {:^15} | {:^15}",
-        "Provider", "Avg Speed", "Max Speed"
-    );
-    set_default_colour();
-    for provider in providers.clone() {
-        let (name, host) = provider;
-        let url = format!("http://{}/download?size=1000000000", host);
-        log.loading(&format!(
-            "Running multi thread downloading test for \"{}\"",
-            name
-        ));
-        let (avg_speed, max_speed, speeds) = block_on(multi::multi_download(url.as_str(), 4));
-        log.done();
-        download_results.push((name.to_string(), avg_speed, max_speed, speeds));
-
-        set_random_colour();
-        print!("{name:^15}");
-        set_random_colour();
-        print!(" | {avg_speed:^10.2} Mbps");
-        set_random_colour();
-        println!(" | {max_speed:^10.2} Mbps");
+pub fn get_providers() -> Vec<(&'static str, String)> {
+    if let Ok(custom) = std::env::var("CUSTOM_SPEEDTEST_SERVER") {
+        vec![("Custom", custom)]
+    } else {
+        vec![
+            ("Speedtest.net", {
+                let host = futures::executor::block_on(get_speedtest_best_server());
+                if let Ok(host) = host {
+                    host
+                } else {
+                    "lg-lax.fdcservers.net.prod.hosts.ooklaserver.net:8080".to_string()
+                }
+            }),
+            (
+                "China Mobile",
+                "speedtest1.sc.chinamobile.com:8080".to_string(),
+            ),
+            ("China Unicom", "36.250.1.90:8080".to_string()),
+            ("China Telecom", "speedtest1.online.sh.cn:8080".to_string()),
+            (
+                "HK I3D",
+                "hk.ap.speedtest.i3d.net.prod.hosts.ooklaserver.net:8080".to_string(),
+            ),
+            ("TW HiNet", "ntp1.chtm.hinet.net:8080".to_string()),
+            (
+                "JP xTom",
+                "speedtest-kix.xtom.info.prod.hosts.ooklaserver.net:8080".to_string(),
+            ),
+            (
+                "SG IX",
+                "speedtest-eqx-sg1.ixtelecom.net.prod.hosts.ooklaserver.net:8080".to_string(),
+            ),
+        ]
     }
-
-    let mut upload_results = Vec::new();
-    set_colour(Color::Yellow);
-    println!();
-    print!("Running multi thread upload test for the following providers:");
-    println!(
-        "\n{:^15} | {:^10} | {:^10}",
-        "Provider", "Avg Speed", "Max Speed"
-    );
-    for provider in providers.clone() {
-        let (name, host) = provider;
-        let url = format!("http://{}/upload", host);
-        log.loading(&format!(
-            "Running multi thread uploading test for \"{}\"",
-            name
-        ));
-        let (avg_speed, max_speed, speeds) = block_on(multi::multi_upload(url.as_str(), 4));
-        log.done();
-        upload_results.push((name.to_string(), avg_speed, max_speed, speeds));
-
-        set_random_colour();
-        print!("{name:^15}");
-        set_random_colour();
-        print!(" | {avg_speed:^10.2} Mbps");
-        set_random_colour();
-        println!(" | {max_speed:^10.2} Mbps");
-    }
-
-    (download_results, upload_results)
 }
 
 pub fn get_table(
@@ -275,4 +192,62 @@ fn parse_result(
         ));
     }
     (combined_results_single, combined_results_multi)
+}
+
+async fn get_speedtest_best_server() -> Result<String, String> {
+    let mut log = paris::Logger::new();
+    log.loading("Getting speedtest server list");
+    let client = if let Ok(client) = Client::builder().user_agent("curl/7.64.1").build() {
+        client
+    } else {
+        log.done();
+        return Err("Failed to create reqwest client".to_string());
+    };
+
+    let res = client
+        .get("https://www.speedtest.net/api/js/servers?engine=js")
+        .timeout(std::time::Duration::from_secs(5))
+        .send()
+        .await;
+    let json = if let Ok(res) = res {
+        match res.json::<Value>().await {
+            Ok(json) => json,
+            Err(_) => {
+                log.done();
+                return Err("Failed to parse json".to_string());
+            }
+        }
+    } else {
+        log.done();
+        return Err("Failed to get speedtest server list".to_string());
+    };
+
+    let array = if let Some(array) = json.as_array() {
+        array
+    } else {
+        log.done();
+        return Err("Failed to get speedtest server list".to_string());
+    };
+
+    let best_host = if let Some(best_host) = array.first() {
+        best_host
+    } else {
+        log.done();
+        return Err("Failed to get speedtest server list".to_string());
+    };
+
+    let host = if let Some(host) = best_host.get("host") {
+        if let Some(host) = host.as_str() {
+            host
+        } else {
+            log.done();
+            return Err("Failed to get speedtest server list".to_string());
+        }
+    } else {
+        log.done();
+        return Err("Failed to get speedtest server list".to_string());
+    };
+    log.done();
+
+    Ok(host.parse().unwrap())
 }

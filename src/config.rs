@@ -44,6 +44,9 @@ pub struct Config {
     #[arg(long, requires = "tune")]
     pub speedtest: bool,
 
+    #[arg(long, requires = "speedtest")]
+    pub custom_speedtest_host: Option<String>,
+
     // Disable color output
     #[arg(long, default_value_t = false)]
     pub no_color: bool,

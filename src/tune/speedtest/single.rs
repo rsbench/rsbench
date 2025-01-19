@@ -1,8 +1,11 @@
+use crate::tune::speedtest::get_providers;
+use crate::utils::{set_colour, set_default_colour, set_random_colour};
 use async_stream::stream;
+use futures::executor::block_on;
 use futures::StreamExt;
-use paris::error;
 use reqwest::Client;
 use std::time::Duration;
+use termcolor::Color;
 use tokio::time::Instant;
 
 pub async fn single_download(url: &str) -> (f64, f64, Vec<f64>) {
@@ -12,12 +15,10 @@ pub async fn single_download(url: &str) -> (f64, f64, Vec<f64>) {
     let response = if let Ok(response) = client.get(url).send().await {
         response
     } else {
-        error!("Failed to fetch data");
         return (0.0, 0.0, Vec::new());
     };
 
     if !response.status().is_success() {
-        eprintln!("Failed to fetch data: {}", response.status());
         return (0.0, 0.0, Vec::new());
     }
 
@@ -99,4 +100,69 @@ pub async fn single_upload(url: &str) -> (f64, f64, Vec<f64>) {
         .unwrap_or_else(|| &0.0);
 
     (average_speed, *max, speeds)
+}
+
+pub fn run_single() -> (
+    Vec<(String, f64, f64, Vec<f64>)>,
+    Vec<(String, f64, f64, Vec<f64>)>,
+) {
+    let mut log = paris::Logger::new();
+
+    let providers = get_providers();
+
+    let mut download_results = Vec::new();
+    set_colour(Color::Yellow);
+    print!("Running single thread download test for the following providers:");
+    println!(
+        "\n{:^15} | {:^15} | {:^15}",
+        "Provider", "Avg Speed", "Max Speed"
+    );
+    set_default_colour();
+    for provider in providers.clone() {
+        let (name, host) = provider;
+        let url = format!("http://{}/download?size=1000000000", host);
+        log.loading(&format!(
+            "Running single thread downloading test for \"{}\"",
+            name
+        ));
+        let (avg_speed, max_speed, speeds) = block_on(single_download(url.as_str()));
+        log.done();
+        download_results.push((name.to_string(), avg_speed, max_speed, speeds));
+
+        set_random_colour();
+        print!("{name:^15}");
+        set_random_colour();
+        print!(" | {avg_speed:^10.2} Mbps");
+        set_random_colour();
+        println!(" | {max_speed:^10.2} Mbps");
+    }
+
+    let mut upload_results = Vec::new();
+    set_colour(Color::Yellow);
+    println!();
+    print!("Running single thread upload test for the following providers:");
+    println!(
+        "\n{:^15} | {:^15} | {:^15}",
+        "Provider", "Avg Speed", "Max Speed"
+    );
+    for provider in providers.clone() {
+        let (name, host) = provider;
+        let url = format!("http://{}/upload", host);
+        log.loading(&format!(
+            "Running single thread uploading test for \"{}\"",
+            name
+        ));
+        let (avg_speed, max_speed, speeds) = block_on(single_upload(url.as_str()));
+        log.done();
+        upload_results.push((name.to_string(), avg_speed, max_speed, speeds));
+
+        set_random_colour();
+        print!("{name:^15}");
+        set_random_colour();
+        print!(" | {avg_speed:^10.2} Mbps");
+        set_random_colour();
+        println!(" | {max_speed:^10.2} Mbps");
+    }
+
+    (download_results, upload_results)
 }
