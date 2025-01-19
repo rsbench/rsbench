@@ -25,12 +25,12 @@ pub async fn multi_download(url: &str, thread_count: u8) -> (f64, f64, Vec<Vec<f
             speeds.push(Vec::new());
         };
     }
-    let avg_speed = avg_speeds.iter().map(|speed| speed).sum();
+    let avg_speed = avg_speeds.iter().sum();
 
-    let max_len = speeds.iter().map(|v| v.len()).max().unwrap_or(0);
+    let max_len = speeds.iter().map(std::vec::Vec::len).max().unwrap_or(0);
     let mut speeds_sum = vec![0.0; max_len];
-    for i in 0..max_len {
-        for inner_vec in speeds.iter() {
+    for (i, _) in speeds_sum.clone().iter_mut().enumerate().take(max_len) {
+        for inner_vec in &speeds {
             if let Some(&value) = inner_vec.get(i) {
                 speeds_sum[i] += value;
             }
@@ -40,7 +40,7 @@ pub async fn multi_download(url: &str, thread_count: u8) -> (f64, f64, Vec<Vec<f
     let max = speeds_sum
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap_or_else(|| &0.0);
+        .unwrap_or(&0.0);
 
     (avg_speed, *max, speeds)
 }
@@ -66,12 +66,12 @@ pub async fn multi_upload(url: &str, thread_count: u8) -> (f64, f64, Vec<Vec<f64
             speeds.push(Vec::new());
         };
     }
-    let avg_speed = avg_speeds.iter().map(|speed| speed).sum();
+    let avg_speed = avg_speeds.iter().sum();
 
-    let max_len = speeds.iter().map(|v| v.len()).max().unwrap_or(0);
+    let max_len = speeds.iter().map(std::vec::Vec::len).max().unwrap_or(0);
     let mut speeds_sum = vec![0.0; max_len];
-    for i in 0..max_len {
-        for inner_vec in speeds.iter() {
+    for (i, _) in speeds_sum.clone().iter_mut().enumerate().take(max_len) {
+        for inner_vec in &speeds {
             if let Some(&value) = inner_vec.get(i) {
                 speeds_sum[i] += value;
             }
@@ -81,15 +81,14 @@ pub async fn multi_upload(url: &str, thread_count: u8) -> (f64, f64, Vec<Vec<f64
     let max = speeds_sum
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap_or_else(|| &0.0);
+        .unwrap_or(&0.0);
 
     (avg_speed, *max, speeds)
 }
 
-pub fn run_multi() -> (
-    Vec<(String, f64, f64, Vec<Vec<f64>>)>,
-    Vec<(String, f64, f64, Vec<Vec<f64>>)>,
-) {
+type MultiUpOrDown = Vec<(String, f64, f64, Vec<Vec<f64>>)>;
+
+pub fn run_multi() -> (MultiUpOrDown, MultiUpOrDown) {
     println!();
     let mut log = paris::Logger::new();
 
@@ -105,10 +104,9 @@ pub fn run_multi() -> (
     set_default_colour();
     for provider in providers.clone() {
         let (name, host) = provider;
-        let url = format!("http://{}/download?size=1000000000", host);
-        log.loading(&format!(
-            "Running multi thread downloading test for \"{}\"",
-            name
+        let url = format!("http://{host}/download?size=1000000000");
+        log.loading(format!(
+            "Running multi thread downloading test for \"{name}\""
         ));
         let (avg_speed, max_speed, speeds) = block_on(multi_download(url.as_str(), 4));
         log.done();
@@ -132,10 +130,9 @@ pub fn run_multi() -> (
     );
     for provider in providers.clone() {
         let (name, host) = provider;
-        let url = format!("http://{}/upload", host);
-        log.loading(&format!(
-            "Running multi thread uploading test for \"{}\"",
-            name
+        let url = format!("http://{host}/upload");
+        log.loading(format!(
+            "Running multi thread uploading test for \"{name}\""
         ));
         let (avg_speed, max_speed, speeds) = block_on(multi_upload(url.as_str(), 4));
         log.done();

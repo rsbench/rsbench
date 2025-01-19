@@ -19,17 +19,16 @@ impl Service for UNext {
             Err(unlock_result) => return unlock_result,
         };
 
-        let result = match client.post("https://cc.unext.jp")
+        let Ok(result) = client.post("https://cc.unext.jp")
             .headers(unext_headers())
             .body("{\"operationName\":\"cosmo_getPlaylistUrl\",\"variables\":{\"code\":\"ED00479780\",\"playMode\":\"caption\",\"bitrateLow\":192,\"bitrateHigh\":null,\"validationOnly\":false},\"query\":\"query cosmo_getPlaylistUrl($code: String, $playMode: String, $bitrateLow: Int, $bitrateHigh: Int, $validationOnly: Boolean) {\\n  webfront_playlistUrl(\\n    code: $code\\n    playMode: $playMode\\n    bitrateLow: $bitrateLow\\n    bitrateHigh: $bitrateHigh\\n    validationOnly: $validationOnly\\n  ) {\\n    subTitle\\n    playToken\\n    playTokenHash\\n    beaconSpan\\n    result {\\n      errorCode\\n      errorMessage\\n      __typename\\n    }\\n    resultStatus\\n    licenseExpireDate\\n    urlInfo {\\n      code\\n      startPoint\\n      resumePoint\\n      endPoint\\n      endrollStartPosition\\n      holderId\\n      saleTypeCode\\n      sceneSearchList {\\n        IMS_AD1\\n        IMS_L\\n        IMS_M\\n        IMS_S\\n        __typename\\n      }\\n      movieProfile {\\n        cdnId\\n        type\\n        playlistUrl\\n        movieAudioList {\\n          audioType\\n          __typename\\n        }\\n        licenseUrlList {\\n          type\\n          licenseUrl\\n          __typename\\n        }\\n        __typename\\n      }\\n      umcContentId\\n      movieSecurityLevelCode\\n      captionFlg\\n      dubFlg\\n      commodityCode\\n      movieAudioList {\\n        audioType\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}")
-            .send().await {
-            Ok(result) => result,
-            Err(_) => return UnlockResult {
+            .send().await else {
+            return UnlockResult {
                 service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some("Not available / Network connection error".to_string()),
-            },
+            }
         };
 
         let html = match parse_response_to_html(self.name(), result).await {

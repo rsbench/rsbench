@@ -16,36 +16,24 @@ impl IPCheck for MyIpLa {
 
     async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None);
-                }
+            let Ok(client_v4) = create_reqwest_client(Some("curl/8.11.1"), false).await else {
+                return (None, None);
             };
 
-            let result = match client_v4.get("https://api.myip.la/cn?json").send().await {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None);
-                }
+            let Ok(result) = client_v4.get("https://api.myip.la/cn?json").send().await else {
+                return (None, None);
             };
 
             parse_myipla_json(result).await
         });
 
         let handle_v6 = tokio::spawn(async move {
-            let client_v6 = match create_reqwest_client(Some("curl/8.11.1"), true).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None);
-                }
+            let Ok(client_v6) = create_reqwest_client(Some("curl/8.11.1"), true).await else {
+                return (None, None);
             };
 
-            let result = match client_v6.get("https://api.myip.la/cn?json").send().await {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None);
-                }
+            let Ok(result) = client_v6.get("https://api.myip.la/cn?json").send().await else {
+                return (None, None);
             };
 
             parse_myipla_json(result).await
@@ -81,11 +69,8 @@ async fn parse_myipla_json(result: Response) -> (Option<IpAddr>, Option<String>)
         return (None, None);
     }
 
-    let json = match result.json::<Value>().await {
-        Ok(json) => json,
-        Err(_) => {
-            return (None, None);
-        }
+    let Ok(json) = result.json::<Value>().await else {
+        return (None, None);
     };
 
     let ip = json_value_to_string(&json, "ip");

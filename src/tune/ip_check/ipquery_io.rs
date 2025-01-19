@@ -15,44 +15,32 @@ impl IPCheck for IPQueryIo {
 
     async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None, None, None);
-                }
+            let Ok(client_v4) = create_reqwest_client(Some("curl/8.11.1"), false).await else {
+                return (None, None, None, None);
             };
 
-            let result = match client_v4
+            let Ok(result) = client_v4
                 .get("https://api.ipquery.io/?format=json")
                 .send()
                 .await
-            {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None, None, None);
-                }
+            else {
+                return (None, None, None, None);
             };
 
             parse_ipquery_json(result).await
         });
 
         let handle_v6 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), true).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None, None, None);
-                }
+            let Ok(client_v4) = create_reqwest_client(Some("curl/8.11.1"), true).await else {
+                return (None, None, None, None);
             };
 
-            let result = match client_v4
+            let Ok(result) = client_v4
                 .get("https://api.ipquery.io/?format=json")
                 .send()
                 .await
-            {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None, None, None);
-                }
+            else {
+                return (None, None, None, None);
             };
 
             parse_ipquery_json(result).await
@@ -88,11 +76,8 @@ impl IPCheck for IPQueryIo {
 async fn parse_ipquery_json(
     result: Response,
 ) -> (Option<IpAddr>, Option<String>, Option<String>, Option<u8>) {
-    let json = match result.json::<serde_json::Value>().await {
-        Ok(json) => json,
-        Err(_) => {
-            return (None, None, None, None);
-        }
+    let Ok(json) = result.json::<serde_json::Value>().await else {
+        return (None, None, None, None);
     };
 
     let ip = json_value_to_string(&json, "ip");
@@ -117,7 +102,7 @@ async fn parse_ipquery_json(
 
     let risk_score = if risk.is_some() {
         match risk.unwrap().get("risk_score") {
-            Some(risk) => risk.as_u64().map(|risk| risk as u8),
+            Some(risk) => risk.as_u64().map(|risk| u8::try_from(risk).unwrap_or(0)),
             None => None,
         }
     } else {

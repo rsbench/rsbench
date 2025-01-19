@@ -12,9 +12,7 @@ pub async fn single_download(url: &str) -> (f64, f64, Vec<f64>) {
     // (avg_speed, max_speed, speeds)
     let client = Client::builder().user_agent("curl/7.64.1").build().unwrap();
 
-    let response = if let Ok(response) = client.get(url).send().await {
-        response
-    } else {
+    let Ok(response) = client.get(url).send().await else {
         return (0.0, 0.0, Vec::new());
     };
 
@@ -55,7 +53,7 @@ pub async fn single_download(url: &str) -> (f64, f64, Vec<f64>) {
     let max = speeds
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap_or_else(|| &0.0);
+        .unwrap_or(&0.0);
 
     (average_speed, *max, speeds)
 }
@@ -97,15 +95,14 @@ pub async fn single_upload(url: &str) -> (f64, f64, Vec<f64>) {
     let max = speeds
         .iter()
         .max_by(|a, b| a.partial_cmp(b).unwrap())
-        .unwrap_or_else(|| &0.0);
+        .unwrap_or(&0.0);
 
     (average_speed, *max, speeds)
 }
 
-pub fn run_single() -> (
-    Vec<(String, f64, f64, Vec<f64>)>,
-    Vec<(String, f64, f64, Vec<f64>)>,
-) {
+type SingleUpOrDown = Vec<(String, f64, f64, Vec<f64>)>;
+
+pub fn run_single() -> (SingleUpOrDown, SingleUpOrDown) {
     let mut log = paris::Logger::new();
 
     let providers = get_providers();
@@ -120,10 +117,9 @@ pub fn run_single() -> (
     set_default_colour();
     for provider in providers.clone() {
         let (name, host) = provider;
-        let url = format!("http://{}/download?size=1000000000", host);
-        log.loading(&format!(
-            "Running single thread downloading test for \"{}\"",
-            name
+        let url = format!("http://{host}/download?size=1000000000");
+        log.loading(format!(
+            "Running single thread downloading test for \"{name}\""
         ));
         let (avg_speed, max_speed, speeds) = block_on(single_download(url.as_str()));
         log.done();
@@ -147,10 +143,9 @@ pub fn run_single() -> (
     );
     for provider in providers.clone() {
         let (name, host) = provider;
-        let url = format!("http://{}/upload", host);
-        log.loading(&format!(
-            "Running single thread uploading test for \"{}\"",
-            name
+        let url = format!("http://{host}/upload");
+        log.loading(format!(
+            "Running single thread uploading test for \"{name}\""
         ));
         let (avg_speed, max_speed, speeds) = block_on(single_upload(url.as_str()));
         log.done();

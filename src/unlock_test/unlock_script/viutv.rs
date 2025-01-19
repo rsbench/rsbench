@@ -19,17 +19,16 @@ impl Service for ViuTV {
             Err(unlock_result) => return unlock_result,
         };
 
-        let result = match client.post("https://api.viu.now.com/p8/3/getLiveURL")
+        let Ok(result) = client.post("https://api.viu.now.com/p8/3/getLiveURL")
             .headers(viutv_headers())
             .body("{\"callerReferenceNo\":\"20210726112323\",\"contentId\":\"099\",\"contentType\":\"Channel\",\"channelno\":\"099\",\"mode\":\"prod\",\"deviceId\":\"29b3cb117a635d5b56\",\"deviceType\":\"ANDROID_WEB\"}")
-            .send().await {
-            Ok(result) => result,
-            Err(_) => return UnlockResult {
+            .send().await else {
+            return UnlockResult {
                 service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some("Not available / Network connection error".to_string()),
-            },
+            }
         };
 
         let html = match parse_response_to_html(self.name(), result).await {

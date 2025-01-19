@@ -1,6 +1,6 @@
 [package]
 name = "rsbench"
-version = "0.4.8" # It is recommended that every Commit that modifies a Rust file should update a minor version.
+version = "0.5.0" # It is recommended that every Commit that modifies a Rust file should update a minor version.
 edition = "2021"
 
 authors = ["moohr <moohric@moohric.com>", "GenshinMinecraft <gm@highp.ing>"]

@@ -22,17 +22,16 @@ impl Service for Dazn {
             Err(unlock_result) => return unlock_result,
         };
 
-        let res = match client.post("https://startup.core.indazn.com/misl/v5/Startup")
+        let Ok(res) = client.post("https://startup.core.indazn.com/misl/v5/Startup")
             .headers(dazn_headers())
             .body("{\"LandingPageKey\":\"generic\",\"languages\":\"en-US,en\",\"Platform\":\"web\",\"PlatformAttributes\":{},\"Manufacturer\":\"\",\"PromoCode\":\"\",\"Version\":\"2\"}")
-            .send().await {
-            Ok(result) => result,
-            Err(_) => return UnlockResult {
+            .send().await else {
+            return UnlockResult {
                 service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some(String::from("Not available / Network connection error")),
-            },
+            }
         };
 
         let html = match parse_response_to_html(self.name(), res).await {

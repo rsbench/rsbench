@@ -159,47 +159,47 @@ async fn get_table(v4: Vec<IPCheckProviderV4>, v6: Vec<IPCheckProviderV6>) -> Ta
     ]));
 
     for provider in v4 {
-        match provider.success {
-            false => continue,
-            true => {
-                table.add_row(Row::new(vec![
-                    Cell::new(&provider.provider).with_style(Attr::ForegroundColor(color::BLUE)),
-                    Cell::new(&provider.ip.unwrap().to_string())
-                        .with_style(Attr::ForegroundColor(color::GREEN)),
-                    Cell::new(provider.region.as_ref().unwrap_or(&"N/A".to_string()))
-                        .with_style(Attr::ForegroundColor(color::BRIGHT_CYAN)),
-                    match provider.risk_score {
-                        Some(risk_score) => Cell::new(&risk_score.to_string())
-                            .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
-                        None => Cell::new("N/A")
-                            .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
-                    },
-                    Cell::new(provider.org.as_ref().unwrap_or(&"N/A".to_string()))
-                        .with_style(Attr::ForegroundColor(color::BRIGHT_WHITE)),
-                ]));
-            }
+        if provider.success {
+            table.add_row(Row::new(vec![
+                Cell::new(&provider.provider).with_style(Attr::ForegroundColor(color::BLUE)),
+                Cell::new(&provider.ip.unwrap().to_string())
+                    .with_style(Attr::ForegroundColor(color::GREEN)),
+                Cell::new(provider.region.as_ref().unwrap_or(&"N/A".to_string()))
+                    .with_style(Attr::ForegroundColor(color::BRIGHT_CYAN)),
+                match provider.risk_score {
+                    Some(risk_score) => Cell::new(&risk_score.to_string())
+                        .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
+                    None => {
+                        Cell::new("N/A").with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA))
+                    }
+                },
+                Cell::new(provider.org.as_ref().unwrap_or(&"N/A".to_string()))
+                    .with_style(Attr::ForegroundColor(color::BRIGHT_WHITE)),
+            ]));
+        } else {
+            continue;
         }
     }
     for provider in v6 {
-        match provider.success {
-            false => continue,
-            true => {
-                table.add_row(Row::new(vec![
-                    Cell::new(&provider.provider).with_style(Attr::ForegroundColor(color::BLUE)),
-                    Cell::new(&provider.ip.unwrap().to_string())
-                        .with_style(Attr::ForegroundColor(color::GREEN)),
-                    Cell::new(provider.region.as_ref().unwrap_or(&"N/A".to_string()))
-                        .with_style(Attr::ForegroundColor(color::BRIGHT_CYAN)),
-                    match provider.risk_score {
-                        Some(risk_score) => Cell::new(&risk_score.to_string())
-                            .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
-                        None => Cell::new("N/A")
-                            .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
-                    },
-                    Cell::new(provider.org.as_ref().unwrap_or(&"N/A".to_string()))
-                        .with_style(Attr::ForegroundColor(color::BRIGHT_WHITE)),
-                ]));
-            }
+        if provider.success {
+            table.add_row(Row::new(vec![
+                Cell::new(&provider.provider).with_style(Attr::ForegroundColor(color::BLUE)),
+                Cell::new(&provider.ip.unwrap().to_string())
+                    .with_style(Attr::ForegroundColor(color::GREEN)),
+                Cell::new(provider.region.as_ref().unwrap_or(&"N/A".to_string()))
+                    .with_style(Attr::ForegroundColor(color::BRIGHT_CYAN)),
+                match provider.risk_score {
+                    Some(risk_score) => Cell::new(&risk_score.to_string())
+                        .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
+                    None => {
+                        Cell::new("N/A").with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA))
+                    }
+                },
+                Cell::new(provider.org.as_ref().unwrap_or(&"N/A".to_string()))
+                    .with_style(Attr::ForegroundColor(color::BRIGHT_WHITE)),
+            ]));
+        } else {
+            continue;
         }
     }
 

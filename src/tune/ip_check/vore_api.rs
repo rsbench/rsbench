@@ -16,22 +16,16 @@ impl IPCheck for VoreAPI {
 
     async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None);
-                }
+            let Ok(client_v4) = create_reqwest_client(Some("curl/8.11.1"), false).await else {
+                return (None, None);
             };
 
-            let result = match client_v4
+            let Ok(result) = client_v4
                 .get(" https://api.vore.top/api/IPdata?ip=")
                 .send()
                 .await
-            {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None);
-                }
+            else {
+                return (None, None);
             };
 
             parse_vore_json(result).await
@@ -66,11 +60,8 @@ async fn parse_vore_json(result: Response) -> (Option<IpAddr>, Option<String>) {
         return (None, None);
     }
 
-    let json = match result.json::<Value>().await {
-        Ok(json) => json,
-        Err(_) => {
-            return (None, None);
-        }
+    let Ok(json) = result.json::<Value>().await else {
+        return (None, None);
     };
 
     let ipinfo = json.get("ipinfo");

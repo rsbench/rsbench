@@ -2,6 +2,7 @@
 
 ![](https://rust-reportcard.xuri.me/badge/github.com/rsbench/rsbench?style=flat)
 ![](https://img.shields.io/crates/v/rsbench.svg)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Frsbench%2Frsbench&count_bg=%23000000&title_bg=%23FF0000&icon=rust.svg&icon_color=%2300FF5D&title=Call+times&edge_flat=false)](https://hits.seeyoufarm.com)
 
 一个用纯 Rust 编写的 **简单**、**方便**、**跨平台**、**高性能** 基准测试工具
 

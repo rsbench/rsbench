@@ -17,8 +17,12 @@ pub fn run_speedtest_single_multi() {
         clear_last_line();
     }
 
-    let (table_single, table_multi) =
-        get_table(single_download, single_upload, multi_download, multi_upload);
+    let (table_single, table_multi) = get_table(
+        &single_download,
+        &single_upload,
+        &multi_download,
+        &multi_upload,
+    );
 
     set_colour(Color::Yellow);
     println!("Single Thread Speedtest: ");
@@ -65,12 +69,12 @@ pub fn get_providers() -> Vec<(&'static str, String)> {
 }
 
 pub fn get_table(
-    single_download_results: Vec<(String, f64, f64, Vec<f64>)>,
-    single_upload_results: Vec<(String, f64, f64, Vec<f64>)>,
-    multi_download_results: Vec<(String, f64, f64, Vec<Vec<f64>>)>,
-    multi_upload_results: Vec<(String, f64, f64, Vec<Vec<f64>>)>,
+    single_download_results: &[(String, f64, f64, Vec<f64>)],
+    single_upload_results: &[(String, f64, f64, Vec<f64>)],
+    multi_download_results: &[(String, f64, f64, Vec<Vec<f64>>)],
+    multi_upload_results: &[(String, f64, f64, Vec<Vec<f64>>)],
 ) -> (Table, Table) {
-    let (single, multi) = parse_result(
+    let last_result = parse_result(
         single_download_results,
         single_upload_results,
         multi_download_results,
@@ -96,16 +100,16 @@ pub fn get_table(
             .with_style(Attr::ForegroundColor(color::YELLOW))
             .with_style(Attr::Bold),
     ]));
-    for (name, avg_down, max_down, avg_up, max_up) in single {
+    for (name, avg_down, max_down, avg_up, max_up) in last_result.single {
         table_single.add_row(Row::new(vec![
             Cell::new(&name).with_style(Attr::ForegroundColor(color::BLUE)),
-            Cell::new(&format!("{:.2}", avg_down))
+            Cell::new(&format!("{avg_down:.2}"))
                 .with_style(Attr::ForegroundColor(color::BRIGHT_CYAN)),
-            Cell::new(&format!("{:.2}", max_down))
+            Cell::new(&format!("{max_down:.2}"))
                 .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
-            Cell::new(&format!("{:.2}", avg_up))
+            Cell::new(&format!("{avg_up:.2}"))
                 .with_style(Attr::ForegroundColor(color::BRIGHT_CYAN)),
-            Cell::new(&format!("{:.2}", max_up))
+            Cell::new(&format!("{max_up:.2}"))
                 .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
         ]));
     }
@@ -129,16 +133,16 @@ pub fn get_table(
             .with_style(Attr::ForegroundColor(color::YELLOW))
             .with_style(Attr::Bold),
     ]));
-    for (name, avg_down, max_down, avg_up, max_up) in multi {
+    for (name, avg_down, max_down, avg_up, max_up) in last_result.multi {
         table_multi.add_row(Row::new(vec![
             Cell::new(&name).with_style(Attr::ForegroundColor(color::BLUE)),
-            Cell::new(&format!("{:.2}", avg_down))
+            Cell::new(&format!("{avg_down:.2}"))
                 .with_style(Attr::ForegroundColor(color::BRIGHT_CYAN)),
-            Cell::new(&format!("{:.2}", max_down))
+            Cell::new(&format!("{max_down:.2}"))
                 .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
-            Cell::new(&format!("{:.2}", avg_up))
+            Cell::new(&format!("{avg_up:.2}"))
                 .with_style(Attr::ForegroundColor(color::BRIGHT_CYAN)),
-            Cell::new(&format!("{:.2}", max_up))
+            Cell::new(&format!("{max_up:.2}"))
                 .with_style(Attr::ForegroundColor(color::BRIGHT_MAGENTA)),
         ]));
     }
@@ -147,14 +151,11 @@ pub fn get_table(
 }
 
 fn parse_result(
-    single_download_results: Vec<(String, f64, f64, Vec<f64>)>,
-    single_upload_results: Vec<(String, f64, f64, Vec<f64>)>,
-    multi_download_results: Vec<(String, f64, f64, Vec<Vec<f64>>)>,
-    multi_upload_results: Vec<(String, f64, f64, Vec<Vec<f64>>)>,
-) -> (
-    Vec<(String, f64, f64, f64, f64)>,
-    Vec<(String, f64, f64, f64, f64)>,
-) {
+    single_download_results: &[(String, f64, f64, Vec<f64>)],
+    single_upload_results: &[(String, f64, f64, Vec<f64>)],
+    multi_download_results: &[(String, f64, f64, Vec<Vec<f64>>)],
+    multi_upload_results: &[(String, f64, f64, Vec<Vec<f64>>)],
+) -> LastResult {
     let mut combined_results_single = Vec::new();
     for i in 0..single_download_results.len() {
         let (download_string, download_f64_avg, download_f64_max, _) = &single_download_results[i];
@@ -165,10 +166,10 @@ fn parse_result(
 
         combined_results_single.push((
             download_string.clone(),
-            download_f64_avg.clone(),
-            download_f64_max.clone(),
-            upload_f64_avg.clone(),
-            upload_f64_max.clone(),
+            *download_f64_avg,
+            *download_f64_max,
+            *upload_f64_avg,
+            *upload_f64_max,
         ));
     }
 
@@ -181,21 +182,22 @@ fn parse_result(
 
         combined_results_multi.push((
             download_string.clone(),
-            download_f64_avg.clone(),
-            download_f64_max.clone(),
-            upload_f64_avg.clone(),
-            upload_f64_max.clone(),
+            *download_f64_avg,
+            *download_f64_max,
+            *upload_f64_avg,
+            *upload_f64_max,
         ));
     }
-    (combined_results_single, combined_results_multi)
+    LastResult {
+        single: combined_results_single,
+        multi: combined_results_multi,
+    }
 }
 
 async fn get_speedtest_best_server() -> Result<String, String> {
     let mut log = paris::Logger::new();
     log.loading("Getting speedtest server list");
-    let client = if let Ok(client) = Client::builder().user_agent("curl/7.64.1").build() {
-        client
-    } else {
+    let Ok(client) = Client::builder().user_agent("curl/7.64.1").build() else {
         log.done();
         return Err("Failed to create reqwest client".to_string());
     };
@@ -206,28 +208,23 @@ async fn get_speedtest_best_server() -> Result<String, String> {
         .send()
         .await;
     let json = if let Ok(res) = res {
-        match res.json::<Value>().await {
-            Ok(json) => json,
-            Err(_) => {
-                log.done();
-                return Err("Failed to parse json".to_string());
-            }
+        if let Ok(json) = res.json::<Value>().await {
+            json
+        } else {
+            log.done();
+            return Err("Failed to parse json".to_string());
         }
     } else {
         log.done();
         return Err("Failed to get speedtest server list".to_string());
     };
 
-    let array = if let Some(array) = json.as_array() {
-        array
-    } else {
+    let Some(array) = json.as_array() else {
         log.done();
         return Err("Failed to get speedtest server list".to_string());
     };
 
-    let best_host = if let Some(best_host) = array.first() {
-        best_host
-    } else {
+    let Some(best_host) = array.first() else {
         log.done();
         return Err("Failed to get speedtest server list".to_string());
     };
@@ -246,4 +243,9 @@ async fn get_speedtest_best_server() -> Result<String, String> {
     log.done();
 
     Ok(host.parse().unwrap())
+}
+
+struct LastResult {
+    single: Vec<(String, f64, f64, f64, f64)>,
+    multi: Vec<(String, f64, f64, f64, f64)>,
 }

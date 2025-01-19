@@ -15,18 +15,12 @@ impl IPCheck for IPCheckIng {
 
     async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None, None, None);
-                }
+            let Ok(client_v4) = create_reqwest_client(Some("curl/8.11.1"), false).await else {
+                return (None, None, None, None);
             };
 
-            let result = match client_v4.get("https://4.ipcheck.ing/").send().await {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None, None, None);
-                }
+            let Ok(result) = client_v4.get("https://4.ipcheck.ing/").send().await else {
+                return (None, None, None, None);
             };
 
             let ip = parse_ipcheck_ing(result).await;
@@ -40,18 +34,12 @@ impl IPCheck for IPCheckIng {
         });
 
         let handle_v6 = tokio::spawn(async move {
-            let client_v6 = match create_reqwest_client(Some("curl/8.11.1"), true).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None, None, None);
-                }
+            let Ok(client_v6) = create_reqwest_client(Some("curl/8.11.1"), true).await else {
+                return (None, None, None, None);
             };
 
-            let result = match client_v6.get("https://6.ipcheck.ing/").send().await {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None, None, None);
-                }
+            let Ok(result) = client_v6.get("https://6.ipcheck.ing/").send().await else {
+                return (None, None, None, None);
             };
             let ip = parse_ipcheck_ing(result).await;
             if let Some(ip) = ip {
@@ -140,25 +128,19 @@ async fn get_ipcheck_ing_info(ip: IpAddr) -> (Option<u8>, Option<String>, Option
     headers.insert("sec-fetch-site", "same-origin".parse().unwrap());
     headers.insert("user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36".parse().unwrap());
 
-    let res = match client
+    let Ok(res) = client
         .get(format!(
             "https://ipcheck.ing/api/ipchecking?ip={ip}&lang=zh-CN"
         ))
         .headers(headers)
         .send()
         .await
-    {
-        Ok(result) => result,
-        Err(_) => {
-            return (None, None, None);
-        }
+    else {
+        return (None, None, None);
     };
 
-    let json = match res.json::<serde_json::Value>().await {
-        Ok(json) => json,
-        Err(_) => {
-            return (None, None, None);
-        }
+    let Ok(json) = res.json::<serde_json::Value>().await else {
+        return (None, None, None);
     };
 
     let asn = json_value_to_string(&json, "asn");
@@ -209,7 +191,7 @@ async fn get_ipcheck_ing_info(ip: IpAddr) -> (Option<u8>, Option<String>, Option
         let risk = proxy.get("risk");
         if let Some(risk) = risk {
             let risk = risk.as_u64();
-            risk.map(|risk| risk as u8)
+            risk.map(|risk| u8::try_from(risk).unwrap_or(0))
         } else {
             None
         }

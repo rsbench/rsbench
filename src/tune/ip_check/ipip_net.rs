@@ -16,18 +16,12 @@ impl IPCheck for IpIpNet {
 
     async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None);
-                }
+            let Ok(client_v4) = create_reqwest_client(Some("curl/8.11.1"), false).await else {
+                return (None, None);
             };
 
-            let result = match client_v4.get("https://myip.ipip.net/json").send().await {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None);
-                }
+            let Ok(result) = client_v4.get("https://myip.ipip.net/json").send().await else {
+                return (None, None);
             };
 
             parse_ipipnet_json(result).await
@@ -62,22 +56,16 @@ async fn parse_ipipnet_json(result: Response) -> (Option<IpAddr>, Option<String>
         return (None, None);
     }
 
-    let json = match result.json::<Value>().await {
-        Ok(json) => json,
-        Err(_) => {
-            return (None, None);
-        }
+    let Ok(json) = result.json::<Value>().await else {
+        return (None, None);
     };
 
     if json_value_to_string(&json, "ret") != Some("ok".to_string()) {
         return (None, None);
     }
 
-    let data = match json.get("data") {
-        Some(data) => data,
-        None => {
-            return (None, None);
-        }
+    let Some(data) = json.get("data") else {
+        return (None, None);
     };
 
     let ip = json_value_to_string(data, "ip");

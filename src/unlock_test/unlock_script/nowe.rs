@@ -19,17 +19,16 @@ impl Service for NowE {
             Err(unlock_result) => return unlock_result,
         };
 
-        let result = match client.post("https://webtvapi.nowe.com/16/1/getVodURL")
+        let Ok(result) = client.post("https://webtvapi.nowe.com/16/1/getVodURL")
             .headers(nowe_headers())
             .body("{\"contentId\":\"202403181904703\",\"contentType\":\"Vod\",\"pin\":\"\",\"deviceName\":\"Browser\",\"deviceId\":\"w-663bcc51-913c-913c-913c-913c913c\",\"deviceType\":\"WEB\",\"secureCookie\":null,\"callerReferenceNo\":\"W17151951620081575\",\"profileId\":null,\"mupId\":null}")
-            .send().await {
-            Ok(result) => result,
-            Err(_) => return UnlockResult {
+            .send().await else {
+            return UnlockResult {
                 service_name: self.name(),
                 available: false,
                 region: None,
                 error: Some("Not available / Network connection error".to_string()),
-            },
+            }
         };
 
         let html = match parse_response_to_html(self.name(), result).await {

@@ -15,45 +15,33 @@ impl IPCheck for IpSb {
 
     async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(None, false).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None, None);
-                }
+            let Ok(client_v4) = create_reqwest_client(None, false).await else {
+                return (None, None, None);
             };
 
-            let result = match client_v4
+            let Ok(result) = client_v4
                 .get("https://api.ip.sb/geoip/")
                 .headers(headers())
                 .send()
                 .await
-            {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None, None);
-                }
+            else {
+                return (None, None, None);
             };
             parse_ipsb_json(result).await
         });
 
         let handle_v6 = tokio::spawn(async move {
-            let client_v6 = match create_reqwest_client(None, true).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return (None, None, None);
-                }
+            let Ok(client_v6) = create_reqwest_client(None, true).await else {
+                return (None, None, None);
             };
 
-            let result = match client_v6
+            let Ok(result) = client_v6
                 .get("https://api.ip.sb/geoip/")
                 .headers(headers())
                 .send()
                 .await
-            {
-                Ok(result) => result,
-                Err(_) => {
-                    return (None, None, None);
-                }
+            else {
+                return (None, None, None);
             };
             parse_ipsb_json(result).await
         });
@@ -88,11 +76,8 @@ async fn parse_ipsb_json(response: Response) -> (Option<IpAddr>, Option<String>,
         return (None, None, None);
     }
 
-    let json = match response.json::<serde_json::Value>().await {
-        Ok(json) => json,
-        Err(_) => {
-            return (None, None, None);
-        }
+    let Ok(json) = response.json::<serde_json::Value>().await else {
+        return (None, None, None);
     };
 
     let ip = json_value_to_string(&json, "ip");
@@ -118,7 +103,7 @@ async fn parse_ipsb_json(response: Response) -> (Option<IpAddr>, Option<String>,
     };
     let mut org_build = Vec::new();
     if let Some(asn) = asn {
-        org_build.push(format!("AS{}", asn));
+        org_build.push(format!("AS{asn}"));
     }
     if let Some(isp) = isp {
         org_build.push(isp);

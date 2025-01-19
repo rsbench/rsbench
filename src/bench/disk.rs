@@ -23,17 +23,17 @@ fn get_space_left() -> (f64, bool) {
         if disk_mount_point == system_tmp_dir {
             let kind = disk.kind().to_string();
             return if kind == "SSD" {
-                (disk.available_space() as f64 / 1000000000.0, true)
+                (disk.available_space() as f64 / 1_000_000_000.0, true)
             } else {
-                (disk.available_space() as f64 / 1000000000.0, false)
+                (disk.available_space() as f64 / 1_000_000_000.0, false)
             };
         }
         if disk_mount_point == "/tmp" {
             let kind = disk.kind().to_string();
             return if kind == "SSD" {
-                (disk.available_space() as f64 / 1000000000.0, true)
+                (disk.available_space() as f64 / 1_000_000_000.0, true)
             } else {
-                (disk.available_space() as f64 / 1000000000.0, false)
+                (disk.available_space() as f64 / 1_000_000_000.0, false)
             };
         }
     }
@@ -46,9 +46,9 @@ fn get_space_left() -> (f64, bool) {
         if disk_mount_point == "/" {
             let kind = disk.kind().to_string();
             return if kind == "SSD" {
-                (disk.available_space() as f64 / 1000000000.0, true)
+                (disk.available_space() as f64 / 1_000_000_000.0, true)
             } else {
-                (disk.available_space() as f64 / 1000000000.0, false)
+                (disk.available_space() as f64 / 1_000_000_000.0, false)
             };
         }
     }
@@ -84,9 +84,7 @@ pub fn write_disk_test() -> Result<(f64, bool), String> {
     };
 
     let buffer = vec![0u8; buffer_size as usize];
-    let mut test_file = if let Ok(file) = File::create(set_file_path()) {
-        file
-    } else {
+    let Ok(mut test_file) = File::create(set_file_path()) else {
         log.done();
         error!("Unable to create test file");
         return Err("Unable to create test file".to_string());
@@ -120,9 +118,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
     let mut log = paris::Logger::new();
     log.loading("Running disk read speed benchmark...");
 
-    let mut test_file = if let Ok(file) = File::open(set_file_path()) {
-        file
-    } else {
+    let Ok(mut test_file) = File::open(set_file_path()) else {
         log.done();
         error!("Unable to open test file");
         return Err("Unable to open test file".to_string());
@@ -139,9 +135,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
     let start = std::time::Instant::now();
 
     while total_read < file_size * 1024 * 1024 {
-        let bytes_read = if let Ok(bytes_read) = test_file.read(&mut buffer) {
-            bytes_read
-        } else {
+        let Ok(bytes_read) = test_file.read(&mut buffer) else {
             log.done();
             error!("Unable to read from test file");
             return Err("Unable to read from test file".to_string());
@@ -179,18 +173,12 @@ fn set_file_path() -> PathBuf {
 }
 
 pub fn run_disk_speed_test() {
-    let (disk_write, is_ssd) = match write_disk_test() {
-        Ok((disk_write, is_ssd)) => (disk_write, is_ssd),
-        Err(_) => {
-            return;
-        }
+    let Ok((disk_write, is_ssd)) = write_disk_test() else {
+        return;
     };
 
-    let disk_read = match read_disk_test(is_ssd) {
-        Ok(disk_read) => disk_read,
-        Err(_) => {
-            return;
-        }
+    let Ok(disk_read) = read_disk_test(is_ssd) else {
+        return;
     };
 
     let binding = disk_write.to_string();

@@ -16,22 +16,16 @@ impl IPCheck for PcOnline {
 
     async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return None;
-                }
+            let Ok(client_v4) = create_reqwest_client(Some("curl/8.11.1"), false).await else {
+                return None;
             };
 
-            let result = match client_v4
+            let Ok(result) = client_v4
                 .get("https://whois.pconline.com.cn/ipJson.jsp?ip=&json=true")
                 .send()
                 .await
-            {
-                Ok(result) => result,
-                Err(_) => {
-                    return None;
-                }
+            else {
+                return None;
             };
 
             parse_pconline_json(result).await
@@ -66,20 +60,14 @@ async fn parse_pconline_json(result: Response) -> Option<IpAddr> {
         return None;
     }
 
-    let text = match result.text().await {
-        Ok(text) => text,
-        Err(_) => {
-            return None;
-        }
+    let Ok(text) = result.text().await else {
+        return None;
     };
 
     let text = text.trim();
 
-    let json = match serde_json::from_str::<Value>(text) {
-        Ok(json) => json,
-        Err(_) => {
-            return None;
-        }
+    let Ok(json) = serde_json::from_str::<Value>(text) else {
+        return None;
     };
 
     let ip = json_value_to_string(&json, "ip");

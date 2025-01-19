@@ -1,8 +1,9 @@
 // #![warn(clippy::all, clippy::pedantic)]
 
-use crate::utils::{clear_screen, set_default_colour, set_random_colour};
+use crate::utils::{clear_screen, get_usage_count, set_colour, set_default_colour};
 use clap::Parser;
 use paris::{info, warn};
+use termcolor::Color;
 
 mod bench;
 mod config;
@@ -14,7 +15,6 @@ mod utils;
 #[tokio::main]
 async fn main() {
     let args = config::Config::parse();
-
     if args.no_color {
         std::env::set_var("RSBENCH_NO_COLOR", "1");
     }
@@ -27,6 +27,14 @@ async fn main() {
     warn!("This is Alpha software. Things may and will break.");
     if !args.no_logo {
         print_ascii_art();
+    }
+    if let Ok(usage) = get_usage_count().await {
+        set_colour(Color::Magenta);
+        println!(
+            "This project has been called {} times in total, {} times today",
+            usage.1, usage.0
+        );
+        set_default_colour();
     }
 
     if args.info {
@@ -48,17 +56,12 @@ async fn main() {
 }
 
 fn print_ascii_art() {
-    let ascii_art = r"  _____   _____ ____                  _
- |  __ \ / ____|  _ \                | |
- | |__) | (___ | |_) | ___ _ __   ___| |__
- |  _  / \___ \|  _ < / _ \ '_ \ / __| '_ \
- | | \ \ ____) | |_) |  __/ | | | (__| | | |
- |_|  \_\_____/|____/ \___|_| |_|\___|_| |_|
-
-";
-    for ascii in ascii_art.chars() {
-        set_random_colour();
-        print!("{ascii}");
-    }
+    let ascii_art = r"   ___  _______               __
+  / _ \/ __/ _ )___ ___  ____/ /
+ / , _/\ \/ _  / -_) _ \/ __/ _ \
+/_/|_/___/____/\__/_//_/\__/_//_/
+                                 ";
+    set_colour(Color::Rgb(255, 182, 193));
+    println!("{ascii_art}");
     set_default_colour();
 }

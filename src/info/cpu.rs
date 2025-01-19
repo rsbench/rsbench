@@ -11,13 +11,11 @@ pub fn get_cpu() -> Result<String, Box<dyn std::error::Error>> {
     if env::var("USER") == Ok("root".to_string()) {
         use dmidecode::{EntryPoint, Structure};
         use std::fs;
-        let entry_point_bytes = match fs::read("/sys/firmware/dmi/tables/smbios_entry_point") {
-            Ok(entry_point_bytes) => entry_point_bytes,
-            Err(_) => return Ok(classic_get_cpu()),
+        let Ok(entry_point_bytes) = fs::read("/sys/firmware/dmi/tables/smbios_entry_point") else {
+            return Ok(classic_get_cpu());
         };
-        let dmi_table_bytes = match fs::read("/sys/firmware/dmi/tables/DMI") {
-            Ok(dmi_table_bytes) => dmi_table_bytes,
-            Err(_) => return Ok(classic_get_cpu()),
+        let Ok(dmi_table_bytes) = fs::read("/sys/firmware/dmi/tables/DMI") else {
+            return Ok(classic_get_cpu());
         };
 
         let entry_point = EntryPoint::search(&entry_point_bytes)

@@ -47,12 +47,6 @@ impl Service for FourGTV {
         let data = trim_string(data, 8, 0);
 
         match data {
-            "N" => UnlockResult {
-                service_name: self.name(),
-                available: false,
-                region: None,
-                error: Some(String::from("Not available")),
-            },
             "Y" => UnlockResult {
                 service_name: self.name(),
                 available: true,

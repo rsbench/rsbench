@@ -15,39 +15,27 @@ impl IPCheck for Cloudflare {
 
     async fn check(&self) -> (IPCheckProviderV4, IPCheckProviderV6) {
         let handle_v4 = tokio::spawn(async move {
-            let client_v4 = match create_reqwest_client(Some("curl/8.11.1"), false).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return None;
-                }
+            let Ok(client_v4) = create_reqwest_client(Some("curl/8.11.1"), false).await else {
+                return None;
             };
 
-            let result = match client_v4.get("https://1.0.0.1/cdn-cgi/trace").send().await {
-                Ok(result) => result,
-                Err(_) => {
-                    return None;
-                }
+            let Ok(result) = client_v4.get("https://1.0.0.1/cdn-cgi/trace").send().await else {
+                return None;
             };
             parse_cloudflare(result).await
         });
 
         let handle_v6 = tokio::spawn(async move {
-            let client_v6 = match create_reqwest_client(Some("curl/8.11.1"), true).await {
-                Ok(client) => client,
-                Err(()) => {
-                    return None;
-                }
+            let Ok(client_v6) = create_reqwest_client(Some("curl/8.11.1"), true).await else {
+                return None;
             };
 
-            let result = match client_v6
+            let Ok(result) = client_v6
                 .get("https://[2606:4700:4700::1111]/cdn-cgi/trace")
                 .send()
                 .await
-            {
-                Ok(result) => result,
-                Err(_) => {
-                    return None;
-                }
+            else {
+                return None;
             };
             parse_cloudflare(result).await
         });
@@ -81,11 +69,8 @@ async fn parse_cloudflare(response: Response) -> Option<IpAddr> {
     if !response.status().is_success() {
         return None;
     }
-    let html = match response.text().await {
-        Ok(html) => html,
-        Err(_) => {
-            return None;
-        }
+    let Ok(html) = response.text().await else {
+        return None;
     };
 
     let mut ip = String::new();

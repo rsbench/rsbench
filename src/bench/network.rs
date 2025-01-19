@@ -25,8 +25,7 @@ async fn perform_ping() -> Result<u128, TcpConnectTimedOut> {
             let elapsed = start.elapsed().as_millis();
             Ok(elapsed)
         }
-        Ok(Err(_)) => Err(TcpConnectTimedOut),
-        Err(_) => Err(TcpConnectTimedOut),
+        Ok(Err(_)) | Err(_) => Err(TcpConnectTimedOut),
     }
 }
 

@@ -49,7 +49,7 @@ fn run_fib() {
         warn!("Skipping fibonacci benchmark");
         println!();
     } else {
-        let total_threads = sysinfo::System::new_all().cpus().len() as u32;
+        let total_threads = u32::try_from(sysinfo::System::new_all().cpus().len()).unwrap_or(1);
         fibonacci::run_fibonacci();
         fibonacci::run_fibonacci_mt(total_threads);
     }
