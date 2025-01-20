@@ -1,4 +1,7 @@
 use crate::utils::color::{set_colour, set_default_colour};
+use crate::GLOBAL_STRING;
+use crate::{global_print, global_println};
+use std::fmt::Write;
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 use termcolor::Color;
@@ -28,10 +31,13 @@ pub fn run_fibonacci() {
 
     set_colour(Color::Yellow);
     print!("FIB : ");
+    global_print!("FIB : ");
     set_colour(Color::White);
     print!("{score}");
+    global_print!("{score}");
     set_colour(Color::Magenta);
     println!(" ({}ms)", duration.as_millis());
+    global_println!(" ({}ms total)", duration.as_millis());
     set_default_colour();
 }
 
@@ -67,9 +73,12 @@ pub fn run_fibonacci_mt(threads: u32) {
 
     set_colour(Color::Yellow);
     print!("FIB{threads}: ");
+    global_print!("FIB{threads}: ");
     set_colour(Color::White);
     print!("{total_score}");
+    global_print!("{total_score}");
     set_colour(Color::Magenta);
     println!(" ({total_time}ms total)");
+    global_println!(" ({total_time}ms total)");
     set_default_colour();
 }

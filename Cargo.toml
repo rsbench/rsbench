@@ -33,6 +33,7 @@ serde = { version = "1.0.217", default-features = false, features = ["std", "der
 serde_json = { version = "1.0.135", default-features = false, features = ["std"] }
 crossterm = { version = "0.28.1", default-features = false, features = ["windows"] }
 prettytable = { version = "0.10.0", default-features = false }
+lazy_static = "1.5.0"
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2.169"

@@ -1,8 +1,11 @@
 use crate::utils::color::{set_colour, set_default_colour};
+use crate::GLOBAL_STRING;
+use crate::{global_print, global_println};
 use paris::error;
+use std::fmt::Write;
 use std::fs;
 use std::fs::File;
-use std::io::{Read, Write};
+use std::io::{Read, Write as OtherWrite};
 use std::path::PathBuf;
 use std::str::FromStr;
 use termcolor::Color;
@@ -189,11 +192,15 @@ pub fn run_disk_speed_test() {
 
     set_colour(Color::Yellow);
     print!("DISK: ");
+    global_print!("DISK: ");
     set_colour(Color::Rgb(175, 231, 154));
     print!("{disk_write} MB/s");
+    global_print!("{disk_write} MB/s");
     set_colour(Color::Yellow);
     print!(" | ");
+    global_print!(" | ");
     set_colour(Color::Rgb(118, 26, 160));
     println!("{disk_read} MB/s");
+    global_println!("{disk_read} MB/s");
     set_default_colour();
 }

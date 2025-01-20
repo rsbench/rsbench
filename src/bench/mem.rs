@@ -1,4 +1,5 @@
 use crate::utils::color::{set_colour, set_default_colour};
+use crate::{global_print, global_println};
 use paris::error;
 use std::hint::black_box;
 use std::ptr::null_mut;
@@ -41,6 +42,7 @@ fn mem_test() -> (f64, f64) {
 
     if memory.is_null() {
         error!("Failed to allocate memory with mmap");
+        global_println!("❌ Failed to allocate memory with mmap");
         return (0.0, 0.0);
     }
 
@@ -94,6 +96,7 @@ fn mem_test() -> (f64, f64) {
 
     if memory.is_null() {
         error!("Failed to allocate memory with VirtualAlloc");
+        global_println!("❌ Failed to allocate memory with VirtualAlloc");
         return (0.0, 0.0);
     }
 
@@ -138,11 +141,15 @@ pub fn run_men_test() {
 
     set_colour(Color::Yellow);
     print!("MEM : ");
+    global_print!("MEM : ");
     set_colour(Color::Rgb(250, 91, 122));
     print!("{write_speed} MB/s");
+    global_print!("{write_speed} MB/s");
     set_colour(Color::Yellow);
     print!(" | ");
+    global_print!(" | ");
     set_colour(Color::Rgb(59, 124, 63));
     println!("{read_speed} MB/s");
+    global_println!("{read_speed} MB/s");
     set_default_colour();
 }

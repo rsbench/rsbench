@@ -1,6 +1,8 @@
 use crate::bench::disk::run_disk_speed_test;
-use crate::config;
+use crate::GLOBAL_STRING;
+use crate::{config, global_println};
 use paris::{info, warn};
+use std::fmt::Write;
 
 mod disk;
 mod fibonacci;
@@ -13,21 +15,25 @@ pub fn run_bench(args: &config::Config) {
             run_fib();
         } else {
             info!("FIB benchmark is disabled");
+            global_println!("ℹ FIB benchmark is disabled");
         }
         if args.disk {
             run_disk();
         } else {
             info!("Disk benchmark is disabled");
+            global_println!("ℹ Disk benchmark is disabled");
         }
         if args.mem {
             run_mem();
         } else {
             info!("Memory benchmark is disabled");
+            global_println!("ℹ Memory benchmark is disabled");
         }
         if args.network {
             run_network();
         } else {
             info!("Network benchmark is disabled");
+            global_println!("ℹ Network benchmark is disabled");
         }
     } else {
         run_fib();
@@ -46,7 +52,9 @@ fn run_network() {
 fn run_fib() {
     if cfg!(debug_assertions) {
         warn!("This program should be built in release mode for accurate benchmarking");
+        global_println!("⚠ This program should be built in release mode for accurate benchmarking");
         warn!("Skipping fibonacci benchmark");
+        global_println!("⚠ Skipping fibonacci benchmark");
         println!();
     } else {
         let total_threads = u32::try_from(sysinfo::System::new_all().cpus().len()).unwrap_or(1);

@@ -1,6 +1,7 @@
 // use std::sync::mpsc::{Receiver, Sender};
 
 use crate::utils::color::{set_colour, set_default_colour};
+use crate::{global_print, global_println};
 use async_stream::stream;
 use futures::{
     channel::mpsc::{Receiver, Sender},
@@ -48,7 +49,9 @@ pub fn ping() {
     let loss = (f64::from(timeouts) / PING_TIMES as f64) * 100.0;
     set_colour(Color::Blue);
     println!("PING: {mean:.2} ms");
+    global_println!("PING: {mean:.2} ms");
     println!("LOSS: {loss:.2}%");
+    global_println!("LOSS: {loss:.2}%");
     set_default_colour();
 }
 
@@ -168,7 +171,9 @@ pub fn start_speedtest() {
         Err(error) => {
             log.done();
             println!();
-            log.error(error);
+            global_println!();
+            error!(error);
+            global_println!("❌ {}", error);
             return;
         }
     };
@@ -178,6 +183,7 @@ pub fn start_speedtest() {
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap_or_else(|| {
             error!("Unable to find max speed");
+            global_println!("❌ Unable to find max speed");
             &0.0
         });
     log.done();
@@ -190,14 +196,19 @@ pub fn start_speedtest() {
 
     set_colour(Color::Yellow);
     print!("DOWN: 🔽 ");
+    global_print!("DOWN: 🔽 ");
     set_colour(Color::Rgb(64, 224, 208));
     print!("{mean_speed_mbps_str} Mbps");
+    global_print!("{mean_speed_mbps_str} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
+    global_print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
+    global_print!("MAX : ");
     set_colour(Color::Rgb(65, 105, 225));
     println!("{max_str} Mbps");
+    global_println!("{max_str} Mbps");
     set_default_colour();
 
     // Upload test
@@ -208,6 +219,7 @@ pub fn start_speedtest() {
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap_or_else(|| {
             error!("Unable to find max speed");
+            global_println!("❌ Unable to find max speed");
             &0.0
         });
     log.done();
@@ -220,14 +232,19 @@ pub fn start_speedtest() {
 
     set_colour(Color::Yellow);
     print!("UP  : 🔼 ");
+    global_print!("UP  : 🔼 ");
     set_colour(Color::Rgb(139, 0, 139));
     print!("{mean_speed_mbps_str} Mbps");
+    global_print!("{mean_speed_mbps_str} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
+    global_print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
+    global_print!("MAX : ");
     set_colour(Color::Rgb(72, 61, 139));
     println!("{max_str} Mbps");
+    global_println!("{max_str} Mbps");
     set_default_colour();
 }
 
@@ -254,7 +271,9 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
             Err(error) => {
                 log.done();
                 println!();
-                log.error(error);
+                global_println!();
+                error!(error);
+                global_println!("❌ {}", error);
                 return;
             }
         }
@@ -285,6 +304,7 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap_or_else(|| {
             error!("Unable to find max speed");
+            global_println!("❌ Unable to find max speed");
             &0.0
         });
     log.done();
@@ -297,14 +317,19 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
 
     set_colour(Color::Yellow);
     print!("DOWN: ⏬ ");
+    global_print!("DOWN: ⏬ ");
     set_colour(Color::Rgb(64, 224, 208));
     print!("{total_mean_speed_str} Mbps");
+    global_print!("{total_mean_speed_str} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
+    global_print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
+    global_print!("MAX : ");
     set_colour(Color::Rgb(65, 105, 225));
     println!("{max_str} Mbps");
+    global_println!("{max_str} Mbps");
     set_default_colour();
 
     // upload test
@@ -343,6 +368,7 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
         .max_by(|a, b| a.partial_cmp(b).unwrap())
         .unwrap_or_else(|| {
             error!("Unable to find max speed");
+            global_println!("❌ Unable to find max speed");
             &0.0
         });
     log.done();
@@ -355,13 +381,18 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
 
     set_colour(Color::Yellow);
     print!("UP  : ⏫ ");
+    global_print!("UP  : ⏫ ");
     set_colour(Color::Rgb(139, 0, 139));
     print!("{total_mean_speed_str} Mbps");
+    global_print!("{total_mean_speed_str} Mbps");
     set_colour(Color::Yellow);
     print!(" | ");
+    global_print!(" | ");
     set_colour(Color::Yellow);
     print!("MAX : ");
+    global_print!("MAX : ");
     set_colour(Color::Rgb(72, 61, 139));
     println!("{max_str} Mbps");
+    global_println!("{max_str} Mbps");
     set_default_colour();
 }

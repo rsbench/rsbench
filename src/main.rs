@@ -1,9 +1,12 @@
+// #![warn(clippy::all, clippy::pedantic)]
+
 use crate::utils::color::{set_colour, set_default_colour};
 use crate::utils::report::get_usage_count;
+use crate::utils::report::GLOBAL_STRING;
 use crate::utils::term::clear_screen;
-// #![warn(clippy::all, clippy::pedantic)]
 use clap::Parser;
 use paris::{info, warn};
+use std::fmt::Write;
 use termcolor::Color;
 
 mod bench;
@@ -25,7 +28,10 @@ async fn main() {
     }
 
     info!("RSBench v{}", env!("CARGO_PKG_VERSION"));
+    global_println!("ℹ RSBench v{}", env!("CARGO_PKG_VERSION"));
     warn!("This is Alpha software. Things may and will break.");
+    global_println!("⚠ This is Alpha software. Things may and will break.");
+
     if !args.no_logo {
         print_ascii_art();
     }
@@ -52,8 +58,16 @@ async fn main() {
     }
     if !args.info && !args.bench && !args.unlock && !args.tune {
         warn!("No parameter is currently specified, info mode will be used by default.");
+        global_println!(
+            "⚠ No parameter is currently specified, info mode will be used by default."
+        );
         info::run_info();
     }
+
+    println!();
+    println!();
+    println!();
+    println!("{}", utils::report::GLOBAL_STRING.lock().unwrap())
 }
 
 fn print_ascii_art() {
@@ -67,5 +81,6 @@ fn print_ascii_art() {
                                                           ";
     set_colour(Color::Rgb(255, 182, 193));
     println!("{ascii_art}");
+    global_println!("{}", ascii_art);
     set_default_colour();
 }
