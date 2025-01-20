@@ -1,5 +1,6 @@
 // use std::sync::mpsc::{Receiver, Sender};
-use crate::utils::{set_colour, set_default_colour};
+
+use crate::utils::color::{set_colour, set_default_colour};
 use async_stream::stream;
 use futures::{
     channel::mpsc::{Receiver, Sender},

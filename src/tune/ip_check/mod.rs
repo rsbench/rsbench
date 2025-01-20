@@ -10,7 +10,8 @@ mod utils;
 mod vore_api;
 
 use crate::tune::ip_check::utils::format_center;
-use crate::utils::{clear_last_line, set_colour, set_default_colour, set_random_colour};
+use crate::utils::color::{set_colour, set_default_colour, set_random_colour};
+use crate::utils::term::clear_last_line;
 use async_trait::async_trait;
 use prettytable::{color, format, Attr, Cell, Row, Table};
 use std::fmt::Display;

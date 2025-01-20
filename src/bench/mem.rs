@@ -1,4 +1,4 @@
-use crate::utils::{set_colour, set_default_colour};
+use crate::utils::color::{set_colour, set_default_colour};
 use paris::error;
 use std::hint::black_box;
 use std::ptr::null_mut;

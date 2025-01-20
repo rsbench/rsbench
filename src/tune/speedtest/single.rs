@@ -1,5 +1,5 @@
 use crate::tune::speedtest::get_providers;
-use crate::utils::{set_colour, set_default_colour, set_random_colour};
+use crate::utils::color::{set_colour, set_default_colour, set_random_colour};
 use async_stream::stream;
 use futures::executor::block_on;
 use futures::StreamExt;

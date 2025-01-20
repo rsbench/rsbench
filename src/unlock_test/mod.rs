@@ -7,7 +7,9 @@ use crate::unlock_test::unlock_script::{
     afr_services, all_services, asia_services, cn_services, euro_services, global_services,
     hk_services, jp_services, mo_services, tw_services, uk_services, us_services,
 };
-use crate::utils::{clear_last_line, set_colour, set_default_colour};
+
+use crate::utils::color::{set_colour, set_default_colour};
+use crate::utils::term::clear_last_line;
 use async_trait::async_trait;
 use futures::executor::block_on;
 use std::fmt::{Display, Formatter};

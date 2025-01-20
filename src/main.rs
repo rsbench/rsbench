@@ -1,6 +1,7 @@
+use crate::utils::color::{set_colour, set_default_colour};
+use crate::utils::report::get_usage_count;
+use crate::utils::term::clear_screen;
 // #![warn(clippy::all, clippy::pedantic)]
-
-use crate::utils::{clear_screen, get_usage_count, set_colour, set_default_colour};
 use clap::Parser;
 use paris::{info, warn};
 use termcolor::Color;
@@ -56,11 +57,14 @@ async fn main() {
 }
 
 fn print_ascii_art() {
-    let ascii_art = r"   ___  _______               __
-  / _ \/ __/ _ )___ ___  ____/ /
- / , _/\ \/ _  / -_) _ \/ __/ _ \
-/_/|_/___/____/\__/_//_/\__/_//_/
-                                 ";
+    let ascii_art = r"
+██████╗ ███████╗██████╗ ███████╗███╗   ██╗ ██████╗██╗  ██╗
+██╔══██╗██╔════╝██╔══██╗██╔════╝████╗  ██║██╔════╝██║  ██║
+██████╔╝███████╗██████╔╝█████╗  ██╔██╗ ██║██║     ███████║
+██╔══██╗╚════██║██╔══██╗██╔══╝  ██║╚██╗██║██║     ██╔══██║
+██║  ██║███████║██████╔╝███████╗██║ ╚████║╚██████╗██║  ██║
+╚═╝  ╚═╝╚══════╝╚═════╝ ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝
+                                                          ";
     set_colour(Color::Rgb(255, 182, 193));
     println!("{ascii_art}");
     set_default_colour();

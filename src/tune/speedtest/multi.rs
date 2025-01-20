@@ -1,6 +1,6 @@
 use crate::tune::speedtest::get_providers;
 use crate::tune::speedtest::single::{single_download, single_upload};
-use crate::utils::{set_colour, set_default_colour, set_random_colour};
+use crate::utils::color::{set_colour, set_default_colour, set_random_colour};
 use futures::executor::block_on;
 use termcolor::Color;
 

@@ -1,6 +1,7 @@
 use crate::tune::speedtest::multi::run_multi;
 use crate::tune::speedtest::single::run_single;
-use crate::utils::{clear_last_line, set_colour, set_default_colour};
+use crate::utils::color::{set_colour, set_default_colour};
+use crate::utils::term::clear_last_line;
 use prettytable::{color, format, Attr, Cell, Row, Table};
 use reqwest::Client;
 use serde_json::Value;
