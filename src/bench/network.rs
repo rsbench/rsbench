@@ -1,6 +1,7 @@
 // use std::sync::mpsc::{Receiver, Sender};
 
 use crate::utils::color::{set_colour, set_default_colour};
+use crate::GLOBAL_STRING;
 use crate::{global_print, global_println};
 use async_stream::stream;
 use futures::{
@@ -9,6 +10,7 @@ use futures::{
     StreamExt,
 };
 use paris::error;
+use std::fmt::Write;
 use std::time::{Duration, Instant};
 use termcolor::Color;
 
@@ -172,7 +174,7 @@ pub fn start_speedtest() {
             log.done();
             println!();
             global_println!();
-            error!(error);
+            error!("{}", error);
             global_println!("❌ {}", error);
             return;
         }
@@ -272,7 +274,7 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
                 log.done();
                 println!();
                 global_println!();
-                error!(error);
+                error!("{}", error);
                 global_println!("❌ {}", error);
                 return;
             }

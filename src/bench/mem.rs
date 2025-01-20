@@ -1,6 +1,8 @@
 use crate::utils::color::{set_colour, set_default_colour};
+use crate::GLOBAL_STRING;
 use crate::{global_print, global_println};
 use paris::error;
+use std::fmt::Write;
 use std::hint::black_box;
 use std::ptr::null_mut;
 use std::time::Instant;

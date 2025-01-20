@@ -1254,7 +1254,7 @@ dependencies = [
  "crossterm",
  "dmidecode",
  "futures",
-    "lazy_static",
+ "lazy_static",
  "libc",
  "paris",
  "prettytable",
