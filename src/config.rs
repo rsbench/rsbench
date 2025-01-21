@@ -58,6 +58,14 @@ pub struct Config {
     // Disable logo output
     #[arg(long, default_value_t = false)]
     pub no_logo: bool,
+
+    // Disable usage count output
+    #[arg(long, default_value_t = false)]
+    pub no_usage: bool,
+
+    // Disable upload test result
+    #[arg(long, default_value_t = false)]
+    pub no_upload: bool,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]

@@ -1,3 +1,4 @@
+use std::fmt::Write;
 pub mod headers;
 mod unlock_script;
 pub mod utils;
@@ -7,7 +8,9 @@ use crate::unlock_test::unlock_script::{
     afr_services, all_services, asia_services, cn_services, euro_services, global_services,
     hk_services, jp_services, mo_services, tw_services, uk_services, us_services,
 };
+use crate::GLOBAL_STRING;
 
+use crate::global_println;
 use crate::utils::color::{set_colour, set_default_colour};
 use crate::utils::term::clear_last_line;
 use async_trait::async_trait;
@@ -47,6 +50,7 @@ pub async fn check_all(args: &crate::config::Config) {
     set_colour(Color::Yellow);
     // 打印 UNLOCK 标题
     println!("UNLOCK:");
+    global_println!("UNLOCK:");
     // 打印表格标题
     println!("{:^5} {:^30} Error", "Y/N", "Service");
     // 设置文本颜色为默认颜色
@@ -118,16 +122,23 @@ pub async fn check_all(args: &crate::config::Config) {
     // 打印已解锁服务的列表
     for service in unlocked_services {
         println!("{service}");
+        global_println!("{service}");
     }
     // 打印未解锁服务的列表
     for service in locked_services {
         println!("{service}");
+        global_println!("{service}");
     }
 
     // 打印测试总结，包括测试的服务数量、花费的时间、已解锁和未解锁的服务数量
     println!(
         "Tested {services_count} projects took {time:.2} seconds, {unlocked_services_count} services unlocked, {locked_services_count} services locked.",
     );
+    global_println!(
+        "Tested {services_count} projects took {time:.2} seconds, {unlocked_services_count} services unlocked, {locked_services_count} services locked.",
+    );
+    println!();
+    global_println!();
 }
 
 impl Display for UnlockResult {

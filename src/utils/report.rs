@@ -1,4 +1,5 @@
 use lazy_static::lazy_static;
+use paris::error;
 use regex::Regex;
 use reqwest::Client;
 use std::sync::Mutex;
@@ -48,17 +49,45 @@ macro_rules! global_print {
     }}
 }
 
-// #[macro_export]
-// macro_rules! global_println {
-//     () => (global_print!("\n"));
-//     ($fmt:expr) => (global_print!(concat!($fmt, "\n")));
-//     ($fmt:expr, $($arg:tt)*) => (global_print!(concat!($fmt, "\n"), $($arg)*));
-// }
-
 #[macro_export]
 macro_rules! global_println {
     ($($arg:tt)*) => {{
         let mut global_string = GLOBAL_STRING.lock().unwrap();
         writeln!(global_string, $($arg)*).expect("Failed to write to global string");
     }}
+}
+
+pub async fn post_to_pastebin() -> Result<u64, String> {
+    // If you see this password, please do not share it with others. (๑•̀ㅂ•́)و✧
+    let secret = if let Some(secret) = option_env!("PASTEBIN_SECRET") {
+        secret
+    } else {
+        error!("Compiling without specifying `PASTEBIN_SECRET` will now skip Pastebin uploads");
+        return Err(
+            "Compiling without specifying `PASTEBIN_SECRET` will now skip Pastebin uploads"
+                .to_string(),
+        );
+    };
+
+    let client = Client::new();
+    let resp = client
+        .post("https://rsbench-pastebin.genshinminecraft-d20.workers.dev/upload")
+        .header("Authorization", secret)
+        .body(GLOBAL_STRING.lock().unwrap().clone())
+        .send()
+        .await;
+    let text = if let Ok(res) = resp {
+        if !res.status().is_success() {
+            return Err("You have no permission to upload".to_string());
+        }
+        match res.text().await {
+            Ok(text) => text,
+            Err(_) => return Err("Can not parse response".to_string()),
+        }
+    } else {
+        return Err("Can not parse response".to_string());
+    };
+
+    let id = text.trim().parse::<u64>().unwrap();
+    Ok(id)
 }

@@ -1,7 +1,7 @@
 use crate::bench::disk::run_disk_speed_test;
 use crate::GLOBAL_STRING;
 use crate::{config, global_println};
-use paris::{info, warn};
+use paris::warn;
 use std::fmt::Write;
 
 mod disk;
@@ -11,29 +11,19 @@ pub(crate) mod network;
 
 pub fn run_bench(args: &config::Config) {
     if args.network || args.fib || args.disk || args.mem {
+        println!("BENCH: ");
+        global_println!("BENCH: ");
         if args.fib {
             run_fib();
-        } else {
-            info!("FIB benchmark is disabled");
-            global_println!("ℹ FIB benchmark is disabled");
         }
         if args.disk {
             run_disk();
-        } else {
-            info!("Disk benchmark is disabled");
-            global_println!("ℹ Disk benchmark is disabled");
         }
         if args.mem {
             run_mem();
-        } else {
-            info!("Memory benchmark is disabled");
-            global_println!("ℹ Memory benchmark is disabled");
         }
         if args.network {
             run_network();
-        } else {
-            info!("Network benchmark is disabled");
-            global_println!("ℹ Network benchmark is disabled");
         }
     } else {
         run_fib();
@@ -41,6 +31,8 @@ pub fn run_bench(args: &config::Config) {
         run_mem();
         run_network();
     }
+    println!();
+    global_println!();
 }
 
 fn run_network() {

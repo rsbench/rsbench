@@ -1,7 +1,9 @@
-use crate::config;
 use crate::tune::ip_check::ip_all;
 use crate::tune::speedtest::run_speedtest_single_multi;
+use crate::GLOBAL_STRING;
+use crate::{config, global_println};
 use futures::executor::block_on;
+use std::fmt::Write;
 
 mod ip_check;
 mod speedtest;
@@ -25,6 +27,8 @@ pub fn run_tune(args: &config::Config) {
 
 fn check_ip_status() {
     block_on(ip_all());
+    println!();
+    global_println!();
 }
 
 fn run_speedtest(custom_host: Option<&str>) {
@@ -32,4 +36,6 @@ fn run_speedtest(custom_host: Option<&str>) {
         std::env::set_var("CUSTOM_SPEEDTEST_SERVER", host);
     }
     run_speedtest_single_multi();
+    println!();
+    global_println!();
 }

@@ -1,16 +1,25 @@
+use crate::global_println;
 use crate::tune::speedtest::multi::run_multi;
 use crate::tune::speedtest::single::run_single;
 use crate::utils::color::{set_colour, set_default_colour};
 use crate::utils::term::clear_last_line;
+use crate::GLOBAL_STRING;
+use lazy_static::lazy_static;
 use prettytable::{color, format, Attr, Cell, Row, Table};
 use reqwest::Client;
 use serde_json::Value;
+use std::fmt::Write;
 use termcolor::Color;
 
 mod multi;
 mod single;
 
 pub fn run_speedtest_single_multi() {
+    set_colour(Color::Yellow);
+    println!("Speedtest:");
+    global_println!("Speedtest:");
+    set_default_colour();
+
     let (single_download, single_upload) = run_single();
     let (multi_download, multi_upload) = run_multi();
 
@@ -27,14 +36,31 @@ pub fn run_speedtest_single_multi() {
 
     set_colour(Color::Yellow);
     println!("Single Thread Speedtest: ");
+    global_println!("Single Thread Speedtest: ");
     set_default_colour();
     table_single.printstd();
+    let string = table_single.to_string();
+    global_println!("{}", &string);
 
     set_colour(Color::Yellow);
     println!();
     println!("Multi Thread Speedtest: ");
+    global_println!("Multi Thread Speedtest: ");
     set_default_colour();
     table_multi.printstd();
+    let string = table_multi.to_string();
+    global_println!("{}", &string);
+}
+
+lazy_static! {
+    static ref BEST_TEST_SERVER: String = {
+        let host = futures::executor::block_on(get_speedtest_best_server());
+        if let Ok(host) = host {
+            host
+        } else {
+            "lg-lax.fdcservers.net.prod.hosts.ooklaserver.net:8080".to_string()
+        }
+    };
 }
 
 pub fn get_providers() -> Vec<(&'static str, String)> {
@@ -42,14 +68,7 @@ pub fn get_providers() -> Vec<(&'static str, String)> {
         vec![("Custom", custom)]
     } else {
         vec![
-            ("Speedtest.net", {
-                let host = futures::executor::block_on(get_speedtest_best_server());
-                if let Ok(host) = host {
-                    host
-                } else {
-                    "lg-lax.fdcservers.net.prod.hosts.ooklaserver.net:8080".to_string()
-                }
-            }),
+            // ("Speedtest.net", BEST_TEST_SERVER.clone()),
             (
                 "China Mobile",
                 "speedtest1.sc.chinamobile.com:8080".to_string(),

@@ -1,3 +1,4 @@
+use std::fmt::Write;
 mod cloudflare;
 mod ip_sb;
 mod ipcheck_ing;
@@ -12,6 +13,8 @@ mod vore_api;
 use crate::tune::ip_check::utils::format_center;
 use crate::utils::color::{set_colour, set_default_colour, set_random_colour};
 use crate::utils::term::clear_last_line;
+use crate::GLOBAL_STRING;
+use crate::{global_print, global_println};
 use async_trait::async_trait;
 use prettytable::{color, format, Attr, Cell, Row, Table};
 use std::fmt::Display;
@@ -101,8 +104,12 @@ pub async fn ip_all() {
     let table = get_table(results_v4, results_v6).await;
     table.printstd();
 
-    set_colour(Color::Yellow);
+    let string = table.to_string();
+    global_print!("{}", &string);
+
+    set_default_colour();
     println!("Tested {results_count} projects took {time:.2} seconds",);
+    global_println!("Tested {results_count} projects took {time:.2} seconds",);
     set_default_colour();
 }
 

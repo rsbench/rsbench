@@ -5,7 +5,7 @@ use crate::utils::report::get_usage_count;
 use crate::utils::report::GLOBAL_STRING;
 use crate::utils::term::clear_screen;
 use clap::Parser;
-use paris::{info, warn};
+use paris::{error, info, warn};
 use std::fmt::Write;
 use termcolor::Color;
 
@@ -37,9 +37,14 @@ async fn main() {
     }
     if let Ok(usage) = get_usage_count().await {
         set_colour(Color::Magenta);
-        println!(
+        info!(
             "This project has been called {} times in total, {} times today",
             usage.1, usage.0
+        );
+        global_println!(
+            "This project has been called {} times in total, {} times today",
+            usage.1,
+            usage.0
         );
         set_default_colour();
     }
@@ -64,10 +69,23 @@ async fn main() {
         info::run_info();
     }
 
-    println!();
-    println!();
-    println!();
-    println!("{}", utils::report::GLOBAL_STRING.lock().unwrap())
+    if !args.no_upload {
+        if let Ok(id) = utils::report::post_to_pastebin().await {
+            set_colour(Color::Green);
+            println!("Result URL: https://rsbench-pastebin.genshinminecraft-d20.workers.dev/{id}");
+        }
+        match utils::report::post_to_pastebin().await {
+            Ok(id) => {
+                info!(
+                    "Result URL: https://rsbench-pastebin.genshinminecraft-d20.workers.dev/{}",
+                    id
+                );
+            }
+            Err(err) => {
+                error!("Failed to upload result to pastebin: {}", err);
+            }
+        }
+    }
 }
 
 fn print_ascii_art() {
