@@ -5,7 +5,7 @@ use crate::utils::report::get_usage_count;
 use crate::utils::report::GLOBAL_STRING;
 use crate::utils::term::clear_screen;
 use clap::Parser;
-use paris::{error, info, warn};
+use paris::{info, warn};
 use std::fmt::Write;
 use termcolor::Color;
 
@@ -70,17 +70,8 @@ async fn main() {
     }
 
     if !args.no_upload {
-        match utils::report::post_to_pastebin().await {
-            Ok(id) => {
-                info!(
-                    "Result URL: {}/{}",
-                    option_env!("PASTEBIN_URL").unwrap(),
-                    id
-                );
-            }
-            Err(err) => {
-                error!("Failed to upload result to pastebin: {}", err);
-            }
+        if let Ok(id) = utils::report::post_to_pastebin().await {
+            info!("{}", id);
         }
     }
 }

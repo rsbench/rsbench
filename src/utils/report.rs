@@ -57,7 +57,8 @@ macro_rules! global_println {
     }}
 }
 
-pub async fn post_to_pastebin() -> Result<u64, String> {
+#[allow(clippy::await_holding_lock)]
+pub async fn post_to_pastebin() -> Result<String, String> {
     // https://rsbench-pastebin.genshinminecraft-d20.workers.dev
     let url = if let Some(url) = option_env!("PASTEBIN_URL") {
         url
@@ -100,5 +101,5 @@ pub async fn post_to_pastebin() -> Result<u64, String> {
     };
 
     let id = text.trim().parse::<u64>().unwrap();
-    Ok(id)
+    Ok(format!("{url}/{id}"))
 }
