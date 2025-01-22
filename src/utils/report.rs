@@ -58,6 +58,17 @@ macro_rules! global_println {
 }
 
 pub async fn post_to_pastebin() -> Result<u64, String> {
+    // https://rsbench-pastebin.genshinminecraft-d20.workers.dev
+    let url = if let Some(url) = option_env!("PASTEBIN_URL") {
+        url
+    } else {
+        error!("Compiling without specifying `PASTEBIN_URL` will now skip Pastebin uploads");
+        return Err(
+            "Compiling without specifying `PASTEBIN_URL` will now skip Pastebin uploads"
+                .to_string(),
+        );
+    };
+
     // If you see this password, please do not share it with others. (๑•̀ㅂ•́)و✧
     let secret = if let Some(secret) = option_env!("PASTEBIN_SECRET") {
         secret
@@ -71,7 +82,7 @@ pub async fn post_to_pastebin() -> Result<u64, String> {
 
     let client = Client::new();
     let resp = client
-        .post("https://rsbench-pastebin.genshinminecraft-d20.workers.dev/upload")
+        .post(format!("{}/upload", url))
         .header("Authorization", secret)
         .body(GLOBAL_STRING.lock().unwrap().clone())
         .send()

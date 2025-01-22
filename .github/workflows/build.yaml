@@ -34,6 +34,10 @@ jobs:
           target: ${{ matrix.platform.target }}
           args: "--locked --release --jobs 32"
           strip: true
+        env:
+          PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
+          PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
+
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
       - name: Upload binary
@@ -76,6 +80,8 @@ jobs:
         run: cross build --target ${{ matrix.platform.target }} --release --jobs 32 --locked
         env:
           CROSS_NO_WARNINGS: 0
+          PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
+          PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
       - name: Upload binary
@@ -167,6 +173,9 @@ jobs:
           target: ${{ matrix.platform.target }}
           args: "--locked --release --jobs 32"
           strip: true
+        env:
+          PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
+          PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
       - name: Install Cargo-deb
         run: cargo install cargo-deb
       - name: Build deb package
@@ -212,6 +221,9 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
       - name: Cargo Build
         run: cargo build --release
+        env:
+          PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
+          PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
@@ -241,6 +253,9 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
       - name: Cargo Build
         run: cargo build --release
+        env:
+          PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
+          PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
@@ -275,6 +290,9 @@ jobs:
           cache: false
       - name: Cargo Build
         run: cargo build --release
+        env:
+          PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
+          PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
