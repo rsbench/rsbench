@@ -70,14 +70,11 @@ async fn main() {
     }
 
     if !args.no_upload {
-        if let Ok(id) = utils::report::post_to_pastebin().await {
-            set_colour(Color::Green);
-            println!("Result URL: https://rsbench-pastebin.genshinminecraft-d20.workers.dev/{id}");
-        }
         match utils::report::post_to_pastebin().await {
             Ok(id) => {
                 info!(
-                    "Result URL: https://rsbench-pastebin.genshinminecraft-d20.workers.dev/{}",
+                    "Result URL: {}/{}",
+                    option_env!("PASTEBIN_URL").unwrap(),
                     id
                 );
             }
