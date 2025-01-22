@@ -1246,7 +1246,7 @@ dependencies = [
 
 [[package]]
 name = "rsbench"
-version = "0.5.3"
+version = "0.5.4"
 dependencies = [
  "async-stream",
  "async-trait",
