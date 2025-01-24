@@ -74,14 +74,14 @@ pub fn write_disk_test() -> Result<(f64, bool), String> {
 
     let (space_left, is_ssd) = get_space_left();
 
-    if (is_ssd && space_left < 5.0) || (!is_ssd && space_left < 1.0) {
+    if (is_ssd && space_left < 3.5) || (!is_ssd && space_left < 1.0) {
         log.done();
         error!("Not enough space left on disk for disk benchmark");
         return Err("Not enough space left on disk for disk benchmark".to_string());
     }
 
     let buffer_size: usize = if is_ssd {
-        1024 * 1024 * 1024 * 5 // 5GB
+        1024 * 1024 * 1024 * 3 // 3GB
     } else {
         1024 * 1024 * 512 // 512MB
     };
@@ -130,7 +130,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
     let mut buffer = vec![0u8; 1024 * 1024]; // 1MB
     let mut total_read = 0;
     let file_size: usize = if is_ssd {
-        1024 * 1024 * 1024 * 5 // 5GB
+        1024 * 1024 * 1024 * 3 // 3GB
     } else {
         1024 * 1024 * 512 // 512MB
     };
