@@ -80,13 +80,13 @@ pub fn write_disk_test() -> Result<(f64, bool), String> {
         return Err("Not enough space left on disk for disk benchmark".to_string());
     }
 
-    let buffer_size: u64 = if is_ssd {
+    let buffer_size: usize = if is_ssd {
         1024 * 1024 * 1024 * 5 // 5GB
     } else {
         1024 * 1024 * 512 // 512MB
     };
 
-    let buffer = vec![0u8; buffer_size as usize];
+    let buffer = vec![0u8; buffer_size];
     let Ok(mut test_file) = File::create(set_file_path()) else {
         log.done();
         error!("Unable to create test file");
@@ -129,7 +129,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
 
     let mut buffer = vec![0u8; 1024 * 1024]; // 1MB
     let mut total_read = 0;
-    let file_size: u64 = if is_ssd {
+    let file_size: usize = if is_ssd {
         1024 * 1024 * 1024 * 5 // 5GB
     } else {
         1024 * 1024 * 512 // 512MB
@@ -146,7 +146,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
         if bytes_read == 0 {
             break;
         }
-        total_read += bytes_read as u64;
+        total_read = (bytes_read as u64 + total_read as u64) as usize;
     }
 
     let read_time = start.elapsed();
