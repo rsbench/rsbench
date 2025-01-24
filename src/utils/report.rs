@@ -59,7 +59,7 @@ macro_rules! global_println {
 
 #[allow(clippy::await_holding_lock)]
 pub async fn post_to_pastebin() -> Result<String, String> {
-    // https://rsbench-pastebin.genshinminecraft-d20.workers.dev
+    // https://pastebin.highp.ing
     let url = if let Some(url) = option_env!("PASTEBIN_URL") {
         url
     } else {
