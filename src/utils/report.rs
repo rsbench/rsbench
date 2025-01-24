@@ -100,6 +100,6 @@ pub async fn post_to_pastebin() -> Result<String, String> {
         return Err("Can not parse response".to_string());
     };
 
-    let id = text.trim().parse::<u64>().unwrap();
+    let id = text.trim().parse::<String>().unwrap();
     Ok(format!("{url}/{id}"))
 }
