@@ -34,7 +34,7 @@ jobs:
         env:
           CROSS_PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
           CROSS_PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
-
+          CROSS_NO_WARNINGS: 0
       - name: Rename binary
         run: cp target/${{ matrix.platform.target }}/release/rsbench target/${{ matrix.platform.target }}/release/${{ matrix.platform.binary_name }}
       - name: Upload binary
@@ -170,6 +170,7 @@ jobs:
         env:
           CROSS_PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
           CROSS_PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
+          CROSS_NO_WARNINGS: 0
       - name: Install Cargo-deb
         run: cargo install cargo-deb
       - name: Build deb package
