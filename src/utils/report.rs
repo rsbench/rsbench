@@ -60,23 +60,25 @@ macro_rules! global_println {
 #[allow(clippy::await_holding_lock)]
 pub async fn post_to_pastebin() -> Result<String, String> {
     // https://pastebin.highp.ing
-    let url = if let Some(url) = option_env!("PASTEBIN_URL") {
+    let url = if let Some(url) = option_env!("CROSS_PASTEBIN_URL") {
         url
     } else {
-        error!("Compiling without specifying `PASTEBIN_URL` will now skip Pastebin uploads");
+        error!("Compiling without specifying `CROSS_PASTEBIN_URL` will now skip Pastebin uploads");
         return Err(
-            "Compiling without specifying `PASTEBIN_URL` will now skip Pastebin uploads"
+            "Compiling without specifying `CROSS_PASTEBIN_URL` will now skip Pastebin uploads"
                 .to_string(),
         );
     };
 
     // If you see this password, please do not share it with others. (๑•̀ㅂ•́)و✧
-    let secret = if let Some(secret) = option_env!("PASTEBIN_SECRET") {
+    let secret = if let Some(secret) = option_env!("CROSS_PASTEBIN_SECRET") {
         secret
     } else {
-        error!("Compiling without specifying `PASTEBIN_SECRET` will now skip Pastebin uploads");
+        error!(
+            "Compiling without specifying `CROSS_PASTEBIN_SECRET` will now skip Pastebin uploads"
+        );
         return Err(
-            "Compiling without specifying `PASTEBIN_SECRET` will now skip Pastebin uploads"
+            "Compiling without specifying `CROSS_PASTEBIN_SECRET` will now skip Pastebin uploads"
                 .to_string(),
         );
     };

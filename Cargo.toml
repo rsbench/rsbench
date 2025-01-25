@@ -1,6 +1,6 @@
 [package]
 name = "rsbench"
-version = "0.5.8" # It is recommended that every Commit that modifies a Rust file should update a minor version.
+version = "0.5.9" # It is recommended that every Commit that modifies a Rust file should update a minor version.
 edition = "2021"
 
 authors = ["moohr <moohric@moohric.com>", "GenshinMinecraft <gm@highp.ing>"]
@@ -42,12 +42,6 @@ winapi = { version = "0.3.9", features = ["memoryapi"] }
 
 [workspace.metadata.cross.target.aarch64-linux-android]
 image = "genshinmc/rust-cross-new-ndk-aarch64-linux-android:0.0.1"
-
-[workspace.metadata.cross.build.env]
-passthrough = [
-    "PASTEBIN_URL",
-    "PASTEBIN_SECRET",
-]
 
 [profile]
 dev = { opt-level = 3 }
