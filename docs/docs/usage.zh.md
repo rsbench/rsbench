@@ -12,6 +12,7 @@
     测试结果仅供参考，不作为判断性能依据
 - TUNE:
      - IPCheck: 检测 IP 的详细信息
+  - Speedtest: 测试网络速度
 - UNLOCK:
     互联网服务解锁测试，用于测试用户是否可以正常使用互联网服务，如流媒体、游戏平台等
 
@@ -278,6 +279,20 @@ hk, mo, tw, jp, cn, asia, euro, afr, uk, us, global
 ```
 
 `global` 为在全球范围内提供服务的平台，如 Netflix (极小部分地区不支持也算)
+
+## 上传至 Pastebin
+
+在默认情况下，测试结束后会自动上传测试结果至 Pastebin，你可以通过以下参数来控制是否上传:
+
+- `--no-upload`: 禁用上传
+
+默认上传至 <https://pastebin.highp.ing>，项目地址为: <https://github.com/rsbench/pastebin>
+
+由于部署于 Cloudflare Workers，数据库采用 D1，拥有一些限制，所以只好打开鉴权
+
+在官方 Github Actions 编译中，我们会内置鉴权信息，所以在安装时无需担心鉴权问题
+
+如果是自行编译，你需要自行配置鉴权信息，具体请参考本文档 (还没写)
 
 ## 通用参数
 
