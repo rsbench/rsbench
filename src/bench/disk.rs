@@ -7,16 +7,17 @@ use std::fs;
 use std::fs::File;
 use std::io::{Read, Write as OtherWrite};
 use std::path::PathBuf;
-use std::str::FromStr;
+use std::time::Instant;
 use termcolor::Color;
 
+const TOTAL_SIZE: usize = 1024 * 1024 * 1024 * 3; // 3GB
+
 #[cfg(not(target_os = "windows"))]
-fn get_space_left() -> (f64, bool) {
-    use std::env;
+fn get_space_left() -> f64 {
     use sysinfo::Disks;
 
-    let system_tmp_dir = env::var("TMPDIR").unwrap_or("/tmp".to_string());
-    // GB, HDD / SSD
+    let binding = std::env::temp_dir();
+    let system_tmp_dir = binding.to_str().unwrap();
     let disks = Disks::new_with_refreshed_list();
     for disk in &disks {
         let disk_mount_point = match disk.mount_point().to_str() {
@@ -24,97 +25,76 @@ fn get_space_left() -> (f64, bool) {
             Some(mount_point) => mount_point,
         };
         if disk_mount_point == system_tmp_dir {
-            let kind = disk.kind().to_string();
-            return if kind == "SSD" {
-                (disk.available_space() as f64 / 1_000_000_000.0, true)
-            } else {
-                (disk.available_space() as f64 / 1_000_000_000.0, false)
-            };
+            return disk.available_space() as f64 / 1_000_000_000.0;
         }
         if disk_mount_point == "/tmp" {
-            let kind = disk.kind().to_string();
-            return if kind == "SSD" {
-                (disk.available_space() as f64 / 1_000_000_000.0, true)
-            } else {
-                (disk.available_space() as f64 / 1_000_000_000.0, false)
-            };
+            return disk.available_space() as f64 / 1_000_000_000.0;
         }
-    }
-
-    for disk in &disks {
-        let disk_mount_point = match disk.mount_point().to_str() {
-            None => continue,
-            Some(mount_point) => mount_point,
-        };
         if disk_mount_point == "/" {
-            let kind = disk.kind().to_string();
-            return if kind == "SSD" {
-                (disk.available_space() as f64 / 1_000_000_000.0, true)
-            } else {
-                (disk.available_space() as f64 / 1_000_000_000.0, false)
-            };
+            return disk.available_space() as f64 / 1_000_000_000.0;
         }
     }
 
     error!("Unable to find root / tmp disk");
-    (0.0, false)
+    0.0
 }
 
 #[cfg(target_os = "windows")]
-fn get_space_left() -> (f64, bool) {
-    // GB, HDD / SSD
-    (114514.0, false) // Default allow
+fn get_space_left() -> f64 {
+    114514.0
 }
 
-pub fn write_disk_test() -> Result<(f64, bool), String> {
+pub fn write_disk_test() -> Result<f64, String> {
     let mut log = paris::Logger::new();
     log.loading("Running disk write speed benchmark...");
 
     delete_test_file();
 
-    let (space_left, is_ssd) = get_space_left();
+    let space_left = get_space_left();
 
-    if (is_ssd && space_left < 3.5) || (!is_ssd && space_left < 1.0) {
+    if space_left < 3.5 {
         log.done();
         error!("Not enough space left on disk for disk benchmark");
         return Err("Not enough space left on disk for disk benchmark".to_string());
     }
 
-    let buffer_size: usize = if is_ssd {
-        1024 * 1024 * 1024 * 3 // 3GB
-    } else {
-        1024 * 1024 * 512 // 512MB
-    };
-
-    let buffer = vec![0u8; buffer_size];
     let Ok(mut test_file) = File::create(set_file_path()) else {
         log.done();
         error!("Unable to create test file");
         return Err("Unable to create test file".to_string());
     };
 
-    let start = std::time::Instant::now();
+    let chunk_size = 1 * 1024 * 1024; // 1MB
 
-    if let Ok(()) = test_file.write_all(&buffer) {
-    } else {
-        log.done();
-        error!("Unable to write to test file");
-        return Err("Unable to write to test file".to_string());
-    };
+    let start_time = Instant::now();
+    let mut written_bytes = 0;
 
-    if let Ok(()) = test_file.sync_all() {
-    } else {
+    while written_bytes < TOTAL_SIZE {
+        let chunk_size = std::cmp::min(chunk_size, TOTAL_SIZE - written_bytes);
+        let data: Vec<u8> = (0..chunk_size).map(|_| 0).collect();
+        if let Ok(_) = test_file.write_all(&data) {
+            written_bytes += chunk_size;
+        } else {
+            log.done();
+            error!("Unable to write to test file");
+            return Err("Unable to write to test file".to_string());
+        };
+    }
+
+    if let Err(_) = test_file.sync_all() {
         log.done();
         error!("Unable to sync test file");
         return Err("Unable to sync test file".to_string());
-    }
+    };
 
-    let write_time = start.elapsed();
+    let elapsed_time = start_time.elapsed();
+    let elapsed_seconds = elapsed_time.as_secs_f64();
+
+    let speed = (TOTAL_SIZE as f64 / elapsed_seconds) / (1024.0 * 1024.0); // MB/s
+
     log.done();
 
-    let speed = buffer_size as f64 / 1024.0 / 1024.0 / write_time.as_secs_f64();
-
-    Ok((speed, is_ssd))
+    Ok(speed)
 }
 
 pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
@@ -129,6 +109,7 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
 
     let mut buffer = vec![0u8; 1024 * 1024]; // 1MB
     let mut total_read = 0;
+
     let file_size: usize = if is_ssd {
         1024 * 1024 * 1024 * 3 // 3GB
     } else {
@@ -137,16 +118,19 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
 
     let start = std::time::Instant::now();
 
-    while total_read < file_size * 1024 * 1024 {
-        let Ok(bytes_read) = test_file.read(&mut buffer) else {
-            log.done();
-            error!("Unable to read from test file");
-            return Err("Unable to read from test file".to_string());
+    while total_read < file_size {
+        let bytes_read = match test_file.read(&mut buffer) {
+            Ok(bytes) => bytes,
+            Err(_) => {
+                log.done();
+                error!("Unable to read from test file");
+                return Err("Unable to read from test file".to_string());
+            }
         };
         if bytes_read == 0 {
             break;
         }
-        total_read = (bytes_read as u64 + total_read as u64) as usize;
+        total_read += bytes_read;
     }
 
     let read_time = start.elapsed();
@@ -163,11 +147,9 @@ fn delete_test_file() {
 
 #[cfg(not(target_os = "windows"))]
 fn set_file_path() -> PathBuf {
-    use std::env;
-    let system_tmp_dir = env::var("TMPDIR").unwrap_or("/tmp".to_string());
-
-    PathBuf::from_str(&format!("{system_tmp_dir}/rsbench_disk_test"))
-        .unwrap_or(PathBuf::from_str("./rsbench_disk_test").unwrap())
+    let mut path = std::env::temp_dir();
+    path.push("rsbench_disk_test");
+    path
 }
 
 #[cfg(target_os = "windows")]
@@ -176,11 +158,11 @@ fn set_file_path() -> PathBuf {
 }
 
 pub fn run_disk_speed_test() {
-    let Ok((disk_write, is_ssd)) = write_disk_test() else {
+    let Ok(disk_write) = write_disk_test() else {
         return;
     };
 
-    let Ok(disk_read) = read_disk_test(is_ssd) else {
+    let Ok(disk_read) = read_disk_test(true) else {
         return;
     };
 

@@ -12,7 +12,7 @@ on:
 jobs:
   cargo-test:
     name: Test - ${{ github.sha }}
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,7 +23,7 @@ jobs:
 
   cargo-check:
     name: Check - ${{ github.sha }}
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
 
   cargo-clippy:
     name: Clippy - ${{ github.sha }}
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -47,7 +47,7 @@ jobs:
 
   publish-to-crates:
     name: Cargo Publish To Crates.io - ${{ github.sha }}
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
