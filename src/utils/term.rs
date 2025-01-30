@@ -20,3 +20,13 @@ pub fn clear_screen() {
     )
     .unwrap();
 }
+
+pub fn process_decimal_point(input: &str) -> String {
+    let mut input = input.to_string();
+    if input.ends_with(".") {
+        if let Some(_) = input.pop() {
+            input.push(' ');
+        }
+    }
+    input
+}

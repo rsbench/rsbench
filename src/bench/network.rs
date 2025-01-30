@@ -1,6 +1,7 @@
 // use std::sync::mpsc::{Receiver, Sender};
 
 use crate::utils::color::{set_colour, set_default_colour};
+use crate::utils::term::process_decimal_point;
 use crate::GLOBAL_STRING;
 use crate::{global_print, global_println};
 use async_stream::stream;
@@ -191,10 +192,10 @@ pub fn start_speedtest() {
     log.done();
 
     let binding = mean_speed_mbps.to_string();
-    let mean_speed_mbps_str = &binding.as_str()[0..6];
+    let mean_speed_mbps_str = process_decimal_point(&binding.as_str()[0..6]);
 
     let binding = max.to_string();
-    let max_str = &binding.as_str()[0..6];
+    let max_str = process_decimal_point(&binding.as_str()[0..6]);
 
     set_colour(Color::Yellow);
     print!("DOWN: 🔽 ");
@@ -312,10 +313,10 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     log.done();
 
     let binding = total_mean_speed.to_string();
-    let total_mean_speed_str = &binding.as_str()[0..6];
+    let total_mean_speed_str = process_decimal_point(&binding.as_str()[0..6]);
 
     let binding = max.to_string();
-    let max_str = &binding.as_str()[0..6];
+    let max_str = process_decimal_point(&binding.as_str()[0..6]);
 
     set_colour(Color::Yellow);
     print!("DOWN: ⏬ ");
@@ -376,10 +377,10 @@ pub fn start_multithread_speedtest(num_concurrent: usize) {
     log.done();
 
     let binding = total_mean_speed.to_string();
-    let total_mean_speed_str = &binding.as_str()[0..6];
+    let total_mean_speed_str = process_decimal_point(&binding.as_str()[0..6]);
 
     let binding = max.to_string();
-    let max_str = &binding.as_str()[0..6];
+    let max_str = process_decimal_point(&binding.as_str()[0..6]);
 
     set_colour(Color::Yellow);
     print!("UP  : ⏫ ");

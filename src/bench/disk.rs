@@ -1,4 +1,5 @@
 use crate::utils::color::{set_colour, set_default_colour};
+use crate::utils::term::process_decimal_point;
 use crate::GLOBAL_STRING;
 use crate::{global_print, global_println};
 use paris::error;
@@ -97,7 +98,7 @@ pub fn write_disk_test() -> Result<f64, String> {
     Ok(speed)
 }
 
-pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
+pub fn read_disk_test() -> Result<f64, String> {
     let mut log = paris::Logger::new();
     log.loading("Running disk read speed benchmark...");
 
@@ -110,16 +111,11 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
     let mut buffer = vec![0u8; 1024 * 1024]; // 1MB
     let mut total_read = 0;
 
-    let file_size: usize = if is_ssd {
-        1024 * 1024 * 1024 * 3 // 3GB
-    } else {
-        1024 * 1024 * 512 // 512MB
-    };
-
     let start = std::time::Instant::now();
 
-    while total_read < file_size {
-        let bytes_read = match test_file.read(&mut buffer) {
+    while total_read < TOTAL_SIZE {
+        let chunk_size = std::cmp::min(1024 * 1024, TOTAL_SIZE - total_read);
+        let bytes_read = match test_file.read(&mut buffer[..chunk_size]) {
             Ok(bytes) => bytes,
             Err(_) => {
                 log.done();
@@ -133,11 +129,13 @@ pub fn read_disk_test(is_ssd: bool) -> Result<f64, String> {
         total_read += bytes_read;
     }
 
-    let read_time = start.elapsed();
+    let elapsed_time = start.elapsed();
+    let elapsed_seconds = elapsed_time.as_secs_f64();
+    let speed = (TOTAL_SIZE as f64 / elapsed_seconds) / (1024.0 * 1024.0); // MB/s
     log.done();
-    let speed = total_read as f64 / 1024.0 / 1024.0 / read_time.as_secs_f64();
 
     delete_test_file();
+
     Ok(speed)
 }
 
@@ -154,6 +152,7 @@ fn set_file_path() -> PathBuf {
 
 #[cfg(target_os = "windows")]
 fn set_file_path() -> PathBuf {
+    use std::str::FromStr;
     PathBuf::from_str("C:\\rsbench_disk_test").unwrap()
 }
 
@@ -162,15 +161,15 @@ pub fn run_disk_speed_test() {
         return;
     };
 
-    let Ok(disk_read) = read_disk_test(true) else {
+    let Ok(disk_read) = read_disk_test() else {
         return;
     };
 
     let binding = disk_write.to_string();
-    let disk_write = &binding.as_str()[0..6];
+    let disk_write = process_decimal_point(&binding.as_str()[0..6]);
 
     let binding = disk_read.to_string();
-    let disk_read = &binding.as_str()[0..6];
+    let disk_read = process_decimal_point(&binding.as_str()[0..6]);
 
     set_colour(Color::Yellow);
     print!("DISK: ");
