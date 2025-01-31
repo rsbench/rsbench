@@ -1,10 +1,8 @@
-use crate::bench::disk::run_disk_speed_test;
 use crate::GLOBAL_STRING;
 use crate::{config, global_println};
-use paris::warn;
+use paris::{error, warn};
 use std::fmt::Write;
 
-mod disk;
 mod fibonacci;
 mod mem;
 pub(crate) mod network;
@@ -56,7 +54,8 @@ fn run_fib() {
 }
 
 fn run_disk() {
-    run_disk_speed_test();
+    error!("Disk test feature is not yet completed.");
+    global_println!("✖ Disk test feature is not yet completed.");
 }
 
 fn run_mem() {

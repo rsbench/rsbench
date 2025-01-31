@@ -1,4 +1,5 @@
 use crate::utils::color::{set_colour, set_default_colour};
+use crate::utils::term::process_decimal_point;
 use crate::GLOBAL_STRING;
 use crate::{global_print, global_println};
 use paris::error;
@@ -136,10 +137,10 @@ pub fn run_men_test() {
     let (write_speed, read_speed) = mem_test();
 
     let binding = write_speed.to_string();
-    let write_speed = &binding.as_str()[0..6];
+    let write_speed = process_decimal_point(&binding.as_str()[0..6]);
 
     let binding = read_speed.to_string();
-    let read_speed = &binding.as_str()[0..6];
+    let read_speed = process_decimal_point(&binding.as_str()[0..6]);
 
     set_colour(Color::Yellow);
     print!("MEM : ");

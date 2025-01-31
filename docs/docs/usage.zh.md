@@ -3,15 +3,25 @@
 本项目分为四个大模块
 
 - INFO:
-    输出主机 `系统环境 / CPU / 内存 / 硬盘 / SWAP / 内核 / 虚拟化技术` 等信息
+    - OS: 操作系统信息
+    - CPU: CPU 信息
+    - MEM: 内存信息
+    - DISK: 磁盘信息
+    - SWAP: 交换分区信息
+    - KERN: 内核信息
+    - VIRT: 虚拟化信息
 
     输出信息仅供参考，不作为判断性能依据
 - BENCH:
-    执行基准测试，包括 `网络测试 / CPU 性能测试 / 内存性能测试 / 硬盘性能测试` 等 (目前部分功能未完成)
-
+    - FIB: 斐波那契数列运算性能测试
+    - DISK: 磁盘顺序读写测试 (BUG 较多暂不开放)
+    - MEM: 内存读写测试
+    - PING: 网络延迟测试 (Cloudflare TCPing)
+    - LOSS: 网络丢包测试 (Cloudflare TCPing)
+    - NET: 网络测试 (仅为与 Cloudflare 测速服务器连接测试，实际多路测试请看下方 Speedtest)
     测试结果仅供参考，不作为判断性能依据
 - TUNE:
-     - IPCheck: 检测 IP 的详细信息
+    - IPCheck: 检测 IP 的详细信息
   - Speedtest: 测试网络速度
 - UNLOCK:
     互联网服务解锁测试，用于测试用户是否可以正常使用互联网服务，如流媒体、游戏平台等
@@ -52,18 +62,21 @@ rsbench -b [OPTIONS]
 - `--network`: 执行网络测试
 - `--fib`: 执行 CPU FIB 运算性能测试
 - `--disk`: 执行磁盘顺序读写测试
+- `--mem`: 执行内存读写测试
 
 在不带任何参数的情况下，会执行所有测试
 
 输出: (如果只开启了部分测试项，则不会输出全部信息)
 ```
+FIB : 0.9673818 (9136ms)
+FIB16: 7.3711944 (19455ms total)
+MEM : 1303.6 MB/s | 14787  MB/s
 PING: 1.22 ms
+LOSS: 0.00%
 DOWN: 🔽 68.39 Mbps | MAX : 95.24 Mbps
 UP  : 🔼 39.66 Mbps | MAX : 79.75 Mbps
 DOWN: ⏬ 97.25 Mbps | MAX : 171.4 Mbps
 UP  : ⏫ 48.91 Mbps | MAX : 113.6 Mbps
-FIB : 0.9673818 (9136ms)
-FIB16: 7.3711944 (19455ms total)
 ```
 
 ### 网络测试
@@ -301,6 +314,8 @@ hk, mo, tw, jp, cn, asia, euro, afr, uk, us, global
 - `--no-color`: 禁用颜色输出
 - `--no-cls`: 禁用清屏，默认在程序执行前清屏
 - `--no-logo`: 不输出 Ascii Art Logo
+- `--no-usage`: 不提交使用次数统计
+- `--no-upload`: 禁用上传测试结果至 Pastebin
 
 在默认情况下，你可以将四个模块的功能合并在一起使用，比如:
 ```bash
