@@ -10,11 +10,11 @@ pub fn set_random_colour() {
     // 定义一个内部函数 random_colour，用于生成随机颜色
     fn random_colour() -> Color {
         // 创建一个随机数生成器
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
         Color::Rgb(
-            rng.gen_range(0..255),
-            rng.gen_range(0..255),
-            rng.gen_range(0..255),
+            rng.random_range(0..255),
+            rng.random_range(0..255),
+            rng.random_range(0..255),
         )
     }
 
