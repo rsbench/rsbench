@@ -220,7 +220,7 @@ jobs:
           CROSS_PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
           CROSS_PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows
           path: target/release/rsbench.exe
@@ -252,7 +252,7 @@ jobs:
           CROSS_PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
           CROSS_PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos
           path: target/release/rsbench
@@ -289,7 +289,7 @@ jobs:
           CROSS_PASTEBIN_SECRET: ${{ secrets.PASTEBIN_SECRET }}
           CROSS_PASTEBIN_URL: ${{ secrets.PASTEBIN_URL }}
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos
           path: target/release/rsbench

@@ -11,7 +11,7 @@
 一键运行 (x86_64 Linux musl):
 
 ```bash
-wget -O ./rsbench https://ghp.rtc.ovh/https://github.com/rsbench/rsbench/releases/download/latest/rsbench-linux-x86_64-musl && chmod +x ./rsbench
+wget -O ./rsbench "https://ghfast.top/https://github.com/rsbench/rsbench/releases/download/latest/rsbench-linux-x86_64-musl" && chmod +x ./rsbench
 ./rsbench -ibtu
 ```
 
