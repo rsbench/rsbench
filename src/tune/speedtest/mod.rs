@@ -68,11 +68,8 @@ pub fn get_providers() -> Vec<(&'static str, String)> {
         vec![("Custom", custom)]
     } else {
         vec![
-            // ("Speedtest.net", BEST_TEST_SERVER.clone()),
-            (
-                "China Mobile",
-                "speedtest1.sc.chinamobile.com:8080".to_string(),
-            ),
+            ("Speedtest.net", BEST_TEST_SERVER.clone()),
+            ("China Mobile", "speedtest.139play.com:8080".to_string()),
             ("China Unicom", "36.250.1.90:8080".to_string()),
             ("China Telecom", "speedtest1.online.sh.cn:8080".to_string()),
             (
