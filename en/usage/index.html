@@ -1,0 +1,1012 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://rsbench.github.io/en/usage/">
+      
+      
+        <link rel="prev" href="../install/">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>Usage Guide - RSBench</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2afb09e1.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+  
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+    
+    
+  
+  
+  <style>:root{--md-admonition-icon--note:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M1%207.775V2.75C1%201.784%201.784%201%202.75%201h5.025c.464%200%20.91.184%201.238.513l6.25%206.25a1.75%201.75%200%200%201%200%202.474l-5.026%205.026a1.75%201.75%200%200%201-2.474%200l-6.25-6.25A1.75%201.75%200%200%201%201%207.775m1.5%200c0%20.066.026.13.073.177l6.25%206.25a.25.25%200%200%200%20.354%200l5.025-5.025a.25.25%200%200%200%200-.354l-6.25-6.25a.25.25%200%200%200-.177-.073H2.75a.25.25%200%200%200-.25.25ZM6%205a1%201%200%201%201%200%202%201%201%200%200%201%200-2%22/%3E%3C/svg%3E');--md-admonition-icon--abstract:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.5%201.75v11.5c0%20.138.112.25.25.25h3.17a.75.75%200%200%201%200%201.5H2.75A1.75%201.75%200%200%201%201%2013.25V1.75C1%20.784%201.784%200%202.75%200h8.5C12.216%200%2013%20.784%2013%201.75v7.736a.75.75%200%200%201-1.5%200V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25m13.274%209.537zl-4.557%204.45a.75.75%200%200%201-1.055-.008l-1.943-1.95a.75.75%200%200%201%201.062-1.058l1.419%201.425%204.026-3.932a.75.75%200%201%201%201.048%201.074M4.75%204h4.5a.75.75%200%200%201%200%201.5h-4.5a.75.75%200%200%201%200-1.5M4%207.75A.75.75%200%200%201%204.75%207h2a.75.75%200%200%201%200%201.5h-2A.75.75%200%200%201%204%207.75%22/%3E%3C/svg%3E');--md-admonition-icon--info:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M0%208a8%208%200%201%201%2016%200A8%208%200%200%201%200%208m8-6.5a6.5%206.5%200%201%200%200%2013%206.5%206.5%200%200%200%200-13M6.5%207.75A.75.75%200%200%201%207.25%207h1a.75.75%200%200%201%20.75.75v2.75h.25a.75.75%200%200%201%200%201.5h-2a.75.75%200%200%201%200-1.5h.25v-2h-.25a.75.75%200%200%201-.75-.75M8%206a1%201%200%201%201%200-2%201%201%200%200%201%200%202%22/%3E%3C/svg%3E');--md-admonition-icon--tip:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M3.499.75a.75.75%200%200%201%201.5%200v.996C5.9%202.903%206.793%203.65%207.662%204.376l.24.202c-.036-.694.055-1.422.426-2.163C9.1.873%2010.794-.045%2012.622.26%2014.408.558%2016%201.94%2016%204.25c0%201.278-.954%202.575-2.44%202.734l.146.508.065.22c.203.701.412%201.455.476%202.226.142%201.707-.4%203.03-1.487%203.898C11.714%2014.671%2010.27%2015%208.75%2015h-6a.75.75%200%200%201%200-1.5h1.376a4.5%204.5%200%200%201-.563-1.191%203.84%203.84%200%200%201-.05-2.063%204.65%204.65%200%200%201-2.025-.293.75.75%200%200%201%20.525-1.406c1.357.507%202.376-.006%202.698-.318l.009-.01a.747.747%200%200%201%201.06%200%20.75.75%200%200%201-.012%201.074c-.912.92-.992%201.835-.768%202.586.221.74.745%201.337%201.196%201.621H8.75c1.343%200%202.398-.296%203.074-.836.635-.507%201.036-1.31.928-2.602-.05-.603-.216-1.224-.422-1.93l-.064-.221c-.12-.407-.246-.84-.353-1.29a2.4%202.4%200%200%201-.507-.441%203.1%203.1%200%200%201-.633-1.248.75.75%200%200%201%201.455-.364c.046.185.144.436.31.627.146.168.353.305.712.305.738%200%201.25-.615%201.25-1.25%200-1.47-.95-2.315-2.123-2.51-1.172-.196-2.227.387-2.706%201.345-.46.92-.27%201.774.019%203.062l.042.19.01.05c.348.443.666.949.94%201.553a.75.75%200%201%201-1.365.62c-.553-1.217-1.32-1.94-2.3-2.768L6.7%205.527c-.814-.68-1.75-1.462-2.692-2.619a3.7%203.7%200%200%200-1.023.88c-.406.495-.663%201.036-.722%201.508.116.122.306.21.591.239.388.038.797-.06%201.032-.19a.75.75%200%200%201%20.728%201.31c-.515.287-1.23.439-1.906.373-.682-.067-1.473-.38-1.879-1.193L.75%205.677V5.5c0-.984.48-1.94%201.077-2.664.46-.559%201.05-1.055%201.673-1.353z%22/%3E%3C/svg%3E');--md-admonition-icon--success:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M13.78%204.22a.75.75%200%200%201%200%201.06l-7.25%207.25a.75.75%200%200%201-1.06%200L2.22%209.28a.75.75%200%200%201%20.018-1.042.75.75%200%200%201%201.042-.018L6%2010.94l6.72-6.72a.75.75%200%200%201%201.06%200%22/%3E%3C/svg%3E');--md-admonition-icon--question:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M0%208a8%208%200%201%201%2016%200A8%208%200%200%201%200%208m8-6.5a6.5%206.5%200%201%200%200%2013%206.5%206.5%200%200%200%200-13M6.92%206.085h.001a.749.749%200%201%201-1.342-.67c.169-.339.436-.701.849-.977C6.845%204.16%207.369%204%208%204a2.76%202.76%200%200%201%201.637.525c.503.377.863.965.863%201.725%200%20.448-.115.83-.329%201.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6%206%200%200%200-.26.16%201%201%200%200%200-.276.245.75.75%200%200%201-1.248-.832c.184-.264.42-.489.692-.661q.154-.1.313-.195l.007-.004c.1-.061.182-.11.258-.161a1%201%200%200%200%20.277-.245C8.96%206.514%209%206.427%209%206.25a.61.61%200%200%200-.262-.525A1.27%201.27%200%200%200%208%205.5c-.369%200-.595.09-.74.187a1%201%200%200%200-.34.398M9%2011a1%201%200%201%201-2%200%201%201%200%200%201%202%200%22/%3E%3C/svg%3E');--md-admonition-icon--warning:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M6.457%201.047c.659-1.234%202.427-1.234%203.086%200l6.082%2011.378A1.75%201.75%200%200%201%2014.082%2015H1.918a1.75%201.75%200%200%201-1.543-2.575Zm1.763.707a.25.25%200%200%200-.44%200L1.698%2013.132a.25.25%200%200%200%20.22.368h12.164a.25.25%200%200%200%20.22-.368Zm.53%203.996v2.5a.75.75%200%200%201-1.5%200v-2.5a.75.75%200%200%201%201.5%200M9%2011a1%201%200%201%201-2%200%201%201%200%200%201%202%200%22/%3E%3C/svg%3E');--md-admonition-icon--failure:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.344%202.343za8%208%200%200%201%2011.314%2011.314A8.002%208.002%200%200%201%20.234%2010.089a8%208%200%200%201%202.11-7.746m1.06%2010.253a6.5%206.5%200%201%200%209.108-9.275%206.5%206.5%200%200%200-9.108%209.275M6.03%204.97%208%206.94l1.97-1.97a.749.749%200%200%201%201.275.326.75.75%200%200%201-.215.734L9.06%208l1.97%201.97a.749.749%200%200%201-.326%201.275.75.75%200%200%201-.734-.215L8%209.06l-1.97%201.97a.749.749%200%200%201-1.275-.326.75.75%200%200%201%20.215-.734L6.94%208%204.97%206.03a.75.75%200%200%201%20.018-1.042.75.75%200%200%201%201.042-.018%22/%3E%3C/svg%3E');--md-admonition-icon--danger:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M9.504.43a1.516%201.516%200%200%201%202.437%201.713L10.415%205.5h2.123c1.57%200%202.346%201.909%201.22%203.004l-7.34%207.142a1.25%201.25%200%200%201-.871.354h-.302a1.25%201.25%200%200%201-1.157-1.723L5.633%2010.5H3.462c-1.57%200-2.346-1.909-1.22-3.004zm1.047%201.074L3.286%208.571A.25.25%200%200%200%203.462%209H6.75a.75.75%200%200%201%20.694%201.034l-1.713%204.188%206.982-6.793A.25.25%200%200%200%2012.538%207H9.25a.75.75%200%200%201-.683-1.06l2.008-4.418.003-.006-.004-.009-.006-.006-.008-.001q-.005%200-.009.004%22/%3E%3C/svg%3E');--md-admonition-icon--bug:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4.72.22a.75.75%200%200%201%201.06%200l1%20.999a3.5%203.5%200%200%201%202.441%200l.999-1a.748.748%200%200%201%201.265.332.75.75%200%200%201-.205.729l-.775.776c.616.63.995%201.493.995%202.444v.327q0%20.15-.025.292c.408.14.764.392%201.029.722l1.968-.787a.75.75%200%200%201%20.556%201.392L13%207.258V9h2.25a.75.75%200%200%201%200%201.5H13v.5q-.002.615-.141%201.186l2.17.868a.75.75%200%200%201-.557%201.392l-2.184-.873A5%205%200%200%201%208%2016a5%205%200%200%201-4.288-2.427l-2.183.873a.75.75%200%200%201-.558-1.392l2.17-.868A5%205%200%200%201%203%2011v-.5H.75a.75.75%200%200%201%200-1.5H3V7.258L.971%206.446a.75.75%200%200%201%20.558-1.392l1.967.787c.265-.33.62-.583%201.03-.722a1.7%201.7%200%200%201-.026-.292V4.5c0-.951.38-1.814.995-2.444L4.72%201.28a.75.75%200%200%201%200-1.06m.53%206.28a.75.75%200%200%200-.75.75V11a3.5%203.5%200%201%200%207%200V7.25a.75.75%200%200%200-.75-.75ZM6.173%205h3.654A.17.17%200%200%200%2010%204.827V4.5a2%202%200%201%200-4%200v.327c0%20.096.077.173.173.173%22/%3E%3C/svg%3E');--md-admonition-icon--example:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M5%205.782V2.5h-.25a.75.75%200%200%201%200-1.5h6.5a.75.75%200%200%201%200%201.5H11v3.282l3.666%205.76C15.619%2013.04%2014.543%2015%2012.767%2015H3.233c-1.776%200-2.852-1.96-1.899-3.458Zm-2.4%206.565a.75.75%200%200%200%20.633%201.153h9.534a.75.75%200%200%200%20.633-1.153L12.225%2010.5h-8.45ZM9.5%202.5h-3V6c0%20.143-.04.283-.117.403L4.73%209h6.54L9.617%206.403A.75.75%200%200%201%209.5%206Z%22/%3E%3C/svg%3E');--md-admonition-icon--quote:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M1.75%202.5h10.5a.75.75%200%200%201%200%201.5H1.75a.75.75%200%200%201%200-1.5m4%205h8.5a.75.75%200%200%201%200%201.5h-8.5a.75.75%200%200%201%200-1.5m0%205h8.5a.75.75%200%200%201%200%201.5h-8.5a.75.75%200%200%201%200-1.5M2.5%207.75v6a.75.75%200%200%201-1.5%200v-6a.75.75%200%200%201%201.5%200%22/%3E%3C/svg%3E');}</style>
+
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#usage-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../" title="RSBench" class="md-header__button md-logo" aria-label="RSBench" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            RSBench
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Usage Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../usage/" hreflang="zh" class="md-select__link">
+              中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/GenshinMinecraft/ak_monitor_client_rs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RSBench
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="RSBench" class="md-nav__button md-logo" aria-label="RSBench" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    RSBench
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/GenshinMinecraft/ak_monitor_client_rs" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    RSBench
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    RSBench
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Usage Guide
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage Guide
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#info" class="md-nav__link">
+    <span class="md-ellipsis">
+      INFO
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      BENCH
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BENCH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fib-calculation-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIB Calculation Test
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disk-sequential-readwrite-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disk Sequential Read/Write Test
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tune" class="md-nav__link">
+    <span class="md-ellipsis">
+      TUNE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TUNE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#speedtest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Speedtest
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unlock" class="md-nav__link">
+    <span class="md-ellipsis">
+      UNLOCK
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uploading-to-pastebin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Uploading to Pastebin
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      General Parameters
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#info" class="md-nav__link">
+    <span class="md-ellipsis">
+      INFO
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      BENCH
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BENCH">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fib-calculation-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      FIB Calculation Test
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#disk-sequential-readwrite-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      Disk Sequential Read/Write Test
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tune" class="md-nav__link">
+    <span class="md-ellipsis">
+      TUNE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TUNE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#speedtest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Speedtest
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unlock" class="md-nav__link">
+    <span class="md-ellipsis">
+      UNLOCK
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uploading-to-pastebin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Uploading to Pastebin
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#general-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      General Parameters
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="usage-guide">Usage Guide</h1>
+<p>This project consists of four main modules:</p>
+<ul>
+<li>INFO:</li>
+<li>OS: Operating system information</li>
+<li>CPU: CPU information</li>
+<li>MEM: Memory information</li>
+<li>DISK: Disk information</li>
+<li>SWAP: Swap partition information</li>
+<li>KERN: Kernel information</li>
+<li>VIRT: Virtualization information</li>
+</ul>
+<p>Output information is for reference only and should not be used as a performance benchmark.
+- BENCH:
+  - FIB: Fibonacci sequence calculation performance test
+  - DISK: Disk sequential read/write test (currently buggy and not available)
+  - MEM: Memory read/write test
+  - PING: Network latency test (Cloudflare TCPing)
+  - LOSS: Network packet loss test (Cloudflare TCPing)
+  - NET: Network test (limited to connectivity testing with Cloudflare speed test servers; for multi-path testing, see Speedtest below)
+    Test results are for reference only and should not be used as a performance benchmark.
+- TUNE:
+  - Speedtest: Network speed test
+- UNLOCK:
+  Internet service unlock testing, used to check whether users can access internet services such as streaming platforms, gaming platforms, etc.</p>
+<h2 id="info">INFO</h2>
+<p>When executing the binary without any parameters, the <code>INFO</code> module is run by default.</p>
+<p>Usage:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>rsbench<span class="w"> </span>-i
+</span></code></pre></div></p>
+<p>This function has no additional parameters. After execution, it will output host information:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>OS  : Arch Linux rolling
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>CPU : AMD Ryzen 7 6800H with Radeon Graphics 16 Threads @ 2333Mhz
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>MEM : 13 GB
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>DISK: 57/185 GB
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>DISK: 35/156 MB
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>SWAP: 8.00 GB
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>KERN: 6.12.6-zen1-1-zen
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>VIRT: none
+</span></code></pre></div></p>
+<h2 id="bench">BENCH</h2>
+<p>This module comprehensively evaluates host performance. Currently implemented features include <code>network testing / CPU performance testing / disk sequential read/write testing</code>, with more updates to come.</p>
+<p><strong>Note: This module may heavily utilize system resources. Use with caution.</strong></p>
+<p>Usage:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>rsbench<span class="w"> </span>-b<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</span></code></pre></div></p>
+<p>Optional parameters:
+- <code>--network</code>: Perform network testing
+- <code>--fib</code>: Perform CPU FIB calculation performance test
+- <code>--disk</code>: Perform disk sequential read/write test
+- <code>--mem</code>: Perform memory read/write test</p>
+<p>If no parameters are provided, all tests will be executed.</p>
+<p>Output: (If only some tests are enabled, not all information will be output.)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>FIB : 0.9673818 (9136ms)
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>FIB16: 7.3711944 (19455ms total)
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>MEM : 1303.6 MB/s | 14787  MB/s
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>PING: 1.22 ms
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>LOSS: 0.00%
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>DOWN: 🔽 68.39 Mbps | MAX : 95.24 Mbps
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>UP  : 🔼 39.66 Mbps | MAX : 79.75 Mbps
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>DOWN: ⏬ 97.25 Mbps | MAX : 171.4 Mbps
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>UP  : ⏫ 48.91 Mbps | MAX : 113.6 Mbps
+</span></code></pre></div></p>
+<h3 id="network-testing">Network Testing</h3>
+<p>Corresponding parameter: <code>--network</code></p>
+<p><code>PING</code> tests the TCPing latency to Cloudflare <code>1.1.1.1:443</code>, in milliseconds:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>PING: 1.22 ms
+</span></code></pre></div></p>
+<p>This test connects to Cloudflare Speedtest servers to measure download and upload speeds.</p>
+<p>The first two lines show single-thread download speeds (marked with 🔽), with the left and right sides representing <em>average speed</em> and <em>maximum speed</em>, respectively, in Mbps, displayed as 5-digit numbers:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>DOWN: 🔽 68.39 Mbps | MAX : 95.24 Mbps
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>UP  : 🔼 39.66 Mbps | MAX : 79.75 Mbps
+</span></code></pre></div></p>
+<p>The next two lines show multi-thread download speeds (marked with ⏬), with the left and right sides representing <em>average speed</em> and <em>maximum speed</em>, respectively, in Mbps, displayed as 5-digit numbers:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>DOWN: ⏬ 97.25 Mbps | MAX : 171.4 Mbps
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>UP  : ⏫ 48.91 Mbps | MAX : 113.6 Mbps
+</span></code></pre></div></p>
+<h3 id="fib-calculation-test">FIB Calculation Test</h3>
+<p>Corresponding parameter: <code>--fib</code></p>
+<p>This test uses the CPU to calculate the Fibonacci sequence and measures the time taken and scores.</p>
+<p>The benchmark is based on testing with the <a href="https://www.mechrevo.com/content/details92_4817.html">MECHREVO蛟龙16 Pro</a> specifications. The score is calculated as <code>benchmark / test time</code>, with higher scores indicating better performance.</p>
+<p>The upper and lower lines show <em>single-thread score</em> and <em>multi-thread score</em>, respectively:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>FIB : 0.9673818 (9136ms)
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>FIB16: 7.3711944 (19455ms total)
+</span></code></pre></div></p>
+<h3 id="disk-sequential-readwrite-test">Disk Sequential Read/Write Test</h3>
+<p>Corresponding parameter: <code>--disk</code></p>
+<p>This test performs sequential read/write operations on the disk and measures the time taken and scores.</p>
+<p>For Windows, the default test file path is <code>C:\\rsbench_disk_test</code>; for other systems, it is <code>/tmp/rsbench_disk_test</code>.</p>
+<p>The left side shows write speed, and the right side shows read speed, in MB/s:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>DISK:<span class="w"> </span><span class="m">1102</span>.68<span class="w"> </span>MB/s<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">2129</span>.57<span class="w"> </span>MB/s
+</span></code></pre></div></p>
+<h2 id="tune">TUNE</h2>
+<p>Usage:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>rsbench<span class="w"> </span>-t<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</span></code></pre></div></p>
+<p>Optional parameters:
+- <code>--speedtest</code>: Perform Speedtest</p>
+<p>If no parameters are provided, all tests will be executed.</p>
+<h3 id="speedtest">Speedtest</h3>
+<p>Corresponding parameter: <code>--speedtest</code></p>
+<p>This test uses Speedtest.net / cn for single-thread / multi-thread testing and outputs detailed information.</p>
+<p>Optional parameters:</p>
+<ul>
+<li><code>--custom-speedtest-host &lt;CUSTOM_SPEEDTEST_HOST&gt;</code>: Custom Speedtest server address, formatted as <code>DOMAIN:PORT</code>, without protocol prefixes like <code>http</code>.</li>
+</ul>
+<p>Example output:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Single<span class="w"> </span>Thread<span class="w"> </span>Speedtest:<span class="w"> </span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w"> </span>Provider<span class="w">      </span><span class="p">|</span><span class="w"> </span>Avg<span class="w"> </span>Down<span class="w"> </span><span class="p">|</span><span class="w"> </span>Max<span class="w"> </span>Down<span class="w"> </span><span class="p">|</span><span class="w"> </span>Avg<span class="w"> </span>Up<span class="w"> </span><span class="p">|</span><span class="w"> </span>Max<span class="w"> </span>Up<span class="w"> </span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>---------------+----------+----------+--------+--------
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w"> </span>Speedtest.net<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">34</span>.62<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">34</span>.22<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">39</span>.64<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">63</span>.67<span class="w"> </span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w"> </span>China<span class="w"> </span>Mobile<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">87</span>.61<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">87</span>.02<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">46</span>.95<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">70</span>.23<span class="w"> </span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w"> </span>China<span class="w"> </span>Unicom<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">96</span>.34<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">97</span>.35<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">46</span>.49<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">63</span>.04<span class="w"> </span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w"> </span>China<span class="w"> </span>Telecom<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">30</span>.98<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">30</span>.62<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">45</span>.93<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">67</span>.04<span class="w"> </span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w"> </span>HK<span class="w"> </span>I3D<span class="w">        </span><span class="p">|</span><span class="w"> </span><span class="m">0</span>.28<span class="w">     </span><span class="p">|</span><span class="w"> </span><span class="m">0</span>.77<span class="w">     </span><span class="p">|</span><span class="w"> </span><span class="m">28</span>.87<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">59</span>.26<span class="w"> </span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w"> </span>TW<span class="w"> </span>HiNet<span class="w">      </span><span class="p">|</span><span class="w"> </span><span class="m">84</span>.80<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">84</span>.50<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">52</span>.70<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">86</span>.57<span class="w"> </span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w"> </span>JP<span class="w"> </span>xTom<span class="w">       </span><span class="p">|</span><span class="w"> </span><span class="m">0</span>.69<span class="w">     </span><span class="p">|</span><span class="w"> </span><span class="m">0</span>.71<span class="w">     </span><span class="p">|</span><span class="w"> </span><span class="m">14</span>.57<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">31</span>.89<span class="w"> </span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Multi<span class="w"> </span>Thread<span class="w"> </span>Speedtest:<span class="w"> </span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w"> </span>Provider<span class="w">      </span><span class="p">|</span><span class="w"> </span>Avg<span class="w"> </span>Down<span class="w"> </span><span class="p">|</span><span class="w"> </span>Max<span class="w"> </span>Down<span class="w"> </span><span class="p">|</span><span class="w"> </span>Avg<span class="w"> </span>Up<span class="w"> </span><span class="p">|</span><span class="w"> </span>Max<span class="w"> </span>Up<span class="w"> </span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>---------------+----------+----------+--------+--------
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w"> </span>Speedtest.net<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">77</span>.43<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">77</span>.14<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">49</span>.71<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">90</span>.23<span class="w"> </span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w"> </span>China<span class="w"> </span>Mobile<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">91</span>.54<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">91</span>.58<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">47</span>.96<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">65</span>.48<span class="w"> </span>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w"> </span>China<span class="w"> </span>Unicom<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">100</span>.87<span class="w">   </span><span class="p">|</span><span class="w"> </span><span class="m">101</span>.75<span class="w">   </span><span class="p">|</span><span class="w"> </span><span class="m">45</span>.47<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">58</span>.95<span class="w"> </span>
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w"> </span>China<span class="w"> </span>Telecom<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="m">28</span>.76<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">78</span>.35<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">48</span>.68<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">72</span>.82<span class="w"> </span>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w"> </span>HK<span class="w"> </span>I3D<span class="w">        </span><span class="p">|</span><span class="w"> </span><span class="m">0</span>.47<span class="w">     </span><span class="p">|</span><span class="w"> </span><span class="m">1</span>.07<span class="w">     </span><span class="p">|</span><span class="w"> </span><span class="m">50</span>.97<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">99</span>.50<span class="w"> </span>
+</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w"> </span>TW<span class="w"> </span>HiNet<span class="w">      </span><span class="p">|</span><span class="w"> </span><span class="m">92</span>.11<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">91</span>.96<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">65</span>.39<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">119</span>.48<span class="w"> </span>
+</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w"> </span>JP<span class="w"> </span>xTom<span class="w">       </span><span class="p">|</span><span class="w"> </span><span class="m">25</span>.72<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">68</span>.65<span class="w">    </span><span class="p">|</span><span class="w"> </span><span class="m">56</span>.44<span class="w">  </span><span class="p">|</span><span class="w"> </span><span class="m">159</span>.33<span class="w"> </span>
+</span></code></pre></div>
+<p>Default speed test servers:</p>
+<ul>
+<li><code>Speedtest.net</code>: Default speed test server, selecting the nearest server via API.</li>
+<li><code>China Mobile</code>: speedtest1.sc.chinamobile.com:8080</li>
+<li><code>China Unicom</code>: 36.250.1.90:8080</li>
+<li><code>China Telecom</code>: speedtest1.online.sh.cn:8080</li>
+<li><code>HK I3D</code>: hk.ap.speedtest.i3d.net.prod.hosts.ooklaserver.net:8080</li>
+<li><code>TW HiNet</code>: ntp1.chtm.hinet.net:8080</li>
+<li><code>JP xTom</code>: speedtest-kix.xtom.info.prod.hosts.ooklaserver.net:8080</li>
+</ul>
+<p>For more information, refer to <a href="https://12101111.github.io/speedtest-net/#https-www-speedtest-net-api-js-servers-engine-js">
+<code>12101111 Blog's article</code></a> and
+the speed test server collection list: <a href="https://github.com/spiritLHLS/speedtest.cn-CN-ID">CN</a> / <a href="https://github.com/spiritLHLS/speedtest.net-CN-ID">Net</a>.</p>
+<h2 id="unlock">UNLOCK</h2>
+<p>This module uses multi-threading to check whether users can access internet services such as streaming platforms, gaming platforms, etc.</p>
+<p>Usage:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>rsbench<span class="w"> </span>-u<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+</span></code></pre></div></p>
+<p>Optional parameters:
+- <code>--region [location]</code>: Specify a region. Multiple regions can be specified, e.g., <code>--region cn --region us</code>.</p>
+<p>By default, if no region is specified, all regions' internet services will be tested.</p>
+<p><strong>Note: Due to the time-sensitive and specific nature of unlock testing scripts, results may not always match reality!</strong></p>
+<p>Example output:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>rsbench<span class="w"> </span>-u
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>UNLOCK:
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w"> </span>Y/N<span class="w">             </span>Service<span class="w">             </span>Error
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">           </span>myTV<span class="w"> </span>Super<span class="w">          </span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">    </span>Bilibili<span class="w"> </span>China<span class="w"> </span>Mainland<span class="w">    </span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">      </span>Youtube<span class="w"> </span>Premium<span class="w"> </span><span class="o">(</span>HK<span class="o">)</span><span class="w">     </span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">       </span>IQIYI<span class="w"> </span>Oversea<span class="w"> </span><span class="o">(</span>HK<span class="o">)</span><span class="w">      </span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">             </span>ViuTV<span class="w">             </span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w"> </span>Google<span class="w"> </span>Play<span class="w"> </span>Store<span class="w"> </span><span class="o">(</span>Hong<span class="w"> </span>Kong<span class="o">)</span><span class="w"> </span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">          </span>Steam<span class="w"> </span><span class="o">(</span>HKD<span class="o">)</span><span class="w">          </span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">       </span>Youtube<span class="w"> </span>CDN<span class="w"> </span><span class="o">(</span>HKG<span class="o">)</span><span class="w">       </span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">           </span>Dazn<span class="w"> </span><span class="o">(</span>HK<span class="o">)</span><span class="w">           </span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">           </span>Hulu<span class="w"> </span>Japan<span class="w">          </span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">       </span>Bahamut<span class="w"> </span>Anime<span class="w"> </span><span class="o">(</span>HK<span class="o">)</span><span class="w">      </span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">          </span>HBO<span class="w"> </span>MAX<span class="w"> </span><span class="o">(</span>US<span class="o">)</span><span class="w">         </span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">    </span>Bilibili<span class="w"> </span>China<span class="w"> </span>HK/MO/TW<span class="w">     </span>Not<span class="w"> </span>available
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">         </span>Kancolle<span class="w"> </span>Japan<span class="w">        </span>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">           </span>AnimeFesta<span class="w">          </span>
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">     </span>Bilibili<span class="w"> </span>China<span class="w"> </span>TW<span class="w"> </span>Only<span class="w">     </span>Not<span class="w"> </span>available
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w"> </span>Princess<span class="w"> </span>Connect<span class="w"> </span>Re:Dive<span class="w"> </span>Japan<span class="w"> </span>Not<span class="w"> </span>available
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">             </span>Lemino<span class="w">            </span>
+</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">              </span>4GTV<span class="w">              </span>Not<span class="w"> </span>available
+</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">           </span>HamiVideo<span class="w">            </span>Not<span class="w"> </span>available
+</span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">          </span>BBC<span class="w"> </span>iPlayer<span class="w">           </span>Not<span class="w"> </span>available
+</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">              </span>Mora<span class="w">             </span>
+</span><span id="__span-12-27"><a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">             </span>U-Next<span class="w">             </span>Not<span class="w"> </span>available
+</span><span id="__span-12-28"><a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">             </span>Now<span class="w"> </span>E<span class="w">             </span>
+</span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">            </span>Netflix<span class="w">             </span>Not<span class="w"> </span>available
+</span><span id="__span-12-30"><a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">            </span>Showmax<span class="w">             </span>Not<span class="w"> </span>available
+</span><span id="__span-12-31"><a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">            </span>Sling<span class="w"> </span>TV<span class="w">            </span>Not<span class="w"> </span>available
+</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>Tested<span class="w"> </span><span class="m">27</span><span class="w"> </span>projects<span class="w"> </span>took<span class="w"> </span><span class="m">3</span>.24<span class="w"> </span>seconds,<span class="w"> </span><span class="m">12</span><span class="w"> </span>services<span class="w"> </span>unlocked,<span class="w"> </span><span class="m">15</span><span class="w"> </span>services<span class="w"> </span>locked.
+</span></code></pre></div></p>
+<p>Specifying regions:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>rsbench<span class="w"> </span>-u<span class="w"> </span>--region<span class="w"> </span>cn<span class="w"> </span>--region<span class="w"> </span>us
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>UNLOCK:
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w"> </span>Y/N<span class="w">             </span>Service<span class="w">             </span>Error
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">    </span>Bilibili<span class="w"> </span>China<span class="w"> </span>Mainland<span class="w">    </span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="o">[</span><span class="w"> </span>Y<span class="w"> </span><span class="o">]</span><span class="w">       </span>IQIYI<span class="w"> </span>Oversea<span class="w"> </span><span class="o">(</span>HK<span class="o">)</span><span class="w">      </span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="o">[</span><span class="w"> </span>N<span class="w"> </span><span class="o">]</span><span class="w">            </span>Sling<span class="w"> </span>TV<span class="w">            </span>Not<span class="w"> </span>available
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>Tested<span class="w"> </span><span class="m">3</span><span class="w"> </span>projects<span class="w"> </span>took<span class="w"> </span><span class="m">2</span>.32<span class="w"> </span>seconds,<span class="w"> </span><span class="m">2</span><span class="w"> </span>services<span class="w"> </span>unlocked,<span class="w"> </span><span class="m">1</span><span class="w"> </span>services<span class="w"> </span>locked.
+</span></code></pre></div></p>
+<p>Currently categorized regions:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>hk, mo, tw, jp, cn, asia, euro, afr, uk, us, global
+</span></code></pre></div></p>
+<p><code>global</code> refers to platforms available worldwide, such as Netflix (considered available even if unavailable in a few regions).</p>
+<h2 id="uploading-to-pastebin">Uploading to Pastebin</h2>
+<p>By default, test results are automatically uploaded to Pastebin after completion. You can control this behavior with the following parameter:</p>
+<ul>
+<li><code>--no-upload</code>: Disable uploading.</li>
+</ul>
+<p>The default upload destination is <a href="https://pastebin.highp.ing">https://pastebin.highp.ing</a>, with the project repository at <a href="https://github.com/rsbench/pastebin">https://github.com/rsbench/pastebin</a>.</p>
+<p>Due to deployment on Cloudflare Workers and the use of D1 database, which has certain limitations, authentication is required.</p>
+<p>For official Github Actions builds, authentication information is embedded, so no additional configuration is needed during installation.</p>
+<p>For self-compiled builds, you need to configure authentication information yourself. Refer to this documentation for details (not yet written).</p>
+<h2 id="general-parameters">General Parameters</h2>
+<ul>
+<li><code>--help</code>: Display help information.</li>
+<li><code>--version</code>: Display version information.</li>
+<li><code>--no-color</code>: Disable colored output.</li>
+<li><code>--no-cls</code>: Disable screen clearing. By default, the screen is cleared before execution.</li>
+<li><code>--no-logo</code>: Do not output Ascii Art Logo.</li>
+<li><code>--no-usage</code>: Do not submit usage statistics.</li>
+<li><code>--no-upload</code>: Disable uploading test results to Pastebin.</li>
+</ul>
+<p>By default, you can combine the functionalities of all four modules, e.g.:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>rsbench<span class="w"> </span>-ibtu<span class="w"> </span>--network<span class="w"> </span>--region<span class="w"> </span>cn
+</span></code></pre></div></p>
+<p>Or run a full test directly:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>rsbench<span class="w"> </span>-ibtu
+</span></code></pre></div></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../install/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Installation
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/rsbench/rsbench" target="_blank" rel="noopener" title="Github Repo" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tracking", "navigation.sections", "navigation.path", "navigation.prune", "navigation.top", "search.suggest", "search.highlight", "search.share", "navigation.footer", "content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
