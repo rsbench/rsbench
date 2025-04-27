@@ -11,7 +11,7 @@
 ## 基础功能
 - INFO 信息输出: 输出机器环境信息
 - BENCH 性能测试: 涵盖 CPU、内存、网络、磁盘等性能测试，并评估分数
-- TUNE 一些小功能: IPCheck、Speedtest 等
+- TUNE 一些小功能: Speedtest 等
 - UNLOCK 互联网服务解锁测试: 快速检测互联网部分限定 IP 的服务是否被限制
 
 ## 特性

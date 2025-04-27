@@ -21,8 +21,7 @@
     - NET: 网络测试 (仅为与 Cloudflare 测速服务器连接测试，实际多路测试请看下方 Speedtest)
     测试结果仅供参考，不作为判断性能依据
 - TUNE:
-    - IPCheck: 检测 IP 的详细信息
-  - Speedtest: 测试网络速度
+    - Speedtest: 测试网络速度
 - UNLOCK:
     互联网服务解锁测试，用于测试用户是否可以正常使用互联网服务，如流媒体、游戏平台等
 
@@ -137,40 +136,9 @@ rsbench -t [OPTIONS]
 ```
 
 可选参数:
-- `--ip`: 执行网络测试
 - `--speedtest`: 执行 Speedtest 测试
 
 在不带任何参数的情况下，会执行所有测试
-
-### IPCheck
-
-对应参数: `--ip`
-
-该测试会检测用户的 IP 地址，并输出详细信息
-
-该测试会使用多个 IP 提供服务商进行测试，如果本地多 IP 或有对应的分流规则，将会出现多个 IP 情况，这是正常的
-
-示例输出:
-```bash
-IP  :
- Provider    | IP                        | Region                        | Risk | Org 
--------------+---------------------------+-------------------------------+------+---------------------------------------------------
- Ipinfo.io   | 68.233.xxx.xx             | IN - Telangana - Srīrāmnagar  | N/A  | AS31898 Oracle Corporation 
- Ipip.net    | 68.233.xxx.xx             | N/A                           | N/A  | 印度 - 特伦甘纳邦 - 海得拉巴oracle.com 
- Ip.sb       | 68.233.xxx.xx             | India - Telangana - Hyderabad | N/A  | AS31898 - Oracle Cloud - ORACLE-BMC-31898 
- Myip.la     | 68.233.xxx.xx             | 印度 - 特伦甘纳邦 - 海得拉巴  | N/A  | N/A 
- Ipquery.io  | 68.233.xxx.xx             | India - Telangana - Hyderabad | 0    | AS31898 - Oracle Corporation - Oracle Corporation 
- Vore.top    | 68.233.xxx.xx             | N/A                           | N/A  | 印度特伦加纳海得拉巴 - 甲骨文公司 
- Ipcheck.ing | 68.233.xxx.xx             | 印度 - 特伦甘纳邦 - 海得拉巴  | 66   | AS31898 Oracle Corporation 
- PcOnline    | 68.233.xxx.xx             | N/A                           | N/A  | N/A 
- Cloudflare  | 2603:c024:8000:xxxx::xxxx | N/A                           | N/A  | N/A 
- Ipinfo.io   | 2603:c024:8000:xxxx::xxxx | IN - Telangana - Srīrāmnagar  | N/A  | AS31898 Oracle Corporation 
- Ip.sb       | 2603:c024:8000:xxxx::xxxx | India - Telangana - Hyderabad | N/A  | AS31898 - Oracle Cloud - ORACLE-BMC-31898 
- Myip.la     | 2603:c024:8000:xxxx::xxxx | 印度 - 印度 -                 | N/A  | N/A 
- Ipquery.io  | 2603:c024:8000:xxxx::xxxx | India - Telangana - Hyderabad | 0    | AS31898 - Oracle Corporation - Oracle Corporation 
- Ipcheck.ing | 2603:c024:8000:xxxx::xxxx | 印度 - 特伦甘纳邦 - 海得拉巴  | 66   | AS31898 Oracle Corporation 
-Tested 14 projects took 5.84 seconds
-```
 
 ### Speedtest
 

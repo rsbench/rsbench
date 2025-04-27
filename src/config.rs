@@ -39,9 +39,6 @@ pub struct Config {
     pub tune: bool,
 
     #[arg(long, requires = "tune")]
-    pub ip: bool,
-
-    #[arg(long, requires = "tune")]
     pub speedtest: bool,
 
     #[arg(long, requires = "speedtest")]

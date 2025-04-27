@@ -12,7 +12,7 @@ Dependency issues? Unsupported architectures? Incorrect output formatting?
 
 - INFO Information Output: Outputs machine environment information
 - BENCH Performance Testing: Covers CPU, memory, network, disk performance testing and evaluates scores
-- TUNE Some Small Functionalities: IPCheck, Speedtest, etc.
+- TUNE Some Small Functionalities: Speedtest, etc.
 - UNLOCK Internet Service Unblock Test: Quickly checks if internet services with IP restrictions are blocked
 
 ## Features

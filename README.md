@@ -8,6 +8,8 @@
 
 **使用方法请见 DOCS: <https://rsbench.github.io/rsbench>**
 
+## 该项目将暂时停止更新，并将其功能分成一个个小模块，RSBench 仅保留核心功能 Bench 与 Info 模块，其他模块将在同 Github 组织作为其他项目更新
+
 一键运行 (x86_64 Linux musl):
 
 ```bash
